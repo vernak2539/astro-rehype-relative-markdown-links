@@ -3,7 +3,8 @@
 This is a [rehype](https://github.com/rehypejs/rehype) plugin built for [Astro](https://astro.build/) that aims to
 transform relative links in MD and MDX files into their final output paths.
 
-🚨 This is experimental and build **exclusively** for Astro. Happy to take contributions!
+🚨 This is experimental and build **exclusively** for Astro. Happy to take contributions! See [Todos](#todos) for things
+I have yet to do.
 
 For example, if you have a markdown files at `src/content/blog/post.md` with the content of:
 
@@ -17,7 +18,7 @@ The resulting HTML should be:
 <a href="/blog/other-markdown">relative link</a>
 ```
 
-🚨 **Note**: This doesn't work with files that have custom slugs (again, contributions are welcome!)
+It supports links with Query Strings and Hashes (e.g. `[relative link](./other-markdown.md?query=test#hash)`).
 
 ## Installation
 
@@ -55,3 +56,11 @@ export default defineConfig({
   },
 });
 ```
+
+## Notes
+
+- I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
+
+## Todos
+
+- [ ] Implement usage with [Astro's custom slug](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)
