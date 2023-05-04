@@ -9,6 +9,7 @@
   ],
   "homepage": "https://github.com/vernak2539/rehype-astro-relative-markdown-links",
   "main": "index.js",
+  "files": ["index.js", "README.md"],
   "repository": {
     "type": "git",
     "url": "https://github.com/vernak2539/rehype-astro-relative-markdown-links.git"
