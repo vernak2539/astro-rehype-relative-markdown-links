@@ -41,17 +41,48 @@ function isValidRelativeLink(link) {
   );
 }
 
+function getPathWithoutQueryOrHash(url) {
+  const indexQuery = url.indexOf("?");
+  const indexHash = url.indexOf("#");
+
+  if (indexQuery === -1 && indexHash === -1) {
+    return [url, null];
+  }
+
+  let firstCharacterIndex;
+
+  if (indexQuery !== -1 && indexHash === -1) {
+    firstCharacterIndex = indexQuery;
+  } else if (indexQuery === -1 && indexHash !== -1) {
+    firstCharacterIndex = indexHash;
+  } else {
+    firstCharacterIndex = indexQuery < indexHash ? indexQuery : indexHash;
+  }
+
+  const splitUrl = url.substring(0, firstCharacterIndex);
+  const splitQueryStringAndHash = url.substring(firstCharacterIndex);
+
+  return [splitUrl, splitQueryStringAndHash];
+}
+
 // This is very specific to Astro
 const contentPath = "src/content";
 
 function rehypeAstroRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
     visit(tree, "element", (node) => {
-      const url = node.properties.href;
+      const nodeHref = node.properties.href;
+
+      if (!nodeHref) {
+        return;
+      }
+
+      const [url, queryStringAndHash] = getPathWithoutQueryOrHash(nodeHref);
 
       if (!isValidRelativeLink(url)) {
         return;
       }
+      // deal with links that have hashes + query strings
 
       const currentFile = file.history[0];
       const currentFileParsed = path.parse(currentFile);
@@ -75,7 +106,11 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       // }
 
       const webPath = relativeFile.split(contentPath)[1];
-      const webPathFinal = replaceExt(webPath, "");
+      let webPathFinal = replaceExt(webPath, "");
+
+      if (queryStringAndHash) {
+        webPathFinal += queryStringAndHash;
+      }
 
       // Debugging
       // console.log("markdown path: ", url);
