@@ -1,0 +1,17 @@
+{
+  "name": "rehype-astro-relative-markdown-links",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:vernak2539/rehype-astro-relative-markdown-links.git",
+  "author": "Alex Vernacchia <alvernacchia@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "unist-util-visit": "^4.1.2"
+  },
+  "peerDependencies": {
+    "astro": "2*"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  }
+}
