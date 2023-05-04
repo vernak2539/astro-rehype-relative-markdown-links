@@ -82,7 +82,6 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       if (!isValidRelativeLink(url)) {
         return;
       }
-      // deal with links that have hashes + query strings
 
       const currentFile = file.history[0];
       const currentFileParsed = path.parse(currentFile);
