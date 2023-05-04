@@ -66,7 +66,7 @@ function getPathWithoutQueryOrHash(url) {
 }
 
 // This is very specific to Astro
-const contentPath = "src/content";
+const contentPath = ["src", "content"].join(path.sep);
 
 function rehypeAstroRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
@@ -89,38 +89,39 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       const currentFileName = `${currentFileParsed.name}${currentFileParsed.ext}`;
       const currentFileDirectory = currentFile.replace(currentFileName, "");
       const relativeFile = path.resolve(currentFileDirectory, url);
-      const relativeFileExists = fs.existsSync(relativeFile);
 
-      if (!relativeFileExists) {
-        return;
-      }
+      fs.exists(relativeFile, (relativeFileExists) => {
+        if (!relativeFileExists) {
+          return;
+        }
 
-      // TODO: this needs to be the relative file testing to see if it has a slug
-      // const customSlug = file.data.astro.frontmatter.slug;
-      //
-      // if (customSlug) {
-      //     webPathFinal = webPathFinal.split(path.sep).pop();
-      //     webPathFinal = [webPathFinal, customSlug].join(
-      //         path.sep
-      //     );
-      // }
+        // TODO: this needs to be the relative file testing to see if it has a slug
+        // const customSlug = file.data.astro.frontmatter.slug;
+        //
+        // if (customSlug) {
+        //     webPathFinal = webPathFinal.split(path.sep).pop();
+        //     webPathFinal = [webPathFinal, customSlug].join(
+        //         path.sep
+        //     );
+        // }
 
-      const webPath = relativeFile.split(contentPath)[1];
-      let webPathFinal = replaceExt(webPath, "");
+        const webPath = relativeFile.split(contentPath)[1];
+        let webPathFinal = replaceExt(webPath, "");
 
-      if (queryStringAndHash) {
-        webPathFinal += queryStringAndHash;
-      }
+        if (queryStringAndHash) {
+          webPathFinal += queryStringAndHash;
+        }
 
-      // Debugging
-      // console.log("markdown path: ", url);
-      // console.log("current file: ", currentFile);
-      // console.log("current file dir: ", currentFileDirectory);
-      // console.log("relative file: ", relativeFile);
-      // console.log("relative file exists: ", relativeFileExists);
-      // console.log("new path: ", webPathFinal);
+        // Debugging
+        // console.log("markdown path: ", url);
+        // console.log("current file: ", currentFile);
+        // console.log("current file dir: ", currentFileDirectory);
+        // console.log("relative file: ", relativeFile);
+        // console.log("relative file exists: ", relativeFileExists);
+        // console.log("new path: ", webPathFinal);
 
-      node.properties.href = webPathFinal;
+        node.properties.href = webPathFinal;
+      });
     });
   };
 }
