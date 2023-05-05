@@ -24,6 +24,9 @@
     "url": "https://github.com/vernak2539/rehype-astro-relative-markdown-links/issues",
     "email": "alvernacchia@gmail.com"
   },
+  "scripts": {
+    "prettier": "prettier index.mjs -w"
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "gray-matter": "^4.0.3",
