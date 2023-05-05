@@ -1,6 +1,7 @@
 import { visit } from "unist-util-visit";
 import * as path from "path";
 import * as fs from "fs";
+import { default as matter } from "gray-matter";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
@@ -94,32 +95,48 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
         return;
       }
 
-      // TODO: this needs to be the relative file testing to see if it has a slug
-      // const customSlug = file.data.astro.frontmatter.slug;
-      //
-      // if (customSlug) {
-      //     webPathFinal = webPathFinal.split(path.sep).pop();
-      //     webPathFinal = [webPathFinal, customSlug].join(
-      //         path.sep
-      //     );
-      // }
+      // TODO: Test for windows paths
 
-      const webPath = relativeFile.split(contentPath)[1];
-      let webPathFinal = replaceExt(webPath, "");
+      // read gray matter from relative file
+      const relativeFileContent = fs.readFileSync(relativeFile);
+      const { data: frontmatter } = matter(relativeFileContent);
+
+      const relativeFileCustomSlug = frontmatter.slug;
+      let webPathFinal;
+
+      if (relativeFileCustomSlug) {
+        console.log(relativeFile, contentPath);
+
+        const webPath = relativeFile.split(contentPath)[1];
+        console.log("TEST", webPath, webPath.split(path.sep));
+        webPathFinal =
+          "/" +
+          [
+            webPath.split(path.sep)[1], // this should be the content collection
+            relativeFileCustomSlug,
+          ].join("/");
+      } else {
+        const webPath = relativeFile.split(contentPath)[1];
+        webPathFinal = replaceExt(webPath, "");
+      }
 
       if (queryStringAndHash) {
         webPathFinal += queryStringAndHash;
       }
 
       // Debugging
-      // console.log("markdown path: ", url);
-      // console.log("current file: ", currentFile);
-      // console.log("current file dir: ", currentFileDirectory);
-      // console.log("relative file: ", relativeFile);
-      // console.log("relative file exists: ", relativeFileExists);
-      // console.log("FINAL PATH: ", webPathFinal);
-      // console.log("-----------------");
-      // console.log("");
+      console.log("markdown path: ", url);
+      console.log("current file: ", currentFile);
+      console.log("current file dir: ", currentFileDirectory);
+      console.log("relative file: ", relativeFile);
+      console.log(
+        "relative file has custom slug: ",
+        Boolean(relativeFileCustomSlug)
+      );
+      console.log("relative file custom slug: ", relativeFileCustomSlug);
+      console.log("FINAL PATH: ", webPathFinal);
+      console.log("-----------------");
+      console.log("");
 
       node.properties.href = webPathFinal;
     });
