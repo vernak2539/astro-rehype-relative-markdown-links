@@ -57,10 +57,22 @@ export default defineConfig({
 });
 ```
 
+### Debugging
+
+Using Yarn in example (sorry).
+
+```bash
+DEBUG=rehype-astro-relative-markdown-links yarn build
+
+# or
+
+DEBUG=rehype-astro-relative-markdown-links yarn dev
+```
+
 ## Notes
 
 - I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
 
 ## Todos
 
-- [ ] Implement usage with [Astro's custom slug](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)
+- [x] (via [#1](https://github.com/vernak2539/rehype-astro-relative-markdown-links/pulls)) Implement usage with [Astro's custom slug](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)
