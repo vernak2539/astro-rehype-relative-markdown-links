@@ -106,9 +106,6 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       const webPath = relativeFile.split(contentPath)[1];
 
       if (relativeFileCustomSlug) {
-        console.log(relativeFile, contentPath);
-
-        console.log("TEST", webPath, webPath.split(path.sep));
         webPathFinal =
           "/" +
           [
