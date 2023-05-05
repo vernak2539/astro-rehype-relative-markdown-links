@@ -2,8 +2,11 @@ import { visit } from "unist-util-visit";
 import * as path from "path";
 import * as fs from "fs";
 import { default as matter } from "gray-matter";
+import { default as debugFn } from "debug";
 
 // This package makes a lot of assumptions based on it being used with Astro
+
+const debug = debugFn("rehype-astro-relative-markdown-links");
 
 function replaceExt(npath, ext) {
   if (typeof npath !== "string") {
@@ -101,11 +104,12 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       const relativeFileContent = fs.readFileSync(relativeFile);
       const { data: frontmatter } = matter(relativeFileContent);
       const relativeFileCustomSlug = frontmatter.slug;
+      const relativeFileHasCustomSlug = Boolean(relativeFileCustomSlug);
 
       let webPathFinal;
       const webPath = relativeFile.split(contentPath)[1];
 
-      if (relativeFileCustomSlug) {
+      if (relativeFileHasCustomSlug) {
         webPathFinal =
           path.posix.sep +
           [
@@ -123,18 +127,18 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       }
 
       // Debugging
-      console.log("markdown path: ", url);
-      console.log("current file: ", currentFile);
-      console.log("current file dir: ", currentFileDirectory);
-      console.log("relative file: ", relativeFile);
-      console.log(
-        "relative file has custom slug: ",
-        Boolean(relativeFileCustomSlug)
-      );
-      console.log("relative file custom slug: ", relativeFileCustomSlug);
-      console.log("FINAL PATH: ", webPathFinal);
-      console.log("-----------------");
-      console.log("");
+      debug("--------------------------------");
+      debug("md/mdx AST Current File        : %s", currentFile);
+      debug("md/mdx AST Current File Dir    : %s", currentFileDirectory);
+      debug("md/mdx AST href full           : %s", nodeHref);
+      debug("md/mdx AST href path           : %s", url);
+      debug("md/mdx AST href qs and/or hash : %s", queryStringAndHash);
+      debug("File relative to current md/mdx: %s", relativeFile);
+      debug("File relative has custom slug  : %s", relativeFileHasCustomSlug);
+      if (relativeFileHasCustomSlug) {
+        debug("File relative custom slug      : %s", relativeFileCustomSlug);
+      }
+      debug("Final URL path                 : %s", webPathFinal);
 
       node.properties.href = webPathFinal;
     });

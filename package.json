@@ -25,6 +25,7 @@
     "email": "alvernacchia@gmail.com"
   },
   "dependencies": {
+    "debug": "^4.3.4",
     "gray-matter": "^4.0.3",
     "unist-util-visit": "^4.1.2"
   },
