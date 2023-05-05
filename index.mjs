@@ -100,14 +100,14 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       // read gray matter from relative file
       const relativeFileContent = fs.readFileSync(relativeFile);
       const { data: frontmatter } = matter(relativeFileContent);
-
       const relativeFileCustomSlug = frontmatter.slug;
+
       let webPathFinal;
+      const webPath = relativeFile.split(contentPath)[1];
 
       if (relativeFileCustomSlug) {
         console.log(relativeFile, contentPath);
 
-        const webPath = relativeFile.split(contentPath)[1];
         console.log("TEST", webPath, webPath.split(path.sep));
         webPathFinal =
           "/" +
@@ -116,9 +116,10 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
             relativeFileCustomSlug,
           ].join("/");
       } else {
-        const webPath = relativeFile.split(contentPath)[1];
         webPathFinal = replaceExt(webPath, "");
       }
+
+      webPathFinal = webPathFinal.split(path.sep).join(path.posix.sep);
 
       if (queryStringAndHash) {
         webPathFinal += queryStringAndHash;
