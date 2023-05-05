@@ -107,11 +107,11 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
 
       if (relativeFileCustomSlug) {
         webPathFinal =
-          "/" +
+          path.posix.sep +
           [
             webPath.split(path.sep)[1], // this should be the content collection
             relativeFileCustomSlug,
-          ].join("/");
+          ].join(path.posix.sep);
       } else {
         webPathFinal = replaceExt(webPath, "");
       }
