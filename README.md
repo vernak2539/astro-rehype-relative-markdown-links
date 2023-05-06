@@ -71,7 +71,4 @@ DEBUG=astro-rehype-relative-markdown-links yarn dev
 ## Notes
 
 - I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
-
-## Todos
-
-- [x] (via [#1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pulls)) Implement usage with [Astro's custom slug](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)
+- This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
