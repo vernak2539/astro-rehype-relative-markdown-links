@@ -3,8 +3,7 @@
 This is a [rehype](https://github.com/rehypejs/rehype) plugin built for [Astro](https://astro.build/) that aims to
 transform relative links in MD and MDX files into their final output paths.
 
-🚨 This is experimental and build **exclusively** for Astro. Happy to take contributions! See [Todos](#todos) for things
-I have yet to do.
+🚨 This is experimental and build **exclusively** for Astro. Happy to take contributions!
 
 For example, if you have a markdown files at `src/content/blog/post.md` with the content of:
 
