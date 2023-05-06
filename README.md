@@ -1,4 +1,4 @@
-# rehype-astro-relative-markdown-links
+# astro-rehype-relative-markdown-links
 
 This is a [rehype](https://github.com/rehypejs/rehype) plugin built for [Astro](https://astro.build/) that aims to
 transform relative links in MD and MDX files into their final output paths.
@@ -25,19 +25,19 @@ It supports links with Query Strings and Hashes (e.g. `[relative link](./other-m
 **Yarn**
 
 ```bash
-yarn add rehype-astro-relative-markdown-links
+yarn add astro-rehype-relative-markdown-links
 ```
 
 **PNPM**
 
 ```bash
-pnpm add rehype-astro-relative-markdown-links
+pnpm add astro-rehype-relative-markdown-links
 ```
 
 **NPM**
 
 ```bash
-npm install rehype-astro-relative-markdown-links
+npm install astro-rehype-relative-markdown-links
 ```
 
 ## Usage
@@ -45,7 +45,7 @@ npm install rehype-astro-relative-markdown-links
 `astro.config.mjs`
 
 ```js
-import rehypeAstroRelativeMarkdownLinks from "rehype-astro-relative-markdown-links";
+import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
 
 // ...everything else
 
@@ -62,11 +62,11 @@ export default defineConfig({
 Using Yarn in example (sorry).
 
 ```bash
-DEBUG=rehype-astro-relative-markdown-links yarn build
+DEBUG=astro-rehype-relative-markdown-links yarn build
 
 # or
 
-DEBUG=rehype-astro-relative-markdown-links yarn dev
+DEBUG=astro-rehype-relative-markdown-links yarn dev
 ```
 
 ## Notes
@@ -75,4 +75,4 @@ DEBUG=rehype-astro-relative-markdown-links yarn dev
 
 ## Todos
 
-- [x] (via [#1](https://github.com/vernak2539/rehype-astro-relative-markdown-links/pulls)) Implement usage with [Astro's custom slug](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)
+- [x] (via [#1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pulls)) Implement usage with [Astro's custom slug](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)

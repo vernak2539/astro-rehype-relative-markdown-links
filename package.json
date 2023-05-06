@@ -1,5 +1,5 @@
 {
-  "name": "rehype-astro-relative-markdown-links",
+  "name": "astro-rehype-relative-markdown-links",
   "version": "0.3.0",
   "keywords": [
     "astro",
@@ -7,7 +7,7 @@
     "markdown",
     "relative links"
   ],
-  "homepage": "https://github.com/vernak2539/rehype-astro-relative-markdown-links",
+  "homepage": "https://github.com/vernak2539/astro-rehype-relative-markdown-links",
   "main": "index.mjs",
   "type": "module",
   "files": [
@@ -16,12 +16,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vernak2539/rehype-astro-relative-markdown-links.git"
+    "url": "https://github.com/vernak2539/astro-rehype-relative-markdown-links.git"
   },
   "author": "Alex Vernacchia <alvernacchia@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vernak2539/rehype-astro-relative-markdown-links/issues",
+    "url": "https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues",
     "email": "alvernacchia@gmail.com"
   },
   "scripts": {

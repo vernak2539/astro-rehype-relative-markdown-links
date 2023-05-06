@@ -6,7 +6,7 @@ import { default as debugFn } from "debug";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
-const debug = debugFn("rehype-astro-relative-markdown-links");
+const debug = debugFn("astro-rehype-relative-markdown-links");
 
 function replaceExt(npath, ext) {
   if (typeof npath !== "string") {
