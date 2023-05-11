@@ -5,8 +5,9 @@ transform relative links in MD and MDX files into their final output paths.
 
 🚨 This is experimental and build **exclusively** for Astro. I have made a couple assumptions. They are:
 
-1. You have a content collection residing at `src/content/<content_collection>`
-2. You have a page that renders the above content collection at `src/pages/<content_collection>/[...slug].astro`
+1. You are rendering a static site (i.e. not using SSR)
+2. You have a content collection residing at `src/content/<content_collection>`
+3. You have a page that renders the above content collection at `src/pages/<content_collection>/[...slug].astro`
 
 ## Example Functionality
 
