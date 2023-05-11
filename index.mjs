@@ -98,8 +98,6 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
         return;
       }
 
-      // TODO: Test for windows paths
-
       // read gray matter from relative file
       const relativeFileContent = fs.readFileSync(relativeFile);
       const { data: frontmatter } = matter(relativeFileContent);
