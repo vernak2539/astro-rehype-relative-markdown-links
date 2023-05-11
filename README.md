@@ -19,6 +19,14 @@ The resulting HTML should be:
 
 It supports links with Query Strings and Hashes (e.g. `[relative link](./other-markdown.md?query=test#hash)`).
 
+## OS Support
+
+Tested with Node.js v18 and Astro 2.x.
+
+- [x] MacOS (Ventura)
+- [x] Windows (Windows 11)
+- [x] Linux (Debian)
+
 ## Installation
 
 **Yarn**
