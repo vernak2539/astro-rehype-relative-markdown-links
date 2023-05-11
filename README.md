@@ -25,7 +25,7 @@ Tested with Node.js v18 and Astro 2.x.
 
 - [x] MacOS (Ventura)
 - [x] Windows (Windows 11)
-- [x] Linux (Debian)
+- [x] Linux (Debian 11)
 
 ## Installation
 
