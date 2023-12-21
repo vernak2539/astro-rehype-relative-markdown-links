@@ -37,6 +37,6 @@
     "astro": "2.x"
   },
   "devDependencies": {
-    "prettier": "^2.8.8"
+    "prettier": "^4.0.0-alpha.8"
   }
 }
