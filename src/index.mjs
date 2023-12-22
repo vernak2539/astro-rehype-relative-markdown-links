@@ -3,47 +3,12 @@ import * as path from "path";
 import * as fs from "fs";
 import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
+import { replaceExt, isValidRelativeLink } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
-function replaceExt(npath, ext) {
-  if (typeof npath !== "string") {
-    return npath;
-  }
-
-  if (npath.length === 0) {
-    return npath;
-  }
-
-  const nFileName = path.basename(npath, path.extname(npath)) + ext;
-  const nFilepath = path.join(path.dirname(npath), nFileName);
-
-  // Because `path.join` removes the head './' from the given path.
-  // This removal can cause a problem when passing the result to `require` or
-  // `import`.
-  if (startsWithSingleDot(npath)) {
-    return "." + path.sep + nFilepath;
-  }
-
-  return nFilepath;
-}
-
-function startsWithSingleDot(fpath) {
-  const first2chars = fpath.slice(0, 2);
-  return first2chars === "." + path.sep || first2chars === "./";
-}
-
-function isValidRelativeLink(link) {
-  const validExtensions = [".md", ".mdx"];
-
-  return (
-    link &&
-    validExtensions.includes(path.extname(link)) &&
-    !path.isAbsolute(link)
-  );
-}
 
 function getPathWithoutQueryOrHash(url) {
   const indexQuery = url.indexOf("?");
