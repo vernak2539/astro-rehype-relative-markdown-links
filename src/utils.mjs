@@ -1,4 +1,4 @@
-import path from "path"
+import path from "path";
 
 const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
@@ -22,28 +22,27 @@ export const replaceExt = (npath, ext) => {
 
   // Because `path.join` removes the head './' from the given path.
   if (isCurrentDirectory(npath)) {
-    return `.${pathSeparator}${nFilepath}`
+    return `.${pathSeparator}${nFilepath}`;
   }
 
-
   return nFilepath;
-}
+};
 
 export const isValidRelativeLink = (link) => {
   if (!link) {
-    return false
+    return false;
   }
 
   if (!validMarkdownExtensions.includes(path.extname(link))) {
-    return false
+    return false;
   }
 
   if (path.isAbsolute(link)) {
-    return false
+    return false;
   }
 
-  return true
-}
+  return true;
+};
 
 export const splitPathFromQueryAndFragment = (url) => {
   const indexQuery = url.indexOf("?");
@@ -67,4 +66,4 @@ export const splitPathFromQueryAndFragment = (url) => {
   const splitQueryStringAndHash = url.substring(firstCharacterIndex);
 
   return [splitUrl, splitQueryStringAndHash];
-}
+};

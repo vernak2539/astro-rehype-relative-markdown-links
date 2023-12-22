@@ -3,7 +3,11 @@ import * as path from "path";
 import * as fs from "fs";
 import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
-import { replaceExt, isValidRelativeLink, splitPathFromQueryAndFragment } from "./utils.mjs";
+import {
+  replaceExt,
+  isValidRelativeLink,
+  splitPathFromQueryAndFragment,
+} from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
@@ -21,7 +25,8 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
         return;
       }
 
-      const [url, queryStringAndFragment] = splitPathFromQueryAndFragment(nodeHref);
+      const [url, queryStringAndFragment] =
+        splitPathFromQueryAndFragment(nodeHref);
 
       if (!isValidRelativeLink(url)) {
         return;
@@ -45,7 +50,9 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       const relativeFileHasCustomSlug = Boolean(relativeFileCustomSlug);
 
       let webPathFinal;
-      const webPath = relativeFile.split(options.contentPath || defaultContentPath)[1];
+      const webPath = relativeFile.split(
+        options.contentPath || defaultContentPath,
+      )[1];
 
       if (relativeFileHasCustomSlug) {
         webPathFinal =
@@ -58,12 +65,12 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
         webPathFinal = replaceExt(webPath, "");
       }
 
-      webPathFinal = webPathFinal.split(path.sep)
+      webPathFinal = webPathFinal.split(path.sep);
 
       // Remove index from the end of the path to satsify instances where we'll be generating
-      // index.html files for directories'
+      // index.html files for directories
       if (webPathFinal[webPathFinal.length - 1] === "index") {
-        webPathFinal.pop()
+        webPathFinal.pop();
       }
 
       webPathFinal = webPathFinal.join(path.posix.sep);
