@@ -10,7 +10,7 @@ import { replaceExt, isValidRelativeLink, splitPathFromQueryAndFragment } from "
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
 // This is very specific to Astro
-const contentPath = ["src", "content"].join(path.sep);
+const defaultContentPath = ["src", "content"].join(path.sep);
 
 function rehypeAstroRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
@@ -45,7 +45,7 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       const relativeFileHasCustomSlug = Boolean(relativeFileCustomSlug);
 
       let webPathFinal;
-      const webPath = relativeFile.split(contentPath)[1];
+      const webPath = relativeFile.split(options.contentPath || defaultContentPath)[1];
 
       if (relativeFileHasCustomSlug) {
         webPathFinal =
@@ -58,7 +58,15 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
         webPathFinal = replaceExt(webPath, "");
       }
 
-      webPathFinal = webPathFinal.split(path.sep).join(path.posix.sep);
+      webPathFinal = webPathFinal.split(path.sep)
+
+      // Remove index from the end of the path to satsify instances where we'll be generating
+      // index.html files for directories'
+      if (webPathFinal[webPathFinal.length - 1] === "index") {
+        webPathFinal.pop()
+      }
+
+      webPathFinal = webPathFinal.join(path.posix.sep);
 
       if (queryStringAndFragment) {
         webPathFinal += queryStringAndFragment;
