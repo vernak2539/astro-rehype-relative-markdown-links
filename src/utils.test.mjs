@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert'
 
-import { isValidRelativeLink, replaceExt } from './utils.mjs'
+import { isValidRelativeLink, replaceExt, splitPathFromQueryAndFragment } from './utils.mjs'
 
 describe('replaceExt', () => {
   test('replaces extension with another extension', () => {
@@ -76,5 +76,25 @@ describe('isValidRelativeLink', () => {
     const actual = isValidRelativeLink('/foo.js')
 
     assert.equal(actual, false)
+  })
+})
+
+describe('splitPathFromQueryAndFragment', () => {
+  test('separates path with query string and hash', () => {
+    const actual = splitPathFromQueryAndFragment('./test.md?q=q#hash')
+
+    assert.deepStrictEqual(actual, ['./test.md', '?q=q#hash'])
+  })
+
+  test('separates path with query string only', () => {
+    const actual = splitPathFromQueryAndFragment('./test.md?q=q')
+
+    assert.deepStrictEqual(actual, ['./test.md', '?q=q'])
+  })
+
+  test('separates path with hash only', () => {
+    const actual = splitPathFromQueryAndFragment('./test.md#hash')
+
+    assert.deepStrictEqual(actual, ['./test.md', '#hash'])
   })
 })

@@ -44,3 +44,27 @@ export const isValidRelativeLink = (link) => {
 
   return true
 }
+
+export const splitPathFromQueryAndFragment = (url) => {
+  const indexQuery = url.indexOf("?");
+  const indexHash = url.indexOf("#");
+
+  if (indexQuery === -1 && indexHash === -1) {
+    return [url, null];
+  }
+
+  let firstCharacterIndex;
+
+  if (indexQuery !== -1 && indexHash === -1) {
+    firstCharacterIndex = indexQuery;
+  } else if (indexQuery === -1 && indexHash !== -1) {
+    firstCharacterIndex = indexHash;
+  } else {
+    firstCharacterIndex = indexQuery < indexHash ? indexQuery : indexHash;
+  }
+
+  const splitUrl = url.substring(0, firstCharacterIndex);
+  const splitQueryStringAndHash = url.substring(firstCharacterIndex);
+
+  return [splitUrl, splitQueryStringAndHash];
+}

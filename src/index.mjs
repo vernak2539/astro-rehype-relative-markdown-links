@@ -3,36 +3,11 @@ import * as path from "path";
 import * as fs from "fs";
 import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
-import { replaceExt, isValidRelativeLink } from "./utils.mjs";
+import { replaceExt, isValidRelativeLink, splitPathFromQueryAndFragment } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
-
-
-function getPathWithoutQueryOrHash(url) {
-  const indexQuery = url.indexOf("?");
-  const indexHash = url.indexOf("#");
-
-  if (indexQuery === -1 && indexHash === -1) {
-    return [url, null];
-  }
-
-  let firstCharacterIndex;
-
-  if (indexQuery !== -1 && indexHash === -1) {
-    firstCharacterIndex = indexQuery;
-  } else if (indexQuery === -1 && indexHash !== -1) {
-    firstCharacterIndex = indexHash;
-  } else {
-    firstCharacterIndex = indexQuery < indexHash ? indexQuery : indexHash;
-  }
-
-  const splitUrl = url.substring(0, firstCharacterIndex);
-  const splitQueryStringAndHash = url.substring(firstCharacterIndex);
-
-  return [splitUrl, splitQueryStringAndHash];
-}
 
 // This is very specific to Astro
 const contentPath = ["src", "content"].join(path.sep);
@@ -46,7 +21,7 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
         return;
       }
 
-      const [url, queryStringAndHash] = getPathWithoutQueryOrHash(nodeHref);
+      const [url, queryStringAndFragment] = splitPathFromQueryAndFragment(nodeHref);
 
       if (!isValidRelativeLink(url)) {
         return;
@@ -85,8 +60,8 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
 
       webPathFinal = webPathFinal.split(path.sep).join(path.posix.sep);
 
-      if (queryStringAndHash) {
-        webPathFinal += queryStringAndHash;
+      if (queryStringAndFragment) {
+        webPathFinal += queryStringAndFragment;
       }
 
       // Debugging
@@ -95,7 +70,7 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       debug("md/mdx AST Current File Dir    : %s", currentFileDirectory);
       debug("md/mdx AST href full           : %s", nodeHref);
       debug("md/mdx AST href path           : %s", url);
-      debug("md/mdx AST href qs and/or hash : %s", queryStringAndHash);
+      debug("md/mdx AST href qs and/or hash : %s", queryStringAndFragment);
       debug("File relative to current md/mdx: %s", relativeFile);
       debug("File relative has custom slug  : %s", relativeFileHasCustomSlug);
       if (relativeFileHasCustomSlug) {
