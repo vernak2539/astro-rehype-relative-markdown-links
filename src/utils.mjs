@@ -1,6 +1,7 @@
 import path from "path"
 
 const pathSeparator = path.sep;
+const validMarkdownExtensions = [".md", ".mdx"];
 
 function isCurrentDirectory(fpath) {
   const first2chars = fpath.slice(0, 2);
@@ -26,4 +27,20 @@ export const replaceExt = (npath, ext) => {
 
 
   return nFilepath;
+}
+
+export const isValidRelativeLink = (link) => {
+  if (!link) {
+    return false
+  }
+
+  if (!validMarkdownExtensions.includes(path.extname(link))) {
+    return false
+  }
+
+  if (path.isAbsolute(link)) {
+    return false
+  }
+
+  return true
 }

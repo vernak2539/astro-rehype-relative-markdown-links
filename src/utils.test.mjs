@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert'
 
-import { replaceExt } from './utils.mjs'
+import { isValidRelativeLink, replaceExt } from './utils.mjs'
 
 describe('replaceExt', () => {
   test('replaces extension with another extension', () => {
@@ -38,5 +38,43 @@ describe('replaceExt', () => {
     const actual = replaceExt('', '.md')
 
     assert.equal(actual, '')
+  })
+})
+
+describe('isValidRelativeLink', () => {
+  test('return true if relative path to .md file', () => {
+    const actual = isValidRelativeLink('./foo.md')
+
+    assert.equal(actual, true)
+  })
+
+  test('return true if relative path to .mdx file', () => {
+    const actual = isValidRelativeLink('./foo.mdx')
+
+    assert.equal(actual, true)
+  })
+
+  test('return false if link empty string', () => {
+    const actual = isValidRelativeLink('')
+
+    assert.equal(actual, false)
+  })
+
+  test('return false if link does not exist', () => {
+    const actual = isValidRelativeLink(null)
+
+    assert.equal(actual, false)
+  })
+
+  test('return false if not .md or .mdx file', () => {
+    const actual = isValidRelativeLink('./foo.js')
+
+    assert.equal(actual, false)
+  })
+
+  test('return false if an aboslute path', () => {
+    const actual = isValidRelativeLink('/foo.js')
+
+    assert.equal(actual, false)
   })
 })
