@@ -26,7 +26,8 @@
     "email": "alvernacchia@gmail.com"
   },
   "scripts": {
-    "prettier": "prettier ./src/** -w"
+    "prettier": "prettier ./src/** -w",
+    "test": "node --test"
   },
   "dependencies": {
     "debug": "^4.3.4",
