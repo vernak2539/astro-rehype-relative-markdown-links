@@ -12,8 +12,8 @@
   "main": "./src/index.mjs",
   "type": "module",
   "files": [
-    "./src/index.mjs",
-    "./src/utils.mjs",
+    "src/index.mjs",
+    "src/utils.mjs",
     "README.md"
   ],
   "repository": {
