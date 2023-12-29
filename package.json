@@ -13,6 +13,7 @@
   "type": "module",
   "files": [
     "./src/index.mjs",
+    "./src/utils.mjs",
     "README.md"
   ],
   "repository": {
