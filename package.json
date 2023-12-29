@@ -9,10 +9,10 @@
     "relative links"
   ],
   "homepage": "https://github.com/vernak2539/astro-rehype-relative-markdown-links",
-  "main": "index.mjs",
+  "main": "./src/index.mjs",
   "type": "module",
   "files": [
-    "index.mjs",
+    "./src/index.mjs",
     "README.md"
   ],
   "repository": {
@@ -26,7 +26,8 @@
     "email": "alvernacchia@gmail.com"
   },
   "scripts": {
-    "prettier": "prettier index.mjs -w"
+    "prettier": "prettier ./src/** -w",
+    "test": "node --test"
   },
   "dependencies": {
     "debug": "^4.3.4",
@@ -37,6 +38,7 @@
     "astro": "2.x"
   },
   "devDependencies": {
-    "prettier": "^4.0.0-alpha.8"
+    "prettier": "^4.0.0-alpha.8",
+    "rehype": "^13.0.1"
   }
 }
