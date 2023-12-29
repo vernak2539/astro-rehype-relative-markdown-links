@@ -46,6 +46,8 @@ function isValidRelativeLink(link) {
 }
 
 function getPathWithoutQueryOrHash(url) {
+  // Use decodeURI to handle spaces in the URL
+  url = decodeURI(url);
   const indexQuery = url.indexOf("?");
   const indexHash = url.indexOf("#");
 
