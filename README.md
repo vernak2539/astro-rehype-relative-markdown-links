@@ -27,7 +27,7 @@ It supports links with Query Strings and Hashes (e.g. `[relative link](./other-m
 
 ## OS Support
 
-Tested with Node.js v18 and Astro 2.x.
+Tested with Node.js v18 and v20 and Astro 2.x+.
 
 - [x] MacOS (Ventura)
 - [x] Windows (Windows 11)
