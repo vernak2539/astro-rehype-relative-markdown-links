@@ -2,7 +2,7 @@ name: Publish Package to npmjs
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   build:
@@ -11,12 +11,15 @@ jobs:
       name: npm-publish
     steps:
       - uses: actions/checkout@v3
+      - name: Enable corepack
+        run: |
+          corepack enable
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: "16.x"
           cache: "yarn"
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - run: yarn install --frozen-lockfile
       - run: yarn publish
         env:
