@@ -41,5 +41,6 @@
   "devDependencies": {
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1"
-  }
+  },
+  "packageManager": "yarn@4.0.2"
 }
