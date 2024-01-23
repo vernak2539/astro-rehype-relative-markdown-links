@@ -16,6 +16,8 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
 
+const defaultBase=""
+
 function rehypeAstroRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
     visit(tree, "element", (node) => {
@@ -36,7 +38,8 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       const currentFileParsed = path.parse(currentFile);
       const currentFileName = `${currentFileParsed.name}${currentFileParsed.ext}`;
       const currentFileDirectory = currentFile.replace(currentFileName, "");
-      const relativeFile = path.resolve(currentFileDirectory, url);
+      // we additionally unescape the path so that "%20" == " " will be handled too
+      const relativeFile = unescape(path.resolve(currentFileDirectory, url));
       const relativeFileExists = fs.existsSync(relativeFile);
 
       if (!relativeFileExists) {
@@ -78,6 +81,11 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
       if (queryStringAndFragment) {
         webPathFinal += queryStringAndFragment;
       }
+
+     // add changes specific to our current environment
+     webPathFinal =  webPathFinal.replace("/docs",  options.base || defaultBase) 
+     webPathFinal= webPathFinal.toLowerCase()
+     webPathFinal=webPathFinal.replace(/ /g, "-");
 
       // Debugging
       debug("--------------------------------");
