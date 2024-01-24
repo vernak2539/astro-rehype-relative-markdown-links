@@ -49,7 +49,7 @@ export const splitPathFromQueryAndFragment = (url) => {
   const indexHash = url.indexOf("#");
 
   if (indexQuery === -1 && indexHash === -1) {
-    return [url, null];
+    return [decodeURI(url), null];
   }
 
   let firstCharacterIndex;
@@ -65,5 +65,5 @@ export const splitPathFromQueryAndFragment = (url) => {
   const splitUrl = url.substring(0, firstCharacterIndex);
   const splitQueryStringAndHash = url.substring(firstCharacterIndex);
 
-  return [splitUrl, splitQueryStringAndHash];
+  return [decodeURI(splitUrl), splitQueryStringAndHash];
 };
