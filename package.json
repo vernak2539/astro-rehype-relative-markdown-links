@@ -36,7 +36,7 @@
     "unist-util-visit": "^4.1.2"
   },
   "peerDependencies": {
-    "astro": "2.x"
+    "astro": ">=2.x <5"
   },
   "devDependencies": {
     "prettier": "^4.0.0-alpha.8",
