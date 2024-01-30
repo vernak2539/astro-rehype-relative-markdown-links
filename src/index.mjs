@@ -17,7 +17,7 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 const defaultContentPath = ["src", "content"].join(path.sep);
 
 /** @param options {import('./index').Options} */
-function rehypeAstroRelativeMarkdownLinks(options = {}) {
+function astroRehypeRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
     visit(tree, "element", (node) => {
       const nodeHref = node.properties.href;
@@ -99,4 +99,4 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
   };
 }
 
-export default rehypeAstroRelativeMarkdownLinks;
+export default astroRehypeRelativeMarkdownLinks;
