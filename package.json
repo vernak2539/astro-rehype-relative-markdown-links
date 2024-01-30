@@ -11,9 +11,11 @@
   "homepage": "https://github.com/vernak2539/astro-rehype-relative-markdown-links",
   "main": "./src/index.mjs",
   "type": "module",
+  "types": "./src/index.d.ts",
   "files": [
     "src/index.mjs",
     "src/utils.mjs",
+    "src/**/*.d.ts",
     "README.md"
   ],
   "repository": {
