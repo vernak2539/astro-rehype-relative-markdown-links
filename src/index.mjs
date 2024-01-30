@@ -7,6 +7,7 @@ import {
   replaceExt,
   isValidRelativeLink,
   splitPathFromQueryAndFragment,
+  normaliseAstroOutputPath,
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
@@ -84,8 +85,7 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
 
       // add changes specific to our current environment
       // webPathFinal =  webPathFinal.replace("/docs",  options.base || defaultBase)
-      // webPathFinal= webPathFinal.toLowerCase()
-      // webPathFinal=webPathFinal.replace(/ /g, "-");
+      webPathFinal = normaliseAstroOutputPath(webPathFinal);
 
       // Debugging
       debug("--------------------------------");

@@ -3,6 +3,7 @@ import assert from "node:assert";
 
 import {
   isValidRelativeLink,
+  normaliseAstroOutputPath,
   replaceExt,
   splitPathFromQueryAndFragment,
 } from "./utils.mjs";
@@ -100,5 +101,19 @@ describe("splitPathFromQueryAndFragment", () => {
     const actual = splitPathFromQueryAndFragment("./test.md#hash");
 
     assert.deepStrictEqual(actual, ["./test.md", "#hash"]);
+  });
+});
+
+describe("normaliseAstroOutputPath", () => {
+  test("removes uppercase characters", () => {
+    const actual = normaliseAstroOutputPath("/Foo-TESTING-test");
+
+    assert.equal(actual, "/foo-testing-test");
+  });
+
+  test("replaces spaces with dashes", () => {
+    const actual = normaliseAstroOutputPath("/foo testing test");
+
+    assert.equal(actual, "/foo-testing-test");
   });
 });

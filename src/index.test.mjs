@@ -49,18 +49,21 @@ test("rehypeAstroRelativeMarkdownLinks", async (t) => {
     assert.equal(actual, expected);
   });
 
-  await t.test("should transform encoded paths", async () => {
-    const input = '<a href="./fixtures/test%20with%20space.md">foo</a>';
-    const { value: actual } = await rehype()
-      .use(testSetupRehype)
-      .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
-      .process(input);
+  await t.test(
+    "should transform encoded paths with capital letters",
+    async () => {
+      const input = '<a href="./fixtures/test%20with%20SPACE.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
 
-    const expected =
-      '<html><head></head><body><a href="/fixtures/test with space">foo</a></body></html>';
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test-with-space">foo</a></body></html>';
 
-    assert.equal(actual, expected);
-  });
+      assert.equal(actual, expected);
+    },
+  );
 
   await t.test("should keep query and fragment", async () => {
     const input = '<a href="./fixtures/test.md?q=q#hash">foo</a>';
