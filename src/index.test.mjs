@@ -8,7 +8,7 @@ import { visit } from "unist-util-visit";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import rehypeAstroRelativeMarkdownLinks from "./index.mjs";
+import astroRehypeRelativeMarkdownLinks from "./index.mjs";
 
 function testSetupRehype(options = {}) {
   return (tree, file) => {
@@ -27,7 +27,7 @@ test("rehypeAstroRelativeMarkdownLinks", async (t) => {
     const input = '<a href="./fixtures/test.md">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
-      .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
       .process(input);
 
     const expected =
@@ -40,7 +40,7 @@ test("rehypeAstroRelativeMarkdownLinks", async (t) => {
     const input = '<a href="./fixtures/index.md">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
-      .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
       .process(input);
 
     const expected =
@@ -53,7 +53,7 @@ test("rehypeAstroRelativeMarkdownLinks", async (t) => {
     const input = '<a href="./fixtures/test.md?q=q#hash">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
-      .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
       .process(input);
 
     const expected =
@@ -68,7 +68,7 @@ test("rehypeAstroRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/does-not-exist.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
         .process(input);
 
       const expected =
