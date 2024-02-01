@@ -22,7 +22,7 @@ function testSetupRehype(options = {}) {
   };
 }
 
-test("rehypeAstroRelativeMarkdownLinks", async (t) => {
+test("astroRehypeRelativeMarkdownLinks", async (t) => {
   await t.test("should transform valid paths", async () => {
     const input = '<a href="./fixtures/test.md">foo</a>';
     const { value: actual } = await rehype()
@@ -55,7 +55,7 @@ test("rehypeAstroRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/test%20with%20SPACE.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(rehypeAstroRelativeMarkdownLinks, { contentPath: "src" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
         .process(input);
 
       const expected =
