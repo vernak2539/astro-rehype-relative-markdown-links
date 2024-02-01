@@ -3,6 +3,9 @@ import path from "path";
 const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
 
+// value to be used when normalising the content paths that contain spaces (used in join)
+const ASTRO_PATH_JOIN_DELIMITER = "-";
+
 /** @type {import('./utils').IsCurrentDirectoryFn} */
 function isCurrentDirectory(fpath) {
   const first2chars = fpath.slice(0, 2);
@@ -53,7 +56,7 @@ export const splitPathFromQueryAndFragment = (url) => {
   const indexHash = url.indexOf("#");
 
   if (indexQuery === -1 && indexHash === -1) {
-    return [url, null];
+    return [decodeURI(url), null];
   }
 
   let firstCharacterIndex;
@@ -69,5 +72,13 @@ export const splitPathFromQueryAndFragment = (url) => {
   const splitUrl = url.substring(0, firstCharacterIndex);
   const splitQueryStringAndHash = url.substring(firstCharacterIndex);
 
-  return [splitUrl, splitQueryStringAndHash];
+  return [decodeURI(splitUrl), splitQueryStringAndHash];
+};
+
+export const normaliseAstroOutputPath = (initialPath) => {
+  if (!initialPath || typeof initialPath !== "string") {
+    return;
+  }
+
+  return initialPath.toLowerCase().replace(/ /g, ASTRO_PATH_JOIN_DELIMITER);
 };

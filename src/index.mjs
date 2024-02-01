@@ -7,6 +7,7 @@ import {
   replaceExt,
   isValidRelativeLink,
   splitPathFromQueryAndFragment,
+  normaliseAstroOutputPath,
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
@@ -37,6 +38,7 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const currentFileParsed = path.parse(currentFile);
       const currentFileName = `${currentFileParsed.name}${currentFileParsed.ext}`;
       const currentFileDirectory = currentFile.replace(currentFileName, "");
+
       const relativeFile = path.resolve(currentFileDirectory, url);
       const relativeFileExists = fs.existsSync(relativeFile);
 
@@ -79,6 +81,8 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       if (queryStringAndFragment) {
         webPathFinal += queryStringAndFragment;
       }
+
+      webPathFinal = normaliseAstroOutputPath(webPathFinal);
 
       // Debugging
       debug("--------------------------------");
