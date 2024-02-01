@@ -70,6 +70,21 @@ export default defineConfig({
 });
 ```
 
+To set custom options, pass an object to the plugin like below:
+
+```js
+const options = {
+  contentPath: "", // where you store your content relative to the root directory. default: 'src/content'
+};
+
+export default defineConfig({
+  // ...everything else
+  markdown: {
+    rehypePlugins: [[rehypeAstroRelativeMarkdownLinks, options]],
+  },
+});
+```
+
 ### Debugging
 
 Using Yarn in example (sorry).

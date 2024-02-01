@@ -19,7 +19,8 @@ const defaultContentPath = ["src", "content"].join(path.sep);
 
 const defaultBase = "";
 
-function rehypeAstroRelativeMarkdownLinks(options = {}) {
+/** @param options {import('./index').Options} */
+function astroRehypeRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
     visit(tree, "element", (node) => {
       const nodeHref = node.properties.href;
@@ -106,4 +107,4 @@ function rehypeAstroRelativeMarkdownLinks(options = {}) {
   };
 }
 
-export default rehypeAstroRelativeMarkdownLinks;
+export default astroRehypeRelativeMarkdownLinks;

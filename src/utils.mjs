@@ -6,11 +6,13 @@ const validMarkdownExtensions = [".md", ".mdx"];
 // value to be used when normalising the content paths that contain spaces (used in join)
 const ASTRO_PATH_JOIN_DELIMITER = "-";
 
+/** @type {import('./utils').IsCurrentDirectoryFn} */
 function isCurrentDirectory(fpath) {
   const first2chars = fpath.slice(0, 2);
   return first2chars === "." + pathSeparator || first2chars === "./";
 }
 
+/** @type {import('./utils').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
   if (typeof npath !== "string") {
     return npath;
@@ -31,6 +33,7 @@ export const replaceExt = (npath, ext) => {
   return nFilepath;
 };
 
+/** @type {import('./utils').IsValidRelativeLinkFn} */
 export const isValidRelativeLink = (link) => {
   if (!link) {
     return false;
@@ -47,6 +50,7 @@ export const isValidRelativeLink = (link) => {
   return true;
 };
 
+/** @type {import('./utils').SplitPathFromQueryAndFragmentFn} */
 export const splitPathFromQueryAndFragment = (url) => {
   const indexQuery = url.indexOf("?");
   const indexHash = url.indexOf("#");
