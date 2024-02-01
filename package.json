@@ -1,7 +1,7 @@
 {
   "name": "astro-rehype-relative-markdown-links",
   "description": "A rehype plugin built for Astro that aims to transform relative links in MD and MDX files into the proper URL path",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "keywords": [
     "astro",
     "rehype",
