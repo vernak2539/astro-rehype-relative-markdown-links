@@ -17,8 +17,6 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
 
-const defaultBase = "";
-
 /** @param options {import('./index').Options} */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
@@ -84,8 +82,6 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
         webPathFinal += queryStringAndFragment;
       }
 
-      // add changes specific to our current environment
-      // webPathFinal =  webPathFinal.replace("/docs",  options.base || defaultBase)
       webPathFinal = normaliseAstroOutputPath(webPathFinal);
 
       // Debugging
