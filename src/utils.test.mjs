@@ -116,4 +116,38 @@ describe("normaliseAstroOutputPath", () => {
 
     assert.equal(actual, "/foo-testing-test");
   });
+
+  describe("prefix base to path", () => {
+    test("base with no slashes", () => {
+      const actual = normaliseAstroOutputPath("/foo testing test", {
+        astroBaseUrl: "base",
+      });
+
+      assert.equal(actual, "/base/foo-testing-test");
+    });
+
+    test("base with slash at start", () => {
+      const actual = normaliseAstroOutputPath("/foo testing test", {
+        astroBaseUrl: "/base",
+      });
+
+      assert.equal(actual, "/base/foo-testing-test");
+    });
+
+    test("base with slash at end", () => {
+      const actual = normaliseAstroOutputPath("/foo testing test", {
+        astroBaseUrl: "base/",
+      });
+
+      assert.equal(actual, "/base/foo-testing-test");
+    });
+
+    test("base with slash at start and end", () => {
+      const actual = normaliseAstroOutputPath("/foo testing test", {
+        astroBaseUrl: "/base/",
+      });
+
+      assert.equal(actual, "/base/foo-testing-test");
+    });
+  });
 });

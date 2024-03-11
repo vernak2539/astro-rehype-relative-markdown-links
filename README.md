@@ -75,6 +75,7 @@ To set custom options, pass an object to the plugin like below:
 ```js
 const options = {
   contentPath: "", // where you store your content relative to the root directory. default: 'src/content'
+  astroBasePath: "", // the base path of your astro project. default: '/'
 };
 
 export default defineConfig({

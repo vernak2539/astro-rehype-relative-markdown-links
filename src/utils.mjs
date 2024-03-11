@@ -75,10 +75,26 @@ export const splitPathFromQueryAndFragment = (url) => {
   return [decodeURI(splitUrl), splitQueryStringAndHash];
 };
 
-export const normaliseAstroOutputPath = (initialPath) => {
+/**
+ * @param initialPath {string}
+ * @param options {import('./index').Options}
+ */
+export const normaliseAstroOutputPath = (initialPath, options = {}) => {
   if (!initialPath || typeof initialPath !== "string") {
     return;
   }
 
-  return initialPath.toLowerCase().replace(/ /g, ASTRO_PATH_JOIN_DELIMITER);
+  const normalisedPath = initialPath
+    .toLowerCase()
+    .replace(/ /g, ASTRO_PATH_JOIN_DELIMITER);
+
+  if (!options.astroBaseUrl) {
+    return normalisedPath;
+  }
+
+  if (options.astroBaseUrl.startsWith("/")) {
+    return path.join(options.astroBaseUrl, normalisedPath);
+  }
+
+  return "/" + path.join(options.astroBaseUrl, normalisedPath);
 };
