@@ -88,13 +88,13 @@ export const normaliseAstroOutputPath = (initialPath, options = {}) => {
     .toLowerCase()
     .replace(/ /g, ASTRO_PATH_JOIN_DELIMITER);
 
-  if (!options.astroBaseUrl) {
+  if (!options.basePath) {
     return normalisedPath;
   }
 
-  if (options.astroBaseUrl.startsWith("/")) {
-    return path.join(options.astroBaseUrl, normalisedPath);
+  if (options.basePath.startsWith("/")) {
+    return path.join(options.basePath, normalisedPath);
   }
 
-  return "/" + path.join(options.astroBaseUrl, normalisedPath);
+  return "/" + path.join(options.basePath, normalisedPath);
 };

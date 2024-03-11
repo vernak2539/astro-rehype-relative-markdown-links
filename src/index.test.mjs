@@ -84,7 +84,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       .use(testSetupRehype)
       .use(astroRehypeRelativeMarkdownLinks, {
         contentPath: "src",
-        astroBaseUrl: "/testBase",
+        basePath: "/testBase",
       })
       .process(input);
 
