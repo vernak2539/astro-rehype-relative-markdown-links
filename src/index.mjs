@@ -82,7 +82,7 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
         webPathFinal += queryStringAndFragment;
       }
 
-      webPathFinal = normaliseAstroOutputPath(webPathFinal);
+      webPathFinal = normaliseAstroOutputPath(webPathFinal, options);
 
       // Debugging
       debug("--------------------------------");

@@ -78,6 +78,22 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
     assert.equal(actual, expected);
   });
 
+  await t.test("should prefix base to output", async () => {
+    const input = '<a href="./fixtures/test.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, {
+        contentPath: "src",
+        basePath: "/testBase",
+      })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/testBase/fixtures/test">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });
+
   await t.test(
     "should not replace path if relative file does not exist",
     async () => {
