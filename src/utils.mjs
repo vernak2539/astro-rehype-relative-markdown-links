@@ -76,8 +76,8 @@ export const splitPathFromQueryAndFragment = (url) => {
 };
 
 /**
- * @param initialPath {string}
- * @param options {import('./index').Options}
+ * @param {string} initialPath
+ * @param {import('./index').Options} options
  */
 export const normaliseAstroOutputPath = (initialPath, options = {}) => {
   if (!initialPath || typeof initialPath !== "string") {

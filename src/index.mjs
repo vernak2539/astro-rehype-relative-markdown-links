@@ -17,7 +17,7 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
 
-/** @param options {import('./index').Options} */
+/** @param {import('./index').Options} options */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
     visit(tree, "element", (node) => {
