@@ -116,6 +116,7 @@ __metadata:
   resolution: "astro-rehype-relative-markdown-links@workspace:."
   dependencies:
     debug: "npm:^4.3.4"
+    github-slugger: "npm:^2.0.0"
     gray-matter: "npm:^4.0.3"
     prettier: "npm:^4.0.0-alpha.8"
     rehype: "npm:^13.0.1"
@@ -267,6 +268,13 @@ __metadata:
   dependencies:
     find-up-json: "npm:^2.0.1"
   checksum: 10c0/45792713e235865d6c63d9c6421ec153b2c0da6fe1e12c70d6088c628fa4c6d77a21c7780c003c62f34e77b467cc9f53ec10ebe2e4a5804173ef938130197d86
+  languageName: node
+  linkType: hard
+
+"github-slugger@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "github-slugger@npm:2.0.0"
+  checksum: 10c0/21b912b6b1e48f1e5a50b2292b48df0ff6abeeb0691b161b3d93d84f4ae6b1acd6ae23702e914af7ea5d441c096453cf0f621b72d57893946618d21dd1a1c486
   languageName: node
   linkType: hard
 
