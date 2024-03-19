@@ -109,4 +109,20 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       assert.equal(actual, expected);
     },
   );
+
+  await t.test(
+    "should transform paths with non alphanumeric characters",
+    async () => {
+      const input = '<a href="./fixtures/test%20(non-alpha).md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test-non-alpha">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
 });

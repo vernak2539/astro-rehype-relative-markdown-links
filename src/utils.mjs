@@ -1,10 +1,8 @@
 import path from "path";
+import { slug as githubSlug } from "github-slugger";
 
 const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
-
-// value to be used when normalising the content paths that contain spaces (used in join)
-const ASTRO_PATH_JOIN_DELIMITER = "-";
 
 /** @type {import('./utils').IsCurrentDirectoryFn} */
 function isCurrentDirectory(fpath) {
@@ -84,9 +82,18 @@ export const normaliseAstroOutputPath = (initialPath, options = {}) => {
     return;
   }
 
-  const normalisedPath = initialPath
-    .toLowerCase()
-    .replace(/ /g, ASTRO_PATH_JOIN_DELIMITER);
+  const [pathWithoutQueryAndFragment, queryStringAndFragment] =
+    splitPathFromQueryAndFragment(initialPath);
+
+  const pathSegments = pathWithoutQueryAndFragment.split(pathSeparator);
+
+  let normalisedPath = pathSegments
+    .map((segment) => githubSlug(segment).toLowerCase())
+    .join("/");
+
+  if (queryStringAndFragment) {
+    normalisedPath += queryStringAndFragment;
+  }
 
   if (!options.basePath) {
     return normalisedPath;
