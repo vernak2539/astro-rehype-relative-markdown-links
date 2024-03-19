@@ -88,7 +88,7 @@ export const normaliseAstroOutputPath = (initialPath, options = {}) => {
   const pathSegments = pathWithoutQueryAndFragment.split(pathSeparator);
 
   let normalisedPath = pathSegments
-    .map((segment) => githubSlug(segment).toLowerCase())
+    .map((segment) => githubSlug(segment))
     .join("/");
 
   if (queryStringAndFragment) {
