@@ -19,6 +19,7 @@
     "email": "alvernacchia@gmail.com"
   },
   "scripts": {
+    "changelog": "auto-changelog -p",
     "prettier": "prettier ./src/** -w",
     "test": "node --test"
   },
@@ -32,8 +33,14 @@
     "astro": ">=2.x <5"
   },
   "devDependencies": {
+    "auto-changelog": "^2.4.0",
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1"
   },
-  "packageManager": "yarn@4.1.0"
+  "packageManager": "yarn@4.1.0",
+  "auto-changelog": {
+    "template": "keepachangelog",
+    "hideCredit": true,
+    "commitLimit": false
+  }
 }
