@@ -8,6 +8,8 @@ import {
   isValidRelativeLink,
   splitPathFromQueryAndFragment,
   normaliseAstroOutputPath,
+  generateSlug,
+  resolveSlug,
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
@@ -49,34 +51,22 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       // read gray matter from relative file
       const relativeFileContent = fs.readFileSync(relativeFile);
       const { data: frontmatter } = matter(relativeFileContent);
-      const relativeFileCustomSlug = frontmatter.slug;
-      const relativeFileHasCustomSlug = Boolean(relativeFileCustomSlug);
+      const frontmatterSlug = frontmatter.slug;
+      const contentDir = options.contentPath || defaultContentPath;
 
-      let webPathFinal;
-      const webPath = relativeFile.split(
-        options.contentPath || defaultContentPath,
-      )[1];
+      const relativeToContentPath = path.relative(contentDir, relativeFile);
+      const collectionName = path.dirname(relativeToContentPath).split(path.posix.sep)[0];
+      const relativeToCollectionPath = path.relative(collectionName, relativeToContentPath);
+      const withoutFileExt = replaceExt(relativeToCollectionPath, "")
+      const pathSegments = withoutFileExt.split(path.posix.sep);
+      const generatedSlug = generateSlug(pathSegments);
+      const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
 
-      if (relativeFileHasCustomSlug) {
-        webPathFinal =
-          path.posix.sep +
-          [
-            webPath.split(path.sep)[1], // this should be the content collection
-            relativeFileCustomSlug,
-          ].join(path.posix.sep);
-      } else {
-        webPathFinal = replaceExt(webPath, "");
-      }
-
-      webPathFinal = webPathFinal.split(path.sep);
-
-      // Remove index from the end of the path to satsify instances where we'll be generating
-      // index.html files for directories
-      if (webPathFinal[webPathFinal.length - 1] === "index") {
-        webPathFinal.pop();
-      }
-
-      webPathFinal = webPathFinal.join(path.posix.sep);
+      let webPathFinal = path.posix.sep +
+        [
+          collectionName,
+          resolvedSlug,
+        ].join(path.posix.sep);
 
       if (queryStringAndFragment) {
         webPathFinal += queryStringAndFragment;
@@ -86,17 +76,16 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
 
       // Debugging
       debug("--------------------------------");
-      debug("md/mdx AST Current File        : %s", currentFile);
-      debug("md/mdx AST Current File Dir    : %s", currentFileDirectory);
-      debug("md/mdx AST href full           : %s", nodeHref);
-      debug("md/mdx AST href path           : %s", url);
-      debug("md/mdx AST href qs and/or hash : %s", queryStringAndFragment);
-      debug("File relative to current md/mdx: %s", relativeFile);
-      debug("File relative has custom slug  : %s", relativeFileHasCustomSlug);
-      if (relativeFileHasCustomSlug) {
-        debug("File relative custom slug      : %s", relativeFileCustomSlug);
-      }
-      debug("Final URL path                 : %s", webPathFinal);
+      debug("md/mdx AST Current File         : %s", currentFile);
+      debug("md/mdx AST Current File Dir     : %s", currentFileDirectory);
+      debug("md/mdx AST href full            : %s", nodeHref);
+      debug("md/mdx AST href path            : %s", url);
+      debug("md/mdx AST href qs and/or hash  : %s", queryStringAndFragment);
+      debug("File relative to current md/mdx : %s", relativeFile);
+      debug("File relative custom slug       : %s", frontmatterSlug);
+      debug("File relative generated slug    : %s", generatedSlug);
+      debug("File relative resolved slug     : %s", resolvedSlug);
+      debug("Final URL path                  : %s", webPathFinal);
 
       node.properties.href = webPathFinal;
     });

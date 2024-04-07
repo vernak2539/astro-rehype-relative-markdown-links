@@ -27,7 +27,8 @@
     "debug": "^4.3.4",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
-    "unist-util-visit": "^4.1.2"
+    "unist-util-visit": "^4.1.2",
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "astro": ">=2.x <5"

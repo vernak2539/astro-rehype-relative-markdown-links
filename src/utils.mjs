@@ -1,5 +1,6 @@
 import path from "path";
 import { slug as githubSlug } from "github-slugger";
+import { z } from 'zod';
 
 const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
@@ -82,26 +83,26 @@ export const normaliseAstroOutputPath = (initialPath, options = {}) => {
     return;
   }
 
-  const [pathWithoutQueryAndFragment, queryStringAndFragment] =
-    splitPathFromQueryAndFragment(initialPath);
-
-  const pathSegments = pathWithoutQueryAndFragment.split(pathSeparator);
-
-  let normalisedPath = pathSegments
-    .map((segment) => githubSlug(segment))
-    .join("/");
-
-  if (queryStringAndFragment) {
-    normalisedPath += queryStringAndFragment;
-  }
-
   if (!options.basePath) {
-    return normalisedPath;
+    return initialPath;
   }
 
   if (options.basePath.startsWith("/")) {
-    return path.join(options.basePath, normalisedPath);
+    return path.join(options.basePath, initialPath);
   }
 
-  return "/" + path.join(options.basePath, normalisedPath);
+  return "/" + path.join(options.basePath, initialPath);
 };
+
+/** @type {import('./utils').GenerateSlug} */
+export const generateSlug = (pathSegments) => {
+  return pathSegments
+    .map((segment) => githubSlug(segment))
+    .join("/")
+    .replace(/\/index$/, '');
+}
+
+/** @type {import('./utils').ResolveSlug} */
+export const resolveSlug = (generatedSlug, frontmatterSlug) => {
+  return z.string().default(generatedSlug).parse(frontmatterSlug);
+}
