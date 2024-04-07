@@ -36,7 +36,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
     assert.equal(actual, expected);
   });
 
-  await t.test("should transform index.md paths", async () => {
+  await t.test("should transform and contain index for root collection index.md paths", async () => {
     const input = '<a href="./fixtures/index.md">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
@@ -44,7 +44,46 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       .process(input);
 
     const expected =
-      '<html><head></head><body><a href="/fixtures">foo</a></body></html>';
+      '<html><head></head><body><a href="/fixtures/index">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });
+
+  await t.test("should transform root collection index.md paths with empty string custom slug", async () => {
+    const input = '<a href="./fixtures/dir-test-custom-slug/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/dir-test-custom-slug/">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });  
+
+  await t.test("should transform root collection index.md paths with non-empty string custom slug", async () => {
+    const input = '<a href="./fixtures/dir-test-custom-slug-2/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/dir-test-custom-slug-2/myindex">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });    
+
+  await t.test("should transform non-root collection index.md paths", async () => {
+    const input = '<a href="./fixtures/dir-test/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/fixtures/dir-test">foo</a></body></html>';
 
     assert.equal(actual, expected);
   });
