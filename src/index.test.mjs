@@ -156,5 +156,21 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
 
       assert.equal(actual, expected);
     },
+  );
+
+  await t.test(
+    "should not transform content collection path segment",
+    async () => {
+      const input = '<a href="./fixtures.md/test-1.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures.md/test-1">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
   );   
 });
