@@ -1,5 +1,5 @@
 ---
-slug: test.custom.slug
+slug: test.custom.slug-custom
 ---
 
 Test Custom Slug

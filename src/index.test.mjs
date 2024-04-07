@@ -175,7 +175,23 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
         .process(input);
 
       const expected =
-        '<html><head></head><body><a href="/fixtures/test.custom.slug">foo</a></body></html>';
+        '<html><head></head><body><a href="/fixtures/test.custom.slug-custom">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+
+  await t.test(
+    "should transform with correct path when destination has custom slug with file extension",
+    async () => {
+      const input = '<a href="./fixtures/test-custom-slug-ext.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test.custom.slug.md">foo</a></body></html>';
 
       assert.equal(actual, expected);
     },
