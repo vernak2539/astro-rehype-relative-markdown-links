@@ -8,6 +8,7 @@ import {
   isValidRelativeLink,
   splitPathFromQueryAndFragment,
   normaliseAstroOutputPath,
+  isValidFile
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
@@ -40,7 +41,7 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const currentFileDirectory = currentFile.replace(currentFileName, "");
 
       const relativeFile = path.resolve(currentFileDirectory, url);
-      const relativeFileExists = fs.existsSync(relativeFile);
+      const relativeFileExists = isValidFile(relativeFile);
 
       if (!relativeFileExists) {
         return;
