@@ -125,4 +125,36 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       assert.equal(actual, expected);
     },
   );
+
+  await t.test(
+    "should transform with correct path when destination has custom slug",
+    async () => {
+      const input = '<a href="./fixtures/test-custom-slug.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test.custom.slug">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+  
+  await t.test(
+    "should transform with correct path when destination in subpath has custom slug",
+    async () => {
+      const input = '<a href="./fixtures/dir-test-custom-slug/test-custom-slug-in-dot-dir.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/dir.test.custom.slug/test.custom.slug">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );   
 });
