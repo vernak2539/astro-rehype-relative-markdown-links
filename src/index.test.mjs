@@ -235,7 +235,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/index.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
         .process(input);
 
       const expected =
@@ -251,7 +251,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/dir-test-custom-slug/index.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures/dir-test-custom-slug" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures/dir-test-custom-slug", collectionPathMode: 'root' })
         .process(input);
 
       const expected =
@@ -267,7 +267,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/test.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
         .process(input);
 
       const expected =
@@ -283,7 +283,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/test-custom-slug.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
         .process(input);
 
       const expected =
@@ -299,7 +299,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/dir-test/index.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
         .process(input);
 
       const expected =
@@ -315,7 +315,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/dir-test/dir-test-child.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
         .process(input);
 
       const expected =
@@ -331,7 +331,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const input = '<a href="./fixtures/dir-test-custom-slug.md/test-custom-slug-in-dot-dir.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
         .process(input);
 
       const expected =

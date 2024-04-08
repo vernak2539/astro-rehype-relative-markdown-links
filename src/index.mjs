@@ -19,6 +19,9 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
 
+/** @type {import("./index").CollectionPathMode} */
+const defaultCollectionPathMode = 'subdirectory';
+
 /** @param {import('./index').Options} options */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
@@ -53,18 +56,18 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const { data: frontmatter } = matter(relativeFileContent);
       const frontmatterSlug = frontmatter.slug;
       const contentDir = options.contentPath || defaultContentPath;
-
+      const collectionPathMode = options.collectionPathMode || defaultCollectionPathMode;
       const relativeToContentPath = path.relative(contentDir, relativeFile);
-      const collectionName = path.dirname(relativeToContentPath).split(path.posix.sep)[0];
+      const collectionName = collectionPathMode === 'root' ? "" : path.dirname(relativeToContentPath).split(path.posix.sep)[0];
       const relativeToCollectionPath = path.relative(collectionName, relativeToContentPath);
       const withoutFileExt = replaceExt(relativeToCollectionPath, "")
       const pathSegments = withoutFileExt.split(path.posix.sep);
       const generatedSlug = generateSlug(pathSegments);
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
 
-      let webPathFinal = path.posix.sep +
+      let webPathFinal =
         [
-          collectionName,
+          !collectionName ? '' : (path.posix.sep + collectionName),
           resolvedSlug,
         ].join(path.posix.sep);
 
