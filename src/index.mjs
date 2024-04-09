@@ -10,6 +10,7 @@ import {
   normaliseAstroOutputPath,
   generateSlug,
   resolveSlug,
+  applyTrailingSlash
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
@@ -18,6 +19,9 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
+
+/** @type {import("./index").TrailingSlash} */
+const defaultTrailingSlash = 'ignore';
 
 /** @param {import('./index').Options} options */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
@@ -61,12 +65,16 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const pathSegments = withoutFileExt.split(path.posix.sep);
       const generatedSlug = generateSlug(pathSegments);
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
+      const trailingSlashMode = options.trailingSlash || defaultTrailingSlash;
 
-      let webPathFinal = path.posix.sep +
+      const resolvedUrl = path.posix.sep +
         [
           collectionName,
           resolvedSlug,
         ].join(path.posix.sep);
+      
+      // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
+      let webPathFinal = applyTrailingSlash((frontmatterSlug === '' ? '/' : frontmatterSlug) || url, resolvedUrl, trailingSlashMode);
 
       if (queryStringAndFragment) {
         webPathFinal += queryStringAndFragment;
@@ -76,16 +84,21 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
 
       // Debugging
       debug("--------------------------------");
-      debug("md/mdx AST Current File         : %s", currentFile);
-      debug("md/mdx AST Current File Dir     : %s", currentFileDirectory);
-      debug("md/mdx AST href full            : %s", nodeHref);
-      debug("md/mdx AST href path            : %s", url);
-      debug("md/mdx AST href qs and/or hash  : %s", queryStringAndFragment);
-      debug("File relative to current md/mdx : %s", relativeFile);
-      debug("File relative custom slug       : %s", frontmatterSlug);
-      debug("File relative generated slug    : %s", generatedSlug);
-      debug("File relative resolved slug     : %s", resolvedSlug);
-      debug("Final URL path                  : %s", webPathFinal);
+      debug("ContentDir                         : %s", contentDir);
+      debug("TrailingSlashMode                  : %s", trailingSlashMode);
+      debug("md/mdx AST Current File            : %s", currentFile);
+      debug("md/mdx AST Current File Dir        : %s", currentFileDirectory);
+      debug("md/mdx AST href full               : %s", nodeHref);
+      debug("md/mdx AST href path               : %s", url);
+      debug("md/mdx AST href qs and/or hash     : %s", queryStringAndFragment);
+      debug("File relative to current md/mdx    : %s", relativeFile);
+      debug("File relative to content path      : %s", relativeToContentPath);
+      debug("Collection Name                    : %s", collectionName);
+      debug("File relative to collection path   : %s", relativeToCollectionPath);
+      debug("File relative custom slug          : %s", frontmatterSlug);
+      debug("File relative generated slug       : %s", generatedSlug);
+      debug("File relative resolved slug        : %s", resolvedSlug);
+      debug("Final URL path                     : %s", webPathFinal);
 
       node.properties.href = webPathFinal;
     });
