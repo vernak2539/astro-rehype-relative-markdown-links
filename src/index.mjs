@@ -79,6 +79,7 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
 
       // Debugging
       debug("--------------------------------");
+      debug("CollectionPathMode              : %s", collectionPathMode);
       debug("md/mdx AST Current File         : %s", currentFile);
       debug("md/mdx AST Current File Dir     : %s", currentFileDirectory);
       debug("md/mdx AST href full            : %s", nodeHref);
