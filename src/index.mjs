@@ -23,6 +23,9 @@ const defaultContentPath = ["src", "content"].join(path.sep);
 /** @type {import("./index").TrailingSlash} */
 const defaultTrailingSlash = 'ignore';
 
+/** @type {import("./index").CollectionPathMode} */
+const defaultCollectionPathMode = 'subdirectory';
+
 /** @param {import('./index').Options} options */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
   return (tree, file) => {
@@ -57,9 +60,9 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const { data: frontmatter } = matter(relativeFileContent);
       const frontmatterSlug = frontmatter.slug;
       const contentDir = options.contentPath || defaultContentPath;
-
+      const collectionPathMode = options.collectionPathMode || defaultCollectionPathMode;
       const relativeToContentPath = path.relative(contentDir, relativeFile);
-      const collectionName = path.dirname(relativeToContentPath).split(path.posix.sep)[0];
+      const collectionName = collectionPathMode === 'root' ? "" : path.dirname(relativeToContentPath).split(path.posix.sep)[0];
       const relativeToCollectionPath = path.relative(collectionName, relativeToContentPath);
       const withoutFileExt = replaceExt(relativeToCollectionPath, "")
       const pathSegments = withoutFileExt.split(path.posix.sep);
@@ -67,9 +70,9 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
       const trailingSlashMode = options.trailingSlash || defaultTrailingSlash;
 
-      const resolvedUrl = path.posix.sep +
+      const resolvedUrl =
         [
-          collectionName,
+          !collectionName ? '' : (path.posix.sep + collectionName),
           resolvedSlug,
         ].join(path.posix.sep);
       
@@ -86,6 +89,7 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       debug("--------------------------------");
       debug("ContentDir                         : %s", contentDir);
       debug("TrailingSlashMode                  : %s", trailingSlashMode);
+      debug("CollectionPathMode                 : %s", collectionPathMode);
       debug("md/mdx AST Current File            : %s", currentFile);
       debug("md/mdx AST Current File Dir        : %s", currentFileDirectory);
       debug("md/mdx AST href full               : %s", nodeHref);

@@ -296,4 +296,116 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
 
     assert.equal(actual, expected);
   });
+
+  await t.test(
+    "should transform and contain index for root index.md when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/index.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/index">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+
+  await t.test(
+    "should transform root index.md with empty string custom slug when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/dir-test-custom-slug/index.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures/dir-test-custom-slug", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );  
+
+  await t.test(
+    "should transform root path when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/test">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+  
+  await t.test(
+    "should transform root path custom slug when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/test-custom-slug.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/test.custom.slug-custom">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );  
+
+  await t.test(
+    "should transform subdir index.md when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/dir-test/index.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/dir-test">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+
+  await t.test(
+    "should transform subdir path when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/dir-test/dir-test-child.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/dir-test/dir-test-child">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+
+  await t.test(
+    "should transform subdir path custom slug when content path same as collection path",
+    async () => {
+      const input = '<a href="./fixtures/dir-test-custom-slug.md/test-custom-slug-in-dot-dir.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures", collectionPathMode: 'root' })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/dir-test-custom-slug.md/test.custom.slug.in.dot.dir">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );  
 });
