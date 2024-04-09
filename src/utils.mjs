@@ -1,4 +1,5 @@
 import path from "path";
+import { statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 
@@ -48,6 +49,23 @@ export const isValidRelativeLink = (link) => {
 
   return true;
 };
+
+/** @type {import('./utils').IsValidFile} */
+export const isValidFile = (path) => {
+  if (!path) {
+		return false;
+	}
+
+	try {
+		return statSync(path).isFile();
+	} catch (error) {
+		if (error.code === 'ENOENT') {
+			return false;
+		}
+
+		throw error;
+	}
+}
 
 /** @type {import('./utils').SplitPathFromQueryAndFragmentFn} */
 export const splitPathFromQueryAndFragment = (url) => {
