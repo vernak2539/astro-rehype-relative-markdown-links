@@ -6,6 +6,7 @@ import {
   normaliseAstroOutputPath,
   replaceExt,
   splitPathFromQueryAndFragment,
+  isValidFile,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -149,5 +150,91 @@ describe("normaliseAstroOutputPath", () => {
 
       assert.equal(actual, "/base/foo-testing-test");
     });
+  });
+});
+
+describe("isValidFile", () => {
+  test("return true if relative path to .md file exists", () => {
+    const actual = isValidFile("./src/fixtures/test.md");
+
+    assert.equal(actual, true);
+  });
+
+  test("return true if relative path to .mdx file that exists", () => {
+    const actual = isValidFile("./src/fixtures/test.mdx");
+
+    assert.equal(actual, true);
+  });
+
+  test("return true if relative path to a file exists", () => {
+    const actual = isValidFile("./src/fixtures/test.txt");
+
+    assert.equal(actual, true);
+  });
+
+  test("return false if relative path to .md file does not exist", () => {
+    const actual = isValidFile("./src/fixtures/does-not-exist.md");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if relative path to .mdx file does not exist", () => {
+    const actual = isValidFile("./src/fixtures/does-not-exist.mdx");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if relative path to a file does not exist", () => {
+    const actual = isValidFile("./src/fixtures/does-not-exist.txt");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if link empty string", () => {
+    const actual = isValidFile("");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if link is null", () => {
+    const actual = isValidFile(null);
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if link is undefined", () => {
+    const actual = isValidFile();
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .md that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.md");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .md/ that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.md/");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .mdx that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.mdx");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .mdx/ that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.mdx/");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.txt");
+
+    assert.equal(actual, false);
   });
 });
