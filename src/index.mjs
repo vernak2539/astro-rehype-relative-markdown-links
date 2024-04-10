@@ -8,7 +8,7 @@ import {
   isValidRelativeLink,
   splitPathFromQueryAndFragment,
   normaliseAstroOutputPath,
-  isValidFile
+  isValidFile,
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro

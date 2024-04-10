@@ -52,19 +52,19 @@ export const isValidRelativeLink = (link) => {
 /** @type {import('./utils').IsValidFile} */
 export const isValidFile = (path) => {
   if (!path) {
-		return false;
-	}
+    return false;
+  }
 
-	try {
-		return statSync(path).isFile();
-	} catch (error) {
-		if (error.code === 'ENOENT') {
-			return false;
-		}
+  try {
+    return statSync(path).isFile();
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return false;
+    }
 
-		throw error;
-	}
-}
+    throw error;
+  }
+};
 
 /** @type {import('./utils').SplitPathFromQueryAndFragmentFn} */
 export const splitPathFromQueryAndFragment = (url) => {

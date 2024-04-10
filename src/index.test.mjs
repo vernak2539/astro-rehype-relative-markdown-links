@@ -78,7 +78,8 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
         '<html><head></head><body><a href="/fixtures/test?q=q#hash">foo</a></body></html>';
 
       assert.equal(actual, expected);
-  });
+    },
+  );
 
   await t.test(
     "should prefix base to output on file paths that exist",
@@ -96,7 +97,8 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
         '<html><head></head><body><a href="/testBase/fixtures/test">foo</a></body></html>';
 
       assert.equal(actual, expected);
-  });
+    },
+  );
 
   await t.test(
     "should not replace path if relative file does not exist",
@@ -156,7 +158,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       const expected = `<html><head></head><body><a href="${absolutePath}">foo</a></body></html>`;
 
       assert.equal(actual, expected);
-    }
+    },
   );
 
   await t.test(
@@ -172,7 +174,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
         '<html><head></head><body><a href="./fixtures/does-not-exist/index.md">foo</a></body></html>';
 
       assert.equal(actual, expected);
-    }
+    },
   );
 
   await t.test("should not replace path if .md directory exists", async () => {
@@ -214,7 +216,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
         '<html><head></head><body><a href="./fixtures/dir-does-not-exist.md/">foo</a></body></html>';
 
       assert.equal(actual, expected);
-    }
+    },
   );
 
   await t.test(
@@ -230,6 +232,6 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
         '<html><head></head><body><a href="./fixtures/dir-does-not-exist.mdx/">foo</a></body></html>';
 
       assert.equal(actual, expected);
-    }
+    },
   );
 });
