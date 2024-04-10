@@ -148,7 +148,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
   await t.test(
     "should not replace absolute path if file does not exist",
     async () => {
-      const absolutePath = `${path.dirname("./fixtures/test.md")}/does-not-exist.md`;
+      const absolutePath = `${path.dirname(path.resolve("./fixtures/test.md"))}/does-not-exist.md`;
       const input = `<a href="${absolutePath}">foo</a>`;
       const { value: actual } = await rehype()
         .use(testSetupRehype)
