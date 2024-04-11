@@ -27,7 +27,7 @@ const defaultCollectionPathMode = "subdirectory";
 /** @type {import("./index").TrailingSlash} */
 const defaultTrailingSlash = "ignore";
 
-const NO_COLLECTION_NAME = "";
+const PATH_SEGMENT_EMPTY = "";
 
 /** @param {import('./index').Options} options */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
@@ -101,14 +101,15 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       //             the collection path is equivalent to the site root path
       //   - `subdirectory` - Determine the collection name using Astros default assumption that content collections are subdirs of content path
       //                      when the collectionPathMode is `subdirectory` or
-      const collectionName =
-        collectionPathMode === "root"
-          ? NO_COLLECTION_NAME
-          : path.dirname(relativeToContentPath).split(path.posix.sep)[0];
+      const collectionName = path
+        .dirname(relativeToContentPath)
+        .split(path.posix.sep)[0];
+      const collectionPathSegment =
+        collectionPathMode === "root" ? PATH_SEGMENT_EMPTY : collectionName;
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
       const relativeToCollectionPath = path.relative(
-        collectionName,
+        collectionPathSegment,
         relativeToContentPath,
       );
       // md/mdx extentions should not be in the final url
@@ -126,15 +127,15 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       //        directory name of the content collection maps 1:1 to the site page path serviing the content collection
       //        page (see details above)
       const resolvedUrl = [
-        collectionName === NO_COLLECTION_NAME
+        collectionPathSegment === PATH_SEGMENT_EMPTY
           ? ""
-          : path.posix.sep + collectionName,
+          : path.posix.sep + collectionPathSegment,
         resolvedSlug,
       ].join(path.posix.sep);
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
       let webPathFinal = applyTrailingSlash(
-        (frontmatterSlug === "" ? "/" : frontmatterSlug) || url,
+        (frontmatterSlug === PATH_SEGMENT_EMPTY ? "/" : frontmatterSlug) || url,
         resolvedUrl,
         trailingSlashMode,
       );
@@ -146,26 +147,24 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       webPathFinal = normaliseAstroOutputPath(webPathFinal, options);
 
       // Debugging
-      debug("--------------------------------");
-      debug("ContentDir                         : %s", contentDir);
-      debug("CollectionPathMode                 : %s", collectionPathMode);
-      debug("TrailingSlashMode                  : %s", trailingSlashMode);
-      debug("md/mdx AST Current File            : %s", currentFile);
-      debug("md/mdx AST Current File Dir        : %s", currentFileDirectory);
-      debug("md/mdx AST href full               : %s", nodeHref);
-      debug("md/mdx AST href path               : %s", url);
-      debug("md/mdx AST href qs and/or hash     : %s", queryStringAndFragment);
-      debug("File relative to current md/mdx    : %s", relativeFile);
-      debug("File relative to content path      : %s", relativeToContentPath);
-      debug("Collection Name                    : %s", collectionName);
-      debug(
-        "File relative to collection path   : %s",
-        relativeToCollectionPath,
-      );
-      debug("File relative custom slug          : %s", frontmatterSlug);
-      debug("File relative generated slug       : %s", generatedSlug);
-      debug("File relative resolved slug        : %s", resolvedSlug);
-      debug("Final URL path                     : %s", webPathFinal);
+      debug("----------------------------------");
+      debug("ContentDir                       : %s", contentDir);
+      debug("CollectionPathMode               : %s", collectionPathMode);
+      debug("TrailingSlashMode                : %s", trailingSlashMode);
+      debug("md/mdx AST Current File          : %s", currentFile);
+      debug("md/mdx AST Current File Dir      : %s", currentFileDirectory);
+      debug("md/mdx AST href full             : %s", nodeHref);
+      debug("md/mdx AST href path             : %s", url);
+      debug("md/mdx AST href qs and/or hash   : %s", queryStringAndFragment);
+      debug("File relative to current md/mdx  : %s", relativeFile);
+      debug("File relative to content path    : %s", relativeToContentPath);
+      debug("Collection Name                  : %s", collectionName);
+      debug("Collection Path Segment          : %s", collectionPathSegment);
+      debug("File relative to collection path : %s", relativeToCollectionPath);
+      debug("File relative custom slug        : %s", frontmatterSlug);
+      debug("File relative generated slug     : %s", generatedSlug);
+      debug("File relative resolved slug      : %s", resolvedSlug);
+      debug("Final URL path                   : %s", webPathFinal);
 
       node.properties.href = webPathFinal;
     });
