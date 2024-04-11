@@ -11,6 +11,7 @@ astro-rehype-relative-markdown-links
 ### Type Aliases
 
 - [CollectionPathMode](README.md#collectionpathmode)
+- [TrailingSlash](README.md#trailingslash)
 
 ## Type Aliases
 
@@ -21,3 +22,13 @@ astro-rehype-relative-markdown-links
 #### Defined in
 
 [index.d.ts:1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L1)
+
+___
+
+### TrailingSlash
+
+Ƭ **TrailingSlash**: ``"always"`` \| ``"never"`` \| ``"ignore"``
+
+#### Defined in
+
+[index.d.ts:3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L3)
