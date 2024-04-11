@@ -122,6 +122,7 @@ __metadata:
     prettier: "npm:^4.0.0-alpha.8"
     rehype: "npm:^13.0.1"
     unist-util-visit: "npm:^4.1.2"
+    zod: "npm:^3.22.4"
   peerDependencies:
     astro: ">=2.x <5"
   languageName: unknown
@@ -1167,6 +1168,13 @@ __metadata:
   dependencies:
     grammex: "npm:^3.1.1"
   checksum: 10c0/b973b61bef04bcc6963cca41f9dab1e3916dce9f8aa23c23e8a063d5144a61c08427b6a18b3686fe184d19e62a5b22f8636e936bdc38ee874266db7a8ded7a67
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4":
+  version: 3.22.4
+  resolution: "zod@npm:3.22.4"
+  checksum: 10c0/7578ab283dac0eee66a0ad0fc4a7f28c43e6745aadb3a529f59a4b851aa10872b3890398b3160f257f4b6817b4ce643debdda4fb21a2c040adda7862cab0a587
   languageName: node
   linkType: hard
 

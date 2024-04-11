@@ -36,7 +36,7 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
     assert.equal(actual, expected);
   });
 
-  await t.test("should transform index.md file paths that exist", async () => {
+  await t.test("should transform and contain index for root collection index.md file paths that exist", async () => {
     const input = '<a href="./fixtures/index.md">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
@@ -44,7 +44,46 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       .process(input);
 
     const expected =
-      '<html><head></head><body><a href="/fixtures">foo</a></body></html>';
+      '<html><head></head><body><a href="/fixtures/index">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });
+
+  await t.test("should transform root collection index.md paths with empty string custom slug", async () => {
+    const input = '<a href="./fixtures/dir-test-custom-slug/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/dir-test-custom-slug/">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });  
+
+  await t.test("should transform root collection index.md paths with non-empty string custom slug", async () => {
+    const input = '<a href="./fixtures/dir-test-custom-slug-2/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/dir-test-custom-slug-2/myindex">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });    
+
+  await t.test("should transform non-root collection index.md paths", async () => {
+    const input = '<a href="./fixtures/dir-test/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/fixtures/dir-test">foo</a></body></html>';
 
     assert.equal(actual, expected);
   });
@@ -131,6 +170,70 @@ test("astroRehypeRelativeMarkdownLinks", async (t) => {
       assert.equal(actual, expected);
     },
   );
+
+  await t.test(
+    "should transform with correct path when destination has custom slug",
+    async () => {
+      const input = '<a href="./fixtures/test-custom-slug.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test.custom.slug-custom">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+
+  await t.test(
+    "should transform with correct path when destination has custom slug with file extension",
+    async () => {
+      const input = '<a href="./fixtures/test-custom-slug-ext.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test.custom.slug.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+  
+  await t.test(
+    "should transform with correct path when destination in subpath has custom slug",
+    async () => {
+      const input = '<a href="./fixtures/dir-test-custom-slug.md/test-custom-slug-in-dot-dir.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/dir-test-custom-slug.md/test.custom.slug.in.dot.dir">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );
+
+  await t.test(
+    "should not transform content collection path segment",
+    async () => {
+      const input = '<a href="./fixtures/dir-test-with-extension.md/test-1.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/dir-test-with-extension.md/test-1">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    },
+  );   
 
   await t.test("should not replace absolute path if file exists", async () => {
     const absolutePath = path.resolve("./fixtures/test.md");
