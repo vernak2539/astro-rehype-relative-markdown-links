@@ -1,7 +1,15 @@
 export type CollectionPathMode = "subdirectory" | `root`;
 
 export interface Options {
-  contentPath?: string; // where you store your content relative to the root directory
+  /**
+   * @name contentPath
+   * @type {string}
+   * @default `src/content`
+   * @description
+   *
+   * This defines where the content (i.e. md, mdx, etc. files) is stored. This should be a path relative to the root directory
+   */
+  contentPath?: string;
   /**
    * @name collectionPathMode
    * @type {CollectionPathMode}
@@ -24,5 +32,20 @@ export interface Options {
    * ```
    */
   collectionPathMode?: CollectionPathMode;
-  basePath?: string; // https://docs.astro.build/en/reference/configuration-reference/#base
+  /**
+   * @name basePath
+   * @type {string}
+   * @url https://docs.astro.build/en/reference/configuration-reference/#base
+   * @description
+   * The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
+   *
+   * In the example below, `astro dev` will start your server at `/docs`.
+   *
+   * ```js
+   * {
+   *   base: '/docs'
+   * }
+   * ```
+   */
+  basePath?: string;
 }
