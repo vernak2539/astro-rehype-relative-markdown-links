@@ -1,4 +1,4 @@
-export type CollectionPathMode = "subdirectory" | `root`;
+export type CollectionPathMode = "subdirectory" | "root";
 
 export interface Options {
   /**
