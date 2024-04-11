@@ -1,13 +1,23 @@
 {
   "name": "astro-rehype-relative-markdown-links",
   "description": "A rehype plugin built for Astro that aims to transform relative links in MD and MDX files into the proper URL path",
-  "version": "0.8.0",
-  "keywords": ["astro", "rehype", "markdown", "relative links"],
+  "version": "0.9.0",
+  "keywords": [
+    "astro",
+    "rehype",
+    "markdown",
+    "relative links"
+  ],
   "homepage": "https://github.com/vernak2539/astro-rehype-relative-markdown-links",
   "main": "./src/index.mjs",
   "type": "module",
   "types": "./src/index.d.ts",
-  "files": ["src/index.mjs", "src/utils.mjs", "src/**/*.d.ts", "README.md"],
+  "files": [
+    "src/index.mjs",
+    "src/utils.mjs",
+    "src/**/*.d.ts",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/vernak2539/astro-rehype-relative-markdown-links.git"
@@ -18,6 +28,7 @@
     "url": "https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues",
     "email": "alvernacchia@gmail.com"
   },
+  "packageManager": "yarn@4.1.1",
   "scripts": {
     "changelog": "auto-changelog -p",
     "prettier": "prettier ./src/** -w",
@@ -38,7 +49,6 @@
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1"
   },
-  "packageManager": "yarn@4.1.0",
   "auto-changelog": {
     "template": "keepachangelog",
     "hideCredit": true,
