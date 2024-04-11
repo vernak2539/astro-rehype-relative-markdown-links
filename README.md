@@ -102,3 +102,15 @@ DEBUG=astro-rehype-relative-markdown-links yarn dev
 
 - I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
 - This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
+
+### Versions from `v0.9.0` will...
+
+In PR [#3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/3) (based on issue
+[#2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/3)), special case handling of index files
+was added where the `/index` would be stripped from the URL. For example, `src/content/collection/dir/index.md` would
+be transformed into `/collection/dir`.
+
+TL;DR, this functionality shouldn't have been included and was removed in PR [#17](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/17).
+
+To mimic this functionality, the [`slug` frontmatter option](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs)
+provided by Astro can be used, defining an empty string ("").
