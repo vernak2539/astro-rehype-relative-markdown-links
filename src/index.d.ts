@@ -53,7 +53,7 @@ export interface Options {
   /**
    * @name trailingSlash
    * @type {TrailingSlash}
-   * @default `'ignore'`
+   * @default `ignore`
    * @description
    *
    * Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
