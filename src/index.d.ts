@@ -35,7 +35,7 @@ export interface Options {
   /**
    * @name basePath
    * @type {string}
-   * @url https://docs.astro.build/en/reference/configuration-reference/#base
+   * @reference https://docs.astro.build/en/reference/configuration-reference/#base
    * @description
    * The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
    *
