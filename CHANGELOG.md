@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.9.0...v0.10.0) - 2024-04-11
+
+### Merged
+
+- Docs gen [`#29`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/29)
+- chore: use 'describe' in src/index.test.mjs instead of test grouping [`#28`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/28)
+
+### Fixed
+
+- fix: handle collections in root of site (#19) - fixes #18 [`#18`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/18)
+
+### Commits
+
+- chore: run prettier [`3de82a2`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3de82a2686001de066d600688a6de83090e85363)
+- fix: add jsdoc comments to config options [`3ffa015`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3ffa015efa860ff7f1c7b6d3b89cc4fb568f4f47)
+- chore: update v0.9.0 'breaking change' in README [`3ce0276`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3ce027650ed2666a065b4b5f940510c13fe61f79)
+- chore: include v0.9.0 'breaking change' in README [`f6c3067`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/f6c30672c3b88946efd99531aaed21c6e9f55ea4)
+
 ## [v0.9.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.8.1...v0.9.0) - 2024-04-11
 
 ### Merged
@@ -18,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- Release v0.9.0 [`a646e72`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/a646e729de6a2896f75b49cc621b0f4911adf8f7)
 - update changelog [`cff3ecf`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/cff3ecf11e6ced36af98c90ff4cd5c80bd32b2e8)
 
 ## [v0.8.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.8.0...v0.8.1) - 2024-04-10
