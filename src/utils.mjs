@@ -1,7 +1,7 @@
 import path from "path";
 import { statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
-import { z } from 'zod';
+import { z } from "zod";
 
 const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
@@ -117,10 +117,10 @@ export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
     .join("/")
-    .replace(/\/index$/, '');
-}
+    .replace(/\/index$/, "");
+};
 
 /** @type {import('./utils').ResolveSlug} */
 export const resolveSlug = (generatedSlug, frontmatterSlug) => {
   return z.string().default(generatedSlug).parse(frontmatterSlug);
-}
+};

@@ -21,7 +21,7 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 const defaultContentPath = ["src", "content"].join(path.sep);
 
 /** @type {import("./index").CollectionPathMode} */
-const defaultCollectionPathMode = 'subdirectory';
+const defaultCollectionPathMode = "subdirectory";
 
 /** @param {import('./index').Options} options */
 function astroRehypeRelativeMarkdownLinks(options = {}) {
@@ -57,7 +57,8 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const { data: frontmatter } = matter(relativeFileContent);
       const frontmatterSlug = frontmatter.slug;
       const contentDir = options.contentPath || defaultContentPath;
-      const collectionPathMode = options.collectionPathMode || defaultCollectionPathMode;
+      const collectionPathMode =
+        options.collectionPathMode || defaultCollectionPathMode;
 
       /*
         By default, Astro assumes content collections are subdirectories of a content path which by default is src/content.
@@ -89,16 +90,22 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       // determine the path of the target file relative to the content path
       const relativeToContentPath = path.relative(contentDir, relativeFile);
       // When collectionPathMode is:
-      //   - `root`: We assume the content collection is located in the root of the site so there is no collection name in the page path, 
+      //   - `root`: We assume the content collection is located in the root of the site so there is no collection name in the page path,
       //             the collection path is equivalent to the site root path
       //   - `subdirectory` - Determine the collection name using Astros default assumption that content collections are subdirs of content path
-      //                      when the collectionPathMode is `subdirectory` or 
-      const collectionName = collectionPathMode === 'root' ? "" : path.dirname(relativeToContentPath).split(path.posix.sep)[0];
+      //                      when the collectionPathMode is `subdirectory` or
+      const collectionName =
+        collectionPathMode === "root"
+          ? ""
+          : path.dirname(relativeToContentPath).split(path.posix.sep)[0];
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
-      const relativeToCollectionPath = path.relative(collectionName, relativeToContentPath);
+      const relativeToCollectionPath = path.relative(
+        collectionName,
+        relativeToContentPath,
+      );
       // md/mdx extentions should not be in the final url
-      const withoutFileExt = replaceExt(relativeToCollectionPath, "")
+      const withoutFileExt = replaceExt(relativeToCollectionPath, "");
       // each path segment should be individulally sluggified
       const pathSegments = withoutFileExt.split(path.posix.sep);
       // Astro generates a slug for each page on the site as a fallback if the page does not have a custom slug
@@ -111,11 +118,10 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       // NOTE - When there is a content collection name being applied, this only handles situations where the physical
       //        directory name of the content collection maps 1:1 to the site page path serviing the content collection
       //        page (see details above)
-      let webPathFinal =
-        [
-          collectionName === '' ? '' : (path.posix.sep + collectionName),
-          resolvedSlug,
-        ].join(path.posix.sep);
+      let webPathFinal = [
+        collectionName === "" ? "" : path.posix.sep + collectionName,
+        resolvedSlug,
+      ].join(path.posix.sep);
 
       if (queryStringAndFragment) {
         webPathFinal += queryStringAndFragment;

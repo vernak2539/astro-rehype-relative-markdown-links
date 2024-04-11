@@ -8,7 +8,7 @@ import {
   splitPathFromQueryAndFragment,
   isValidFile,
   generateSlug,
-  resolveSlug
+  resolveSlug,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -130,8 +130,8 @@ describe("generateSlug", () => {
     const actual = generateSlug(["/FOO", "/foo-TESTING-test"]);
 
     assert.equal(actual, "foo/foo-testing-test");
-  }); 
-  
+  });
+
   test("removes spaces across multiple segments with no leading slashes", () => {
     const actual = generateSlug(["FOO", "foo TESTING test"]);
 
@@ -141,26 +141,26 @@ describe("generateSlug", () => {
   test("should strip index when subdirectory", () => {
     const actual = generateSlug(["foo", "index"]);
 
-    assert.equal(actual, "foo");    
+    assert.equal(actual, "foo");
   });
 
   test("should strip mixed-case index when subdirectory", () => {
     const actual = generateSlug(["foo", "iNdEX"]);
 
-    assert.equal(actual, "foo");    
+    assert.equal(actual, "foo");
   });
-  
+
   test("should not strip index root", () => {
     const actual = generateSlug(["index"]);
 
-    assert.equal(actual, "index");    
-  });  
+    assert.equal(actual, "index");
+  });
 
   test("should not strip mixed case index root", () => {
     const actual = generateSlug(["iNdEX"]);
 
-    assert.equal(actual, "index");    
-  });    
+    assert.equal(actual, "index");
+  });
 });
 
 describe("resolveSlug", () => {
@@ -180,25 +180,25 @@ describe("resolveSlug", () => {
     const actual = resolveSlug("foo/bar", "index");
 
     assert.equal(actual, "index");
-  });  
+  });
 
   test("uses frontmatter when frontmatter has extension", () => {
     const actual = resolveSlug("foo/bar", "foo.md");
 
     assert.equal(actual, "foo.md");
-  });    
+  });
 
   test("throws exception when no valid slug", () => {
     assert.throws(() => resolveSlug());
   });
 
   test("throws exception when frontmatter is null", () => {
-    assert.throws(() => resolveSlug("foo/bar", null ));
+    assert.throws(() => resolveSlug("foo/bar", null));
   });
 
   test("throws exception when frontmatter is number", () => {
-    assert.throws(() => resolveSlug("foo/bar", 5 ));
-  });  
+    assert.throws(() => resolveSlug("foo/bar", 5));
+  });
 });
 
 describe("normaliseAstroOutputPath", () => {
