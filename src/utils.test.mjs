@@ -6,9 +6,10 @@ import {
   normaliseAstroOutputPath,
   replaceExt,
   splitPathFromQueryAndFragment,
+  isValidFile,
   generateSlug,
   resolveSlug,
-  applyTrailingSlash
+  applyTrailingSlash,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -130,8 +131,8 @@ describe("generateSlug", () => {
     const actual = generateSlug(["/FOO", "/foo-TESTING-test"]);
 
     assert.equal(actual, "foo/foo-testing-test");
-  }); 
-  
+  });
+
   test("removes spaces across multiple segments with no leading slashes", () => {
     const actual = generateSlug(["FOO", "foo TESTING test"]);
 
@@ -141,26 +142,26 @@ describe("generateSlug", () => {
   test("should strip index when subdirectory", () => {
     const actual = generateSlug(["foo", "index"]);
 
-    assert.equal(actual, "foo");    
+    assert.equal(actual, "foo");
   });
 
   test("should strip mixed-case index when subdirectory", () => {
     const actual = generateSlug(["foo", "iNdEX"]);
 
-    assert.equal(actual, "foo");    
+    assert.equal(actual, "foo");
   });
-  
+
   test("should not strip index root", () => {
     const actual = generateSlug(["index"]);
 
-    assert.equal(actual, "index");    
-  });  
+    assert.equal(actual, "index");
+  });
 
   test("should not strip mixed case index root", () => {
     const actual = generateSlug(["iNdEX"]);
 
-    assert.equal(actual, "index");    
-  });    
+    assert.equal(actual, "index");
+  });
 });
 
 describe("resolveSlug", () => {
@@ -180,25 +181,25 @@ describe("resolveSlug", () => {
     const actual = resolveSlug("foo/bar", "index");
 
     assert.equal(actual, "index");
-  });  
+  });
 
   test("uses frontmatter when frontmatter has extension", () => {
     const actual = resolveSlug("foo/bar", "foo.md");
 
     assert.equal(actual, "foo.md");
-  });    
+  });
 
   test("throws exception when no valid slug", () => {
     assert.throws(() => resolveSlug());
   });
 
   test("throws exception when frontmatter is null", () => {
-    assert.throws(() => resolveSlug("foo/bar", null ));
+    assert.throws(() => resolveSlug("foo/bar", null));
   });
 
   test("throws exception when frontmatter is number", () => {
-    assert.throws(() => resolveSlug("foo/bar", 5 ));
-  });  
+    assert.throws(() => resolveSlug("foo/bar", 5));
+  });
 });
 
 describe("normaliseAstroOutputPath", () => {
@@ -237,80 +238,166 @@ describe("normaliseAstroOutputPath", () => {
   });
 });
 
+describe("isValidFile", () => {
+  test("return true if relative path to .md file exists", () => {
+    const actual = isValidFile("./src/fixtures/test.md");
+
+    assert.equal(actual, true);
+  });
+
+  test("return true if relative path to .mdx file that exists", () => {
+    const actual = isValidFile("./src/fixtures/test.mdx");
+
+    assert.equal(actual, true);
+  });
+
+  test("return true if relative path to a file exists", () => {
+    const actual = isValidFile("./src/fixtures/test.txt");
+
+    assert.equal(actual, true);
+  });
+
+  test("return false if relative path to .md file does not exist", () => {
+    const actual = isValidFile("./src/fixtures/does-not-exist.md");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if relative path to .mdx file does not exist", () => {
+    const actual = isValidFile("./src/fixtures/does-not-exist.mdx");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if relative path to a file does not exist", () => {
+    const actual = isValidFile("./src/fixtures/does-not-exist.txt");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if link empty string", () => {
+    const actual = isValidFile("");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if link is null", () => {
+    const actual = isValidFile(null);
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if link is undefined", () => {
+    const actual = isValidFile();
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .md that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.md");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .md/ that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.md/");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .mdx that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.mdx");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory ending in .mdx/ that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.mdx/");
+
+    assert.equal(actual, false);
+  });
+
+  test("return false if path is a directory that exists", () => {
+    const actual = isValidFile("./src/fixtures/dir-exists.txt");
+
+    assert.equal(actual, false);
+  });
+});
+
 describe("applyTrailingSlash", () => {
   describe("always", () => {
     test("original does not contain resolved does not contain", () => {
-      const actual = applyTrailingSlash('./foo.md', '/foo', 'always')
+      const actual = applyTrailingSlash("./foo.md", "/foo", "always");
 
       assert.equal(actual, "/foo/");
     });
 
     test("original contains resolved contains", () => {
-      const actual = applyTrailingSlash('./foo.md/', '/foo/', 'always')
+      const actual = applyTrailingSlash("./foo.md/", "/foo/", "always");
 
       assert.equal(actual, "/foo/");
     });
 
     test("original contains resolved does not contain", () => {
-      const actual = applyTrailingSlash('./foo.md/', '/foo', 'always')
+      const actual = applyTrailingSlash("./foo.md/", "/foo", "always");
 
       assert.equal(actual, "/foo/");
     });
 
     test("original does not contain resolved does contain", () => {
-      const actual = applyTrailingSlash('./foo.md', '/foo/', 'always')
+      const actual = applyTrailingSlash("./foo.md", "/foo/", "always");
 
       assert.equal(actual, "/foo/");
     });
   });
-  
+
   describe("never", () => {
     test("original does not contain resolved does not contain", () => {
-      const actual = applyTrailingSlash('./foo.md', '/foo', 'never')
+      const actual = applyTrailingSlash("./foo.md", "/foo", "never");
 
       assert.equal(actual, "/foo");
     });
 
     test("original contains resolved contains", () => {
-      const actual = applyTrailingSlash('./foo.md/', '/foo/', 'never')
+      const actual = applyTrailingSlash("./foo.md/", "/foo/", "never");
 
       assert.equal(actual, "/foo");
     });
 
     test("original contains resolved does not contain", () => {
-      const actual = applyTrailingSlash('./foo.md/', '/foo', 'never')
+      const actual = applyTrailingSlash("./foo.md/", "/foo", "never");
 
       assert.equal(actual, "/foo");
     });
 
     test("original does not contain resolved does contain", () => {
-      const actual = applyTrailingSlash('./foo.md', '/foo/', 'never')
+      const actual = applyTrailingSlash("./foo.md", "/foo/", "never");
 
       assert.equal(actual, "/foo");
     });
-  });  
+  });
 
   describe("ignore", () => {
     test("original does not contain resolved does not contain", () => {
-      const actual = applyTrailingSlash('./foo.md', '/foo', 'ignore')
+      const actual = applyTrailingSlash("./foo.md", "/foo", "ignore");
 
       assert.equal(actual, "/foo");
     });
 
     test("original contains resolved contains", () => {
-      const actual = applyTrailingSlash('./foo.md/', '/foo/', 'ignore')
+      const actual = applyTrailingSlash("./foo.md/", "/foo/", "ignore");
 
       assert.equal(actual, "/foo/");
     });
 
     test("original contains resolved does not contain", () => {
-      const actual = applyTrailingSlash('./foo.md/', '/foo', 'ignore')
+      const actual = applyTrailingSlash("./foo.md/", "/foo", "ignore");
 
       assert.equal(actual, "/foo/");
     });
 
     test("original does not contain resolved does contain", () => {
-      const actual = applyTrailingSlash('./foo.md', '/foo/', 'ignore')
+      const actual = applyTrailingSlash("./foo.md", "/foo/", "ignore");
 
       assert.equal(actual, "/foo");
     });

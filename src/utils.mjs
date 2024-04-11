@@ -1,4 +1,5 @@
 import path from "path";
+import { statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 
@@ -47,6 +48,23 @@ export const isValidRelativeLink = (link) => {
   }
 
   return true;
+};
+
+/** @type {import('./utils').IsValidFile} */
+export const isValidFile = (path) => {
+  if (!path) {
+    return false;
+  }
+
+  try {
+    return statSync(path).isFile();
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return false;
+    }
+
+    throw error;
+  }
 };
 
 /** @type {import('./utils').SplitPathFromQueryAndFragmentFn} */
@@ -99,7 +117,7 @@ export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
     .join("/")
-    .replace(/\/index$/, '');
+    .replace(/\/index$/, "");
 };
 
 /** @type {import('./utils').ResolveSlug} */
@@ -108,11 +126,15 @@ export const resolveSlug = (generatedSlug, frontmatterSlug) => {
 };
 
 /** @type {import('./utils').ApplyTrailingSlash} */
-export const applyTrailingSlash = (origUrl, resolvedUrl, trailingSlash = "ignore") => {
+export const applyTrailingSlash = (
+  origUrl,
+  resolvedUrl,
+  trailingSlash = "ignore",
+) => {
   const hasTrailingSlash = resolvedUrl.endsWith(`/`);
 
   if (trailingSlash === "always") {
-    return hasTrailingSlash ? resolvedUrl : resolvedUrl + '/';
+    return hasTrailingSlash ? resolvedUrl : resolvedUrl + "/";
   }
 
   if (trailingSlash === "never") {
@@ -121,7 +143,7 @@ export const applyTrailingSlash = (origUrl, resolvedUrl, trailingSlash = "ignore
 
   const hadTrailingSlash = origUrl.endsWith(`/`);
   if (hadTrailingSlash && !hasTrailingSlash) {
-    return resolvedUrl + '/';
+    return resolvedUrl + "/";
   }
 
   if (!hadTrailingSlash && hasTrailingSlash) {

@@ -102,3 +102,19 @@ DEBUG=astro-rehype-relative-markdown-links yarn dev
 
 - I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
 - This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
+
+### Versions including and after `v0.9.0`
+
+In [PR #3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/3) (based on [issue #2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/2)), special case handling of index files was
+added where the `index` would be stripped from the URL. For example, `src/content/collection/dir/index.md` would be
+transformed into `/collection/dir`. This functionality was applied to `index.md` files both at the content collection
+root and content collection subdirectories.
+
+In [PR #17](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/17), applying this functionality to
+`index.md` at the collection root was removed based on the way Astro handles content at site/collection root vs. subdirectories
+(see [this issue](https://github.com/withastro/astro/issues/7038)).
+
+If you want to have your collection root `index.md` be transformed without the `index` slug, utilitize
+the [slug frontmatter option](https://docs.astro.build/en/guides/content-collections/#defining-custom-slugs) provided by
+Astro setting your slug to empty string (`''`) and ensure your `getStaticPaths()` returns `undefined` for the slug of
+the content collection root `index.md`.
