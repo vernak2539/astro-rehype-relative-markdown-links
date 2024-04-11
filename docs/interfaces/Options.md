@@ -38,7 +38,7 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Defined in
 
-[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L50)
+[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L50)
 
 ___
 
@@ -52,13 +52,13 @@ collectionPathMode
 
 **`Default`**
 
-`'subdirectory'`
+`subdirectory`
 
 **`Description`**
 
 Where you store your collections:
-  - `'subdirectory'` - Subdirectories under `contentPath` (ex: `src/content/docs/index.md` where `docs` is the content collection subdirectory of the contentPath `src/content`)
-  - `'root'` - Directly inside `contentPath` (ex: `src/content/docs/index.md` where `src/content/docs` is the `contentPath`)
+  - `subdirectory` - Subdirectories under `contentPath` (ex: `src/content/docs/index.md` where `docs` is the content collection subdirectory of the contentPath `src/content`)
+  - `root` - Directly inside `contentPath` (ex: `src/content/docs/index.md` where `src/content/docs` is the `contentPath`)
 
 Use the `root` configuration option when you are explicitly setting the [contentPath](Options.md#contentpath) property to something other than `src/content` and you want the directory you specify
 for [contentPath](Options.md#contentpath) to be treated a single content collection as if it where located in the site root.  In most scenarios, you should set this value to `subdirectory` or not
@@ -68,14 +68,14 @@ set this value and the default of `subdirectory` will be used.
 
 ```js
 {
-  // Use `subdirectory` mode
-  collectionPathMode: `subdirectory`
+  // Use 'subdirectory' mode
+  collectionPathMode: 'subdirectory'
 }
 ```
 
 #### Defined in
 
-[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L34)
+[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L34)
 
 ___
 
@@ -89,9 +89,7 @@ contentPath
 
 **`Default`**
 
-```ts
-src/content
-```
+`src/content`
 
 **`Description`**
 
@@ -99,4 +97,4 @@ This defines where the content (i.e. md, mdx, etc. files) is stored. This should
 
 #### Defined in
 
-[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L12)
+[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L12)
