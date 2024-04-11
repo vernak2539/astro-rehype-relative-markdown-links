@@ -38,7 +38,7 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Defined in
 
-[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L50)
+[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L50)
 
 ___
 
@@ -75,7 +75,7 @@ set this value and the default of `subdirectory` will be used.
 
 #### Defined in
 
-[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L34)
+[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L34)
 
 ___
 
@@ -89,7 +89,9 @@ contentPath
 
 **`Default`**
 
-`src/content`
+```ts
+src/content
+```
 
 **`Description`**
 
@@ -97,4 +99,4 @@ This defines where the content (i.e. md, mdx, etc. files) is stored. This should
 
 #### Defined in
 
-[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L12)
+[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L12)

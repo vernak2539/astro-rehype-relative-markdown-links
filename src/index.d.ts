@@ -4,7 +4,7 @@ export interface Options {
   /**
    * @name contentPath
    * @type {string}
-   * @default `src/content`
+   * @default src/content
    * @description
    *
    * This defines where the content (i.e. md, mdx, etc. files) is stored. This should be a path relative to the root directory

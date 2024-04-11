@@ -20,4 +20,4 @@ astro-rehype-relative-markdown-links
 
 #### Defined in
 
-[index.d.ts:1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L1)
+[index.d.ts:1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/c59329f183007cfbf433254b3186a2b87d8c1d99/src/index.d.ts#L1)
