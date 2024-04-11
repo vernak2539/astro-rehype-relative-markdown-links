@@ -113,7 +113,7 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       //        page (see details above)
       let webPathFinal =
         [
-          !collectionName ? '' : (path.posix.sep + collectionName),
+          collectionName === '' ? '' : (path.posix.sep + collectionName),
           resolvedSlug,
         ].join(path.posix.sep);
 
