@@ -4,7 +4,7 @@ export interface Options {
   /**
    * @name contentPath
    * @type {string}
-   * @default src/content
+   * @default `src/content`
    * @description
    *
    * This defines where the content (i.e. md, mdx, etc. files) is stored. This should be a path relative to the root directory
@@ -13,12 +13,12 @@ export interface Options {
   /**
    * @name collectionPathMode
    * @type {CollectionPathMode}
-   * @default `'subdirectory'`
+   * @default `subdirectory`
    * @description
    *
    * Where you store your collections:
-   *   - `'subdirectory'` - Subdirectories under `contentPath` (ex: `src/content/docs/index.md` where `docs` is the content collection subdirectory of the contentPath `src/content`)
-   *   - `'root'` - Directly inside `contentPath` (ex: `src/content/docs/index.md` where `src/content/docs` is the `contentPath`)
+   *   - `subdirectory` - Subdirectories under `contentPath` (ex: `src/content/docs/index.md` where `docs` is the content collection subdirectory of the contentPath `src/content`)
+   *   - `root` - Directly inside `contentPath` (ex: `src/content/docs/index.md` where `src/content/docs` is the `contentPath`)
    *
    * Use the `root` configuration option when you are explicitly setting the {@link contentPath} property to something other than `src/content` and you want the directory you specify
    * for {@link contentPath} to be treated a single content collection as if it where located in the site root.  In most scenarios, you should set this value to `subdirectory` or not
@@ -26,8 +26,8 @@ export interface Options {
    * @example
    * ```js
    * {
-   *   // Use `subdirectory` mode
-   *   collectionPathMode: `subdirectory`
+   *   // Use 'subdirectory' mode
+   *   collectionPathMode: 'subdirectory'
    * }
    * ```
    */
