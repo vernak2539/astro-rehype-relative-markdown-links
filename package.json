@@ -31,7 +31,7 @@
   "packageManager": "yarn@4.1.1",
   "scripts": {
     "pre-release": "yarn run changelog && yarn run prettier",
-    "generate-docs": "typedoc --plugin typedoc-plugin-markdown src/index.d.ts",
+    "generate-docs": "typedoc --readme none --plugin typedoc-plugin-markdown src/index.d.ts",
     "changelog": "auto-changelog -p",
     "prettier": "prettier ./src/** -w",
     "test": "node --test"

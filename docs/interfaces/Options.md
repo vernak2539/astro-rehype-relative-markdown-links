@@ -1,4 +1,4 @@
-[astro-rehype-relative-markdown-links](../README.md) / [Exports](../modules.md) / Options
+[astro-rehype-relative-markdown-links](../README.md) / Options
 
 # Interface: Options
 
@@ -38,13 +38,13 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Defined in
 
-[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/a0f4de82b38194c261e9313aeab5a4efe08e34b0/src/index.d.ts#L50)
+[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L50)
 
 ___
 
 ### collectionPathMode
 
-• `Optional` **collectionPathMode**: [`CollectionPathMode`](../modules.md#collectionpathmode)
+• `Optional` **collectionPathMode**: [`CollectionPathMode`](../README.md#collectionpathmode)
 
 **`Name`**
 
@@ -75,7 +75,7 @@ set this value and the default of `subdirectory` will be used.
 
 #### Defined in
 
-[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/a0f4de82b38194c261e9313aeab5a4efe08e34b0/src/index.d.ts#L34)
+[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L34)
 
 ___
 
@@ -97,4 +97,4 @@ This defines where the content (i.e. md, mdx, etc. files) is stored. This should
 
 #### Defined in
 
-[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/a0f4de82b38194c261e9313aeab5a4efe08e34b0/src/index.d.ts#L12)
+[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/6ae08fe7d7b04742435480815eb89b7e1ddde36e/src/index.d.ts#L12)
