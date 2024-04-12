@@ -3,6 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
+import { z } from "zod";
 import {
   replaceExt,
   isValidRelativeLink,
@@ -18,6 +19,8 @@ import {
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
+const PATH_SEGMENT_EMPTY = "";
+
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
 
@@ -27,10 +30,25 @@ const defaultCollectionPathMode = "subdirectory";
 /** @type {import("./index").TrailingSlash} */
 const defaultTrailingSlash = "ignore";
 
-const PATH_SEGMENT_EMPTY = "";
+const OptionsSchema = z.object({
+  contentPath: z.string().default(defaultContentPath),
+  collectionPathMode: z
+    .enum(["root", "subdirectory"])
+    .default(defaultCollectionPathMode),
+  basePath: z.string().optional(),
+  trailingSlash: z
+    .enum(["ignore", "always", "never"])
+    .default(defaultTrailingSlash),
+});
 
 /** @param {import('./index').Options} options */
-function astroRehypeRelativeMarkdownLinks(options = {}) {
+function astroRehypeRelativeMarkdownLinks(opts = {}) {
+  const { success, data: options, error } = OptionsSchema.safeParse(opts);
+
+  if (!success) {
+    throw error;
+  }
+
   return (tree, file) => {
     visit(tree, "element", (node) => {
       const nodeHref = node.properties.href;
@@ -62,34 +80,33 @@ function astroRehypeRelativeMarkdownLinks(options = {}) {
       const relativeFileContent = fs.readFileSync(relativeFile);
       const { data: frontmatter } = matter(relativeFileContent);
       const frontmatterSlug = frontmatter.slug;
-      const contentDir = options.contentPath || defaultContentPath;
-      const collectionPathMode =
-        options.collectionPathMode || defaultCollectionPathMode;
-      const trailingSlashMode = options.trailingSlash || defaultTrailingSlash;
+      const contentDir = options.contentPath;
+      const collectionPathMode = options.collectionPathMode;
+      const trailingSlashMode = options.trailingSlash;
 
       /*
         By default, Astro assumes content collections are subdirectories of a content path which by default is src/content.
         It then treats all content in a content collection as relative to the collection itself, not the site.  For example,
-        a page at /src/content/docs/foo/bar/my-page.md would have a slug of foo/bar/my-page rather than docs/foo/bar/my-page 
-        as foo/bar/my-page is the path relative to the content collection.  This allows Astro to map content collections to 
-        multiple page paths (e.g., /pages/blog/[...slug].astro) & /pages/[year]/[month]/[day]/[slug].astro) to enable reusing 
-        content collections. 
-        
-        Given this, we need to extract the collection name and include it in the generated path.  Since we don't have internal 
+        a page at /src/content/docs/foo/bar/my-page.md would have a slug of foo/bar/my-page rather than docs/foo/bar/my-page
+        as foo/bar/my-page is the path relative to the content collection.  This allows Astro to map content collections to
+        multiple page paths (e.g., /pages/blog/[...slug].astro) & /pages/[year]/[month]/[day]/[slug].astro) to enable reusing
+        content collections.
+
+        Given this, we need to extract the collection name and include it in the generated path.  Since we don't have internal
         info, we have to make an assumption that the site page path is mapped directly to a path that starts with the collection
-        name followed by the slug of the content collection page.  We do this by following Astro's own assumptions on the directory 
+        name followed by the slug of the content collection page.  We do this by following Astro's own assumptions on the directory
         structure of content collections - they are subdirectories of content path.
 
         We make an expection to the above approach when collectionPathMode is `root` and instead, treat the content collection
         as the site root so we do not include the content collection physical directory name in the transformed url.  For example,
-        with a content collection page of of src/content/docs/page-1.md, if the collectionPathMode is `root`, the url would be 
+        with a content collection page of of src/content/docs/page-1.md, if the collectionPathMode is `root`, the url would be
         `/page-1` whereas with collectionPathMode of `subdirectory`, it would be `/docs/page-1`.
 
         KNOWN LIMITATIONS/ISSUES
-        - Astro allows pages within a content collection to be excluded (see https://docs.astro.build/en/guides/routing/#excluding-pages).  
+        - Astro allows pages within a content collection to be excluded (see https://docs.astro.build/en/guides/routing/#excluding-pages).
         We currently do not adhere to this logic (See https://docs.astro.build/en/guides/routing/#excluding-pages).
         - Astro allows mapping a content collection to multiple site paths (as mentioned above).  The current approach of this library
-        assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name.  For 
+        assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name.  For
         example, if you have a content collection at src/content/blogs but your site page path is at /pages/my-blog/[...slug].astro,
         the default functionality of this library will not work currently.  See https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/24.
       */

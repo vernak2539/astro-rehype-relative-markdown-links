@@ -288,6 +288,89 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     });
   });
 
+  describe("config option validation", () => {
+    test("should error when contentPath is not a string", async () => {
+      await assert.rejects(
+        async () => {
+          await rehype()
+            .use(testSetupRehype)
+            .use(astroRehypeRelativeMarkdownLinks, { contentPath: 1 })
+            .process("");
+        },
+        (err) => {
+          assert.strictEqual(err.name, "ZodError");
+          assert.deepStrictEqual(JSON.parse(err.message), [
+            {
+              code: "invalid_type",
+              expected: "string",
+              received: "number",
+              path: ["contentPath"],
+              message: "Expected string, received number",
+            },
+          ]);
+
+          return true;
+        },
+      );
+    });
+
+    test("should error when collectionPathMode is not a subdirectory or root", async () => {
+      await assert.rejects(
+        async () => {
+          await rehype()
+            .use(testSetupRehype)
+            .use(astroRehypeRelativeMarkdownLinks, {
+              collectionPathMode: "not_supported",
+            })
+            .process("");
+        },
+        (err) => {
+          assert.strictEqual(err.name, "ZodError");
+          assert.deepStrictEqual(JSON.parse(err.message), [
+            {
+              code: "invalid_enum_value",
+              message:
+                "Invalid enum value. Expected 'root' | 'subdirectory', received 'not_supported'",
+              options: ["root", "subdirectory"],
+              path: ["collectionPathMode"],
+              received: "not_supported",
+            },
+          ]);
+
+          return true;
+        },
+      );
+    });
+
+    test('should error when trailingSlash is not "ignore", "always", or "never"', async () => {
+      await assert.rejects(
+        async () => {
+          await rehype()
+            .use(testSetupRehype)
+            .use(astroRehypeRelativeMarkdownLinks, {
+              trailingSlash: "not_supported",
+            })
+            .process("");
+        },
+        (err) => {
+          assert.strictEqual(err.name, "ZodError");
+          assert.deepStrictEqual(JSON.parse(err.message), [
+            {
+              code: "invalid_enum_value",
+              message:
+                "Invalid enum value. Expected 'ignore' | 'always' | 'never', received 'not_supported'",
+              options: ["ignore", "always", "never"],
+              path: ["trailingSlash"],
+              received: "not_supported",
+            },
+          ]);
+
+          return true;
+        },
+      );
+    });
+  });
+
   describe("config option - basePath", () => {
     test("should prefix base to output on file paths that exist", async () => {
       const input = '<a href="./fixtures/test.md">foo</a>';
