@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.11.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.10.0...v0.11.0) 2024-04-12
+
+### Fixed
+
+- add trailingSlash support (#20) - resolves #11 [`#11`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/11)
+
 ## [v0.10.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.9.0...v0.10.0) - 2024-04-11
 
 ### Merged
@@ -20,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - chore: run prettier [`3de82a2`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3de82a2686001de066d600688a6de83090e85363)
 - fix: add jsdoc comments to config options [`3ffa015`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3ffa015efa860ff7f1c7b6d3b89cc4fb568f4f47)
+- Release v0.10.0 [`b4a194a`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/b4a194a3dc2bc39ab8590ceec9dc3e27f6527913)
 - chore: update v0.9.0 'breaking change' in README [`3ce0276`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3ce027650ed2666a065b4b5f940510c13fe61f79)
 - chore: include v0.9.0 'breaking change' in README [`f6c3067`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/f6c30672c3b88946efd99531aaed21c6e9f55ea4)
 
