@@ -124,3 +124,31 @@ export const generateSlug = (pathSegments) => {
 export const resolveSlug = (generatedSlug, frontmatterSlug) => {
   return z.string().default(generatedSlug).parse(frontmatterSlug);
 };
+
+/** @type {import('./utils').ApplyTrailingSlash} */
+export const applyTrailingSlash = (
+  origUrl,
+  resolvedUrl,
+  trailingSlash = "ignore",
+) => {
+  const hasTrailingSlash = resolvedUrl.endsWith(`/`);
+
+  if (trailingSlash === "always") {
+    return hasTrailingSlash ? resolvedUrl : resolvedUrl + "/";
+  }
+
+  if (trailingSlash === "never") {
+    return hasTrailingSlash ? resolvedUrl.slice(0, -1) : resolvedUrl;
+  }
+
+  const hadTrailingSlash = origUrl.endsWith(`/`);
+  if (hadTrailingSlash && !hasTrailingSlash) {
+    return resolvedUrl + "/";
+  }
+
+  if (!hadTrailingSlash && hasTrailingSlash) {
+    return resolvedUrl.slice(0, -1);
+  }
+
+  return resolvedUrl;
+};

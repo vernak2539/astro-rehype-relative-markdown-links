@@ -421,4 +421,74 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       assert.equal(actual, expected);
     });
   });
+
+  describe("config option - trailingSlash", () => {
+    test("should contain trailing slash when option not specified and file contains", async () => {
+      const input = '<a href="./fixtures/test.md/">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test/">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not contain trailing slash when option not specified and file does not contain", async () => {
+      const input = '<a href="./fixtures/test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/test">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should contain trailing slash when option not specified and file does not contain and custom slug contains", async () => {
+      const input =
+        '<a href="./fixtures/dir-test-custom-slug/with-trailing-slash.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/dir-test-custom-slug/slug-with-trailing-slash/">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not contain trailing slash when option not specified and file contains and custom slug does not contain", async () => {
+      const input =
+        '<a href="./fixtures/dir-test-custom-slug/without-trailing-slash.md/">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/dir-test-custom-slug/slug-without-trailing-slash">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not contain trailing slash when option not specified and file contains and custom slug contains", async () => {
+      const input =
+        '<a href="./fixtures/dir-test-custom-slug/with-trailing-slash.md/">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/fixtures/dir-test-custom-slug/slug-with-trailing-slash/">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+  });
 });

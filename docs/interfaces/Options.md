@@ -9,6 +9,7 @@
 - [basePath](Options.md#basepath)
 - [collectionPathMode](Options.md#collectionpathmode)
 - [contentPath](Options.md#contentpath)
+- [trailingSlash](Options.md#trailingslash)
 
 ## Properties
 
@@ -38,7 +39,7 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Defined in
 
-[index.d.ts:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L50)
+[index.d.ts:52](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L52)
 
 ___
 
@@ -75,7 +76,7 @@ set this value and the default of `subdirectory` will be used.
 
 #### Defined in
 
-[index.d.ts:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L34)
+[index.d.ts:36](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L36)
 
 ___
 
@@ -97,4 +98,50 @@ This defines where the content (i.e. md, mdx, etc. files) is stored. This should
 
 #### Defined in
 
-[index.d.ts:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L12)
+[index.d.ts:14](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L14)
+
+___
+
+### trailingSlash
+
+• `Optional` **trailingSlash**: [`TrailingSlash`](../README.md#trailingslash)
+
+**`Name`**
+
+trailingSlash
+
+**`Default`**
+
+`ignore`
+
+**`Description`**
+
+Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
+  - `'always'` - Ensure urls always end with a trailing slash regardless of input
+  - `'never'` - Ensure urls never end with a trailing slash regardless of input
+  - `'ignore'` - Do not modify the url, trailing slash behavior will be determined by the file url itself or a custom slug if present.
+
+When set to `'ignore'` (the default), the following will occur:
+  - If there is not a custom slug on the target file, the markdown link itself will determine if there is a trailing slash.
+      - `[Example](./my-doc.md/))` will result in a trailing slash
+      - `[Example](./my-doc.md))` will not result in a trailing slash
+  - If there is a custom slug on the target file, the custom slug determines if there is a trailing slash.
+      - `slug: my-doc/` will result in a trailing slash
+      - `slug: my-doc` will not result in a trailing slash
+
+**`Example`**
+
+```js
+{
+  // Use `always` mode
+  trailingSlash: `always`
+}
+```
+
+**`See`**
+
+[https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro](https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro)
+
+#### Defined in
+
+[index.d.ts:80](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L80)

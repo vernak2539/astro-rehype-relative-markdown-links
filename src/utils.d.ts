@@ -1,3 +1,5 @@
+import { type TrailingSlash } from ".";
+
 export type SplitPathFromQueryAndFragmentFn = (
   path: string,
 ) => [string, string | null];
@@ -9,4 +11,9 @@ export type GenerateSlug = (pathSegments: string[]) => string;
 export type ResolveSlug = (
   generatedSlug: string,
   frontmatterSlug?: unknown,
+) => string;
+export type ApplyTrailingSlash = (
+  originalUrl: string,
+  resolvedUrl: string,
+  trailingSlash: TrailingSlash,
 ) => string;

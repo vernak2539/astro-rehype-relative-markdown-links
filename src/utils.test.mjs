@@ -9,6 +9,7 @@ import {
   isValidFile,
   generateSlug,
   resolveSlug,
+  applyTrailingSlash,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -320,5 +321,85 @@ describe("isValidFile", () => {
     const actual = isValidFile("./src/fixtures/dir-exists.txt");
 
     assert.equal(actual, false);
+  });
+});
+
+describe("applyTrailingSlash", () => {
+  describe("always", () => {
+    test("original does not contain resolved does not contain", () => {
+      const actual = applyTrailingSlash("./foo.md", "/foo", "always");
+
+      assert.equal(actual, "/foo/");
+    });
+
+    test("original contains resolved contains", () => {
+      const actual = applyTrailingSlash("./foo.md/", "/foo/", "always");
+
+      assert.equal(actual, "/foo/");
+    });
+
+    test("original contains resolved does not contain", () => {
+      const actual = applyTrailingSlash("./foo.md/", "/foo", "always");
+
+      assert.equal(actual, "/foo/");
+    });
+
+    test("original does not contain resolved does contain", () => {
+      const actual = applyTrailingSlash("./foo.md", "/foo/", "always");
+
+      assert.equal(actual, "/foo/");
+    });
+  });
+
+  describe("never", () => {
+    test("original does not contain resolved does not contain", () => {
+      const actual = applyTrailingSlash("./foo.md", "/foo", "never");
+
+      assert.equal(actual, "/foo");
+    });
+
+    test("original contains resolved contains", () => {
+      const actual = applyTrailingSlash("./foo.md/", "/foo/", "never");
+
+      assert.equal(actual, "/foo");
+    });
+
+    test("original contains resolved does not contain", () => {
+      const actual = applyTrailingSlash("./foo.md/", "/foo", "never");
+
+      assert.equal(actual, "/foo");
+    });
+
+    test("original does not contain resolved does contain", () => {
+      const actual = applyTrailingSlash("./foo.md", "/foo/", "never");
+
+      assert.equal(actual, "/foo");
+    });
+  });
+
+  describe("ignore", () => {
+    test("original does not contain resolved does not contain", () => {
+      const actual = applyTrailingSlash("./foo.md", "/foo", "ignore");
+
+      assert.equal(actual, "/foo");
+    });
+
+    test("original contains resolved contains", () => {
+      const actual = applyTrailingSlash("./foo.md/", "/foo/", "ignore");
+
+      assert.equal(actual, "/foo/");
+    });
+
+    test("original contains resolved does not contain", () => {
+      const actual = applyTrailingSlash("./foo.md/", "/foo", "ignore");
+
+      assert.equal(actual, "/foo/");
+    });
+
+    test("original does not contain resolved does contain", () => {
+      const actual = applyTrailingSlash("./foo.md", "/foo/", "ignore");
+
+      assert.equal(actual, "/foo");
+    });
   });
 });
