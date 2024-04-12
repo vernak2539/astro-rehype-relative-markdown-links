@@ -5,11 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.12.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.11.0...v0.12.0)
+
+### Merged
+
+- feat: use zod for options validation and defaulting [`#30`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/30)
+
+### Commits
+
+- chore: update changelog [`3728eba`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/3728ebaa07089c6b11ed3102f7f836ac461ad804)
+
 ## [v0.11.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.10.0...v0.11.0) - 2024-04-12
 
 ### Fixed
 
 - add trailingSlash support (#20) - resolves #11 [`#11`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/11)
+
+### Commits
+
+- Release v0.11.0 [`676d657`](https://github.com/vernak2539/astro-rehype-relative-markdown-links/commit/676d65717e2de8231599999bceeb196f73327a5d)
 
 ## [v0.10.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.9.0...v0.10.0) - 2024-04-11
 
