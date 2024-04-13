@@ -574,4 +574,49 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       assert.equal(actual, expected);
     });
   });
+
+  describe("excluded files", () => {
+    test("should not transform markdown file that exists that begins with underscore", async () => {
+      const input = '<a href="./fixtures/_test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="./fixtures/_test.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not transform markdown file that exists with underscore in a directory path segment", async () => {
+      const input =
+        '<a href="./fixtures/_dir-test/content-dir/collection-dir-1/test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="./fixtures/_dir-test/content-dir/collection-dir-1/test.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should transform markdown file that exists with underscore in a directory path above the content dir but not below it", async () => {
+      const input =
+        '<a href="./fixtures/_dir-test/content-dir/collection-dir-1/test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, {
+          contentPath: "src/fixtures/_dir-test/content-dir",
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/collection-dir-1/test">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+  });
 });
