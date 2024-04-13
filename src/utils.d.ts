@@ -17,3 +17,4 @@ export type ApplyTrailingSlash = (
   resolvedUrl: string,
   trailingSlash: TrailingSlash,
 ) => string;
+export type ShouldProcessFile = (path: string) => boolean;

@@ -13,6 +13,7 @@ import {
   generateSlug,
   resolveSlug,
   applyTrailingSlash,
+  shouldProcessFile,
 } from "./utils.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
@@ -113,6 +114,11 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // determine the path of the target file relative to the content path
       const relativeToContentPath = path.relative(contentDir, relativeFile);
+      // based on relative path to content dir, check if we should exclude the file
+      if (!shouldProcessFile(relativeToContentPath)) {
+        return;
+      }
+
       // When collectionPathMode is:
       //   - `root`: We assume the content collection is located in the root of the site so there is no collection name in the page path,
       //             the collection path is equivalent to the site root path
