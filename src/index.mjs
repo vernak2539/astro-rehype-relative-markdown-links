@@ -50,13 +50,17 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
   }
 
   return (tree, file) => {
-    visit(tree, "element", (node) => {
-      const nodeHref = node.properties.href;
-
-      if (!nodeHref) {
+    visit(tree, "element", (node, index, parent) => {
+      if (
+        node.type !== "element" ||
+        node.tagName !== "a" ||
+        typeof node.properties.href !== "string" ||
+        !node.properties.href
+      ) {
         return;
       }
 
+      const nodeHref = node.properties.href;
       const [url, queryStringAndFragment] =
         splitPathFromQueryAndFragment(nodeHref);
 
