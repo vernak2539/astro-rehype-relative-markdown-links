@@ -1,0 +1,33 @@
+name: Update Changelog
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  update_changelog:
+    runs-on: ubuntu-latest
+    environment:
+      name: npm-publish
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+      - name: "Install github_changelog_generator"
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
+        run: gem install github_changelog_generator
+      - name: "Generate and commit CHANGELOG.md"
+        run: |
+          github_changelog_generator
+          git add CHANGELOG.md
+          if [ ! -n "$(git status -s)" ]; then
+            echo "NOTHING TO COMMIT"
+          else
+            git config user.name "Alex Vernacchia"
+            git config user.email "vernak2539@users.noreply.github.com"
+            git commit -m "[skip ci] Update CHANGELOG.md"
+            git push --no-verify
+          fi

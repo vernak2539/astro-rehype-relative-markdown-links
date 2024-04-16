@@ -4,34 +4,34 @@ import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 import { asError } from "catch-unknown";
 
-const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
+const isWindows =
+  typeof process !== "undefined" && process.platform === "win32";
+const windowsSlashRE = /\\/g;
 
-/** @type {import('./utils.d.ts').IsCurrentDirectoryFn} */
-function isCurrentDirectory(fpath) {
-  const first2chars = fpath.slice(0, 2);
-  return first2chars === "." + pathSeparator || first2chars === "./";
+/** @type {import('./utils.d.ts').Slash} */
+function slash(npath, sep) {
+  return npath.replace(windowsSlashRE, sep);
 }
+
+/** @type {import('./utils.d.ts').NormalizePath} */
+function normalizePath(npath) {
+  return path.posix.normalize(isWindows ? slash(npath, path.posix.sep) : npath);
+}
+
+/** @type {string} */
+export const FILE_PATH_SEPARATOR = path.sep;
+
+/** @type {string} */
+export const URL_PATH_SEPARATOR = "/";
 
 /** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
-  if (typeof npath !== "string") {
+  if (typeof npath !== "string" || npath.length === 0) {
     return npath;
   }
 
-  if (npath.length === 0) {
-    return npath;
-  }
-
-  const nFileName = path.basename(npath, path.extname(npath)) + ext;
-  const nFilepath = path.join(path.dirname(npath), nFileName);
-
-  // Because `path.join` removes the head './' from the given path.
-  if (isCurrentDirectory(npath)) {
-    return `.${pathSeparator}${nFilepath}`;
-  }
-
-  return nFilepath;
+  return npath.replace(new RegExp(path.extname(npath) + "$"), ext);
 };
 
 /** @type {import('./utils.d.ts').IsValidRelativeLinkFn} */
@@ -96,26 +96,30 @@ export const splitPathFromQueryAndFragment = (url) => {
 
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
 export const normaliseAstroOutputPath = (initialPath, options = {}) => {
+  const buildPath = () => {
+    if (!options.basePath) {
+      return initialPath;
+    }
+
+    if (options.basePath.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(options.basePath, initialPath);
+    }
+
+    return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
+  };
+
   if (!initialPath) {
     return initialPath;
   }
 
-  if (!options.basePath) {
-    return initialPath;
-  }
-
-  if (options.basePath.startsWith("/")) {
-    return path.join(options.basePath, initialPath);
-  }
-
-  return "/" + path.join(options.basePath, initialPath);
+  return normalizePath(buildPath());
 };
 
 /** @type {import('./utils.d.ts').GenerateSlug} */
 export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
-    .join("/")
+    .join(URL_PATH_SEPARATOR)
     .replace(/\/index$/, "");
 };
 
@@ -130,19 +134,19 @@ export const applyTrailingSlash = (
   resolvedUrl,
   trailingSlash = "ignore",
 ) => {
-  const hasTrailingSlash = resolvedUrl.endsWith(`/`);
+  const hasTrailingSlash = resolvedUrl.endsWith(URL_PATH_SEPARATOR);
 
   if (trailingSlash === "always") {
-    return hasTrailingSlash ? resolvedUrl : resolvedUrl + "/";
+    return hasTrailingSlash ? resolvedUrl : resolvedUrl + URL_PATH_SEPARATOR;
   }
 
   if (trailingSlash === "never") {
     return hasTrailingSlash ? resolvedUrl.slice(0, -1) : resolvedUrl;
   }
 
-  const hadTrailingSlash = origUrl.endsWith(`/`);
+  const hadTrailingSlash = origUrl.endsWith(URL_PATH_SEPARATOR);
   if (hadTrailingSlash && !hasTrailingSlash) {
-    return resolvedUrl + "/";
+    return resolvedUrl + URL_PATH_SEPARATOR;
   }
 
   if (!hadTrailingSlash && hasTrailingSlash) {
