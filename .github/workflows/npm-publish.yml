@@ -25,4 +25,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Trigger Update Changelog Workflow
         run: |
-          gh workflow run update-changelog.yml
+          gh workflow run update-changelog.yml --ref main
