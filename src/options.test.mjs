@@ -2,6 +2,7 @@ import { describe, test } from "node:test";
 import { validateOptions } from "./options.mjs";
 import assert from "node:assert";
 import { OptionsSchema } from "./options.mjs";
+import path from "path";
 
 const { data: defaultOptions } = OptionsSchema.safeParse({});
 
@@ -134,7 +135,7 @@ describe("validateOptions", () => {
 
   describe("contentPath", () => {
     test("should default contentPath to src/content", () => {
-      expectsValidOption({}, "contentPath", "src/content");
+      expectsValidOption({}, "contentPath", ["src", "content"].join(path.sep));
     });
 
     test("should be contentPath value specified when string", () => {
