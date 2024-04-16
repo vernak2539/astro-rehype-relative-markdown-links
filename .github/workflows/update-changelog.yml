@@ -1,6 +1,8 @@
 name: Update Changelog
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   update_changelog:
@@ -9,6 +11,8 @@ jobs:
       name: npm-publish
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: ruby/setup-ruby@v1
       - name: "Update CHANGELOG.md"
         env:
@@ -21,7 +25,7 @@ jobs:
           if [ ! -n "$(git status -s)" ]; then
             echo "NOTHING TO COMMIT"
           else
-            git config user.name vernak2539
+            git config user.name "Alex Vernacchia"
             git config user.email "vernak2539@users.noreply.github.com"
             git commit -m "[skip ci] Update CHANGELOG.md"
             git push --no-verify
