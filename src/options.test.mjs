@@ -1,18 +1,25 @@
 import { describe, test } from "node:test";
 import { validateOptions } from "./options.mjs";
 import assert from "node:assert";
-import { OptionsSchema } from "./options.mjs";
 import path from "path";
 
-const { data: defaultOptions } = OptionsSchema.safeParse({});
+/** @type {import('./options.d.ts').Options} */
+const defaultOptions = {
+  contentPath: ["src", "content"].join(path.sep),
+  trailingSlash: "ignore",
+  collectionPathMode: "subdirectory",
+};
 
 describe("validateOptions", () => {
-  const expectsZodError = async (options, errorCode) => {
-    await assert.rejects(
-      async () => validateOptions(options),
+  const expectsZodError = (options, errorCode) => {
+    assert.throws(
+      () => validateOptions(options),
       (err) => {
         assert.strictEqual(err.name, "ZodError");
-        assert.strictEqual(err.issues[0].code, errorCode);
+        assert.strictEqual(
+          err.issues.some((i) => i.code === errorCode),
+          true,
+        );
         return true;
       },
     );
@@ -56,8 +63,12 @@ describe("validateOptions", () => {
   });
 
   describe("collectionPathMode", () => {
-    test("should default collectionPathMode to subdirectory", () => {
-      expectsValidOption({}, "collectionPathMode", "subdirectory");
+    test("should have expected collectionPathMode default", () => {
+      expectsValidOption(
+        {},
+        "collectionPathMode",
+        defaultOptions.collectionPathMode,
+      );
     });
 
     test("should be collectionPathMode subdirectory when subdirectory specified", () => {
@@ -76,18 +87,18 @@ describe("validateOptions", () => {
       );
     });
 
-    test("should error when collectionPathMode is not a subdirectory or root", async () => {
-      await expectsZodError({ collectionPathMode: "foobar" }, "invalid_union");
+    test("should error when collectionPathMode is not a subdirectory or root", () => {
+      expectsZodError({ collectionPathMode: "foobar" }, "invalid_union");
     });
 
-    test("should fail when collectionPathMode is not a string", async () => {
-      await expectsZodError({ collectionPathMode: {} }, "invalid_union");
+    test("should fail when collectionPathMode is not a string", () => {
+      expectsZodError({ collectionPathMode: {} }, "invalid_union");
     });
   });
 
   describe("trailingSlash", () => {
-    test("should default trailingSlash to ignore", () => {
-      expectsValidOption({}, "trailingSlash", "ignore");
+    test("should have expected trailingSlash default", () => {
+      expectsValidOption({}, "trailingSlash", defaultOptions.trailingSlash);
     });
 
     test("should be trailingSlash always when always specified", () => {
@@ -110,40 +121,40 @@ describe("validateOptions", () => {
       );
     });
 
-    test("should error when trailingSlash is not a ignore, always or never", async () => {
-      await expectsZodError({ trailingSlash: "foobar" }, "invalid_union");
+    test("should error when trailingSlash is not a ignore, always or never", () => {
+      expectsZodError({ trailingSlash: "foobar" }, "invalid_union");
     });
 
-    test("should fail when trailingSlash is not a string", async () => {
-      await expectsZodError({ trailingSlash: {} }, "invalid_union");
+    test("should fail when trailingSlash is not a string", () => {
+      expectsZodError({ trailingSlash: {} }, "invalid_union");
     });
   });
 
   describe("basePath", () => {
-    test("should default baesPath to undefined", () => {
-      expectsValidOption({}, "basePath", undefined);
+    test("should have expected basePath default", () => {
+      expectsValidOption({}, "basePath", defaultOptions.basePath);
     });
 
     test("should be basePath value specified when provided", () => {
       expectsValidOption({ basePath: "foobar" }, "basePath", "foobar");
     });
 
-    test("should fail when baesPath not a string", async () => {
-      await expectsZodError({ basePath: {} }, "invalid_type");
+    test("should fail when baesPath not a string", () => {
+      expectsZodError({ basePath: {} }, "invalid_type");
     });
   });
 
   describe("contentPath", () => {
-    test("should default contentPath to src/content", () => {
-      expectsValidOption({}, "contentPath", ["src", "content"].join(path.sep));
+    test("should have expected contentPath default", () => {
+      expectsValidOption({}, "contentPath", defaultOptions.contentPath);
     });
 
     test("should be contentPath value specified when string", () => {
       expectsValidOption({ contentPath: "foobar" }, "contentPath", "foobar");
     });
 
-    test("should fail when contentPath not a string", async () => {
-      await expectsZodError({ contentPath: {} }, "invalid_type");
+    test("should fail when contentPath not a string", () => {
+      expectsZodError({ contentPath: {} }, "invalid_type");
     });
   });
 });
