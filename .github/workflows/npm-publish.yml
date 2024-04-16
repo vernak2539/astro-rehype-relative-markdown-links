@@ -3,10 +3,6 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-  workflow_run:
-    workflows: [ "Update Changelog" ]
-    type:
-      - complete
 
 jobs:
   publish:
@@ -27,3 +23,6 @@ jobs:
       - run: yarn npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Trigger Update Changelog Workflow
+        run: |
+          gh workflow run update-changelog.yml
