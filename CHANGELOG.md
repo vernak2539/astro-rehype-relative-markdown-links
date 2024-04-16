@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.12.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.12.1) (2024-04-16)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.12.0...v0.12.1)
+
+**Closed issues:**
+
+- bug: does not work cross-platform \(e.g., windows\) [\#31](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/31)
+
+**Merged pull requests:**
+
+- fix\(changelog\): split workflow into two jobs [\#42](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/42) ([vernak2539](https://github.com/vernak2539))
+- Automatically update changelog for new versions [\#41](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/41) ([vernak2539](https://github.com/vernak2539))
+- chore\(changelog\): remove old changelog generator \(for real\) [\#38](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/38) ([vernak2539](https://github.com/vernak2539))
+- fix: cross-platform dev/test/exec issues \(\#31\) [\#32](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/32) ([techfg](https://github.com/techfg))
+
 ## [v0.12.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.12.0) (2024-04-12)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.11.0...v0.12.0)
