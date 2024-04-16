@@ -41,7 +41,7 @@ ___
 
 ### default
 
-▸ **default**(`this`, `...parameters`): `void` \| `Transformer`\<`Root`, `Root`\>
+▸ **default**(`this`, `...parameters`): `undefined` \| `void` \| `Transformer`\<`Root`, `Root`\>
 
 Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
 
@@ -50,11 +50,11 @@ Rehype plugin for Astro to add support for transforming relative links in MD and
 | Name | Type |
 | :------ | :------ |
 | `this` | `Processor`\<`undefined`, `undefined`, `undefined`, `undefined`, `undefined`\> |
-| `...parameters` | [Options?] |
+| `...parameters` | [(null \| Options)?] |
 
 #### Returns
 
-`void` \| `Transformer`\<`Root`, `Root`\>
+`undefined` \| `void` \| `Transformer`\<`Root`, `Root`\>
 
 **`See`**
 
@@ -62,4 +62,4 @@ Rehype plugin for Astro to add support for transforming relative links in MD and
 
 #### Defined in
 
-[src/index.d.ts:91](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L91)
+[src/index.mjs:55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.mjs#L55)

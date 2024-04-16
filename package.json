@@ -31,12 +31,14 @@
   "packageManager": "yarn@4.1.1",
   "scripts": {
     "pre-release": "yarn run changelog && yarn run prettier && yarn run generate-docs",
-    "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src/index.d.ts",
+    "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src",
     "changelog": "auto-changelog -p",
     "prettier": "prettier ./src/** -w",
-    "test": "node --test"
+    "test": "node --test",
+    "type-check": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "catch-unknown": "^2.0.0",
     "debug": "^4.3.4",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
@@ -48,6 +50,8 @@
     "astro": ">=2.x <5"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "@types/node": "^18.17.8",
     "auto-changelog": "^2.4.0",
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1",

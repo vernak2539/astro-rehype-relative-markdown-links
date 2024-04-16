@@ -2,17 +2,18 @@ import path from "path";
 import { statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
+import { asError } from "catch-unknown";
 
 const pathSeparator = path.sep;
 const validMarkdownExtensions = [".md", ".mdx"];
 
-/** @type {import('./utils').IsCurrentDirectoryFn} */
+/** @type {import('./utils.d.ts').IsCurrentDirectoryFn} */
 function isCurrentDirectory(fpath) {
   const first2chars = fpath.slice(0, 2);
   return first2chars === "." + pathSeparator || first2chars === "./";
 }
 
-/** @type {import('./utils').ReplaceExtFn} */
+/** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
   if (typeof npath !== "string") {
     return npath;
@@ -33,7 +34,7 @@ export const replaceExt = (npath, ext) => {
   return nFilepath;
 };
 
-/** @type {import('./utils').IsValidRelativeLinkFn} */
+/** @type {import('./utils.d.ts').IsValidRelativeLinkFn} */
 export const isValidRelativeLink = (link) => {
   if (!link) {
     return false;
@@ -50,7 +51,7 @@ export const isValidRelativeLink = (link) => {
   return true;
 };
 
-/** @type {import('./utils').IsValidFile} */
+/** @type {import('./utils.d.ts').IsValidFile} */
 export const isValidFile = (path) => {
   if (!path) {
     return false;
@@ -58,8 +59,9 @@ export const isValidFile = (path) => {
 
   try {
     return statSync(path).isFile();
-  } catch (error) {
-    if (error.code === "ENOENT") {
+  } catch (err) {
+    const error = asError(err);
+    if ("code" in error && error.code === "ENOENT") {
       return false;
     }
 
@@ -67,7 +69,7 @@ export const isValidFile = (path) => {
   }
 };
 
-/** @type {import('./utils').SplitPathFromQueryAndFragmentFn} */
+/** @type {import('./utils.d.ts').SplitPathFromQueryAndFragmentFn} */
 export const splitPathFromQueryAndFragment = (url) => {
   const indexQuery = url.indexOf("?");
   const indexHash = url.indexOf("#");
@@ -92,13 +94,10 @@ export const splitPathFromQueryAndFragment = (url) => {
   return [decodeURI(splitUrl), splitQueryStringAndHash];
 };
 
-/**
- * @param {string} initialPath
- * @param {import('./index').Options} options
- */
+/** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
 export const normaliseAstroOutputPath = (initialPath, options = {}) => {
-  if (!initialPath || typeof initialPath !== "string") {
-    return;
+  if (!initialPath) {
+    return initialPath;
   }
 
   if (!options.basePath) {
@@ -112,7 +111,7 @@ export const normaliseAstroOutputPath = (initialPath, options = {}) => {
   return "/" + path.join(options.basePath, initialPath);
 };
 
-/** @type {import('./utils').GenerateSlug} */
+/** @type {import('./utils.d.ts').GenerateSlug} */
 export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
@@ -120,12 +119,12 @@ export const generateSlug = (pathSegments) => {
     .replace(/\/index$/, "");
 };
 
-/** @type {import('./utils').ResolveSlug} */
+/** @type {import('./utils.d.ts').ResolveSlug} */
 export const resolveSlug = (generatedSlug, frontmatterSlug) => {
   return z.string().default(generatedSlug).parse(frontmatterSlug);
 };
 
-/** @type {import('./utils').ApplyTrailingSlash} */
+/** @type {import('./utils.d.ts').ApplyTrailingSlash} */
 export const applyTrailingSlash = (
   origUrl,
   resolvedUrl,

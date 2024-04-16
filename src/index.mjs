@@ -24,10 +24,10 @@ const PATH_SEGMENT_EMPTY = "";
 // This is very specific to Astro
 const defaultContentPath = ["src", "content"].join(path.sep);
 
-/** @type {import("./index").CollectionPathMode} */
+/** @type {import("./index.d.ts").CollectionPathMode} */
 const defaultCollectionPathMode = "subdirectory";
 
-/** @type {import("./index").TrailingSlash} */
+/** @type {import("./index.d.ts").TrailingSlash} */
 const defaultTrailingSlash = "ignore";
 
 const OptionsSchema = z.object({
@@ -41,20 +41,31 @@ const OptionsSchema = z.object({
     .default(defaultTrailingSlash),
 });
 
-/** @typedef {import('./index').Options} Options */
-/** @type {import('unified').Plugin<[(Options | null | undefined)?], import('hast').Root>} */
+/** 
+ * @typedef {import('./index.d.ts').CollectionPathMode} CollectionPathMode 
+ * @typedef {import('./index.d.ts').TrailingSlash} TrailingSlash 
+ * @typedef {import('./index.d.ts').Options} Options 
+ */
+/**
+ * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
+ * 
+ * @type {import('unified').Plugin<[(Options | null | undefined)?], import('hast').Root>}
+ * @see {@link Options}
+ */
 function astroRehypeRelativeMarkdownLinks(opts = {}) {
-  const { success, data: options, error } = OptionsSchema.safeParse(opts);
+  const parsed = OptionsSchema.safeParse(opts);
 
-  if (!success) {
-    throw error;
+  if (!parsed.success) {
+    throw parsed.error;
   }
+
+  const options = parsed.data;
 
   return (tree, file) => {
     visit(tree, "element", (node) => {
       const nodeHref = node.properties.href;
 
-      if (!nodeHref) {
+      if (typeof nodeHref !== "string" || !nodeHref) {
         return;
       }
 

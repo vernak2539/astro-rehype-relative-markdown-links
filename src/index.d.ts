@@ -52,7 +52,7 @@ export interface Options {
    * }
    * ```
    */
-  basePath?: string;
+  basePath?: string | undefined;
   /**
    * @name trailingSlash
    * @type {TrailingSlash}

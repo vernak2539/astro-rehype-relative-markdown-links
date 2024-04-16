@@ -42,6 +42,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/debug@npm:^4.1.12":
+  version: 4.1.12
+  resolution: "@types/debug@npm:4.1.12"
+  dependencies:
+    "@types/ms": "npm:*"
+  checksum: 10c0/5dcd465edbb5a7f226e9a5efd1f399c6172407ef5840686b73e3608ce135eeca54ae8037dcd9f16bdb2768ac74925b820a8b9ecc588a58ca09eca6acabe33e2f
+  languageName: node
+  linkType: hard
+
 "@types/hast@npm:^3.0.0":
   version: 3.0.3
   resolution: "@types/hast@npm:3.0.3"
@@ -57,6 +66,22 @@ __metadata:
   dependencies:
     "@types/unist": "npm:*"
   checksum: 10c0/e6994404f5ce58073aa6c1a37ceac3060326470a464e2d751580a9f89e2dbca3a2a6222b849bdaaa5bffbe89033c50a886d17e49fca3b040a4ffcf970e387a0c
+  languageName: node
+  linkType: hard
+
+"@types/ms@npm:*":
+  version: 0.7.34
+  resolution: "@types/ms@npm:0.7.34"
+  checksum: 10c0/ac80bd90012116ceb2d188fde62d96830ca847823e8ca71255616bc73991aa7d9f057b8bfab79e8ee44ffefb031ddd1bcce63ea82f9e66f7c31ec02d2d823ccc
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.17.8":
+  version: 18.19.31
+  resolution: "@types/node@npm:18.19.31"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 10c0/bfebae8389220c0188492c82eaf328f4ba15e6e9b4abee33d6bf36d3b13f188c2f53eb695d427feb882fff09834f467405e2ed9be6aeb6ad4705509822d2ea08
   languageName: node
   linkType: hard
 
@@ -115,7 +140,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "astro-rehype-relative-markdown-links@workspace:."
   dependencies:
+    "@types/debug": "npm:^4.1.12"
+    "@types/node": "npm:^18.17.8"
     auto-changelog: "npm:^2.4.0"
+    catch-unknown: "npm:^2.0.0"
     debug: "npm:^4.3.4"
     github-slugger: "npm:^2.0.0"
     gray-matter: "npm:^4.0.3"
@@ -184,6 +212,13 @@ __metadata:
   dependencies:
     balanced-match: "npm:^1.0.0"
   checksum: 10c0/b358f2fe060e2d7a87aa015979ecea07f3c37d4018f8d6deb5bd4c229ad3a0384fe6029bb76cd8be63c81e516ee52d1a0673edbe2023d53a5191732ae3c3e49f
+  languageName: node
+  linkType: hard
+
+"catch-unknown@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "catch-unknown@npm:2.0.0"
+  checksum: 10c0/eee47640c39949ab732885f7962dafed4cb61d42502d04719045ebdca30e31e361e703df9c4db4061dd3e5977612cc72e404d117fbeabfbf17f1fa14e0d8e7eb
   languageName: node
   linkType: hard
 
@@ -1084,6 +1119,13 @@ __metadata:
   bin:
     uglifyjs: bin/uglifyjs
   checksum: 10c0/8b7fcdca69deb284fed7d2025b73eb747ce37f9aca6af53422844f46427152d5440601b6e2a033e77856a2f0591e4167153d5a21b68674ad11f662034ec13ced
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 10c0/bb673d7876c2d411b6eb6c560e0c571eef4a01c1c19925175d16e3a30c4c428181fb8d7ae802a261f283e4166a0ac435e2f505743aa9e45d893f9a3df017b501
   languageName: node
   linkType: hard
 
