@@ -1,7 +1,7 @@
 {
   "name": "astro-rehype-relative-markdown-links",
   "description": "A rehype plugin built for Astro that aims to transform relative links in MD and MDX files into the proper URL path",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "keywords": [
     "astro",
     "rehype",
@@ -32,7 +32,6 @@
   "scripts": {
     "pre-release": "yarn run changelog && yarn run prettier && yarn run generate-docs",
     "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src/index.d.ts",
-    "changelog": "auto-changelog -p",
     "prettier": "prettier ./src/** -w",
     "test": "node --test"
   },
@@ -47,16 +46,10 @@
     "astro": ">=2.x <5"
   },
   "devDependencies": {
-    "auto-changelog": "^2.4.0",
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1",
     "typedoc": "^0.25.13",
     "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.4.5"
-  },
-  "auto-changelog": {
-    "template": "keepachangelog",
-    "hideCredit": true,
-    "commitLimit": false
   }
 }
