@@ -1,3 +1,6 @@
+import { Plugin } from "unified";
+import { Root } from "hast";
+
 export type CollectionPathMode = "subdirectory" | "root";
 
 export type TrailingSlash = "always" | "never" | "ignore";
@@ -79,3 +82,11 @@ export interface Options {
    */
   trailingSlash?: TrailingSlash;
 }
+
+/**
+ * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
+ * 
+ * @see {@link Options}
+ */
+declare const astroRehypeRelativeMarkdownLinks: Plugin<[(Options | null | undefined)?], Root>;
+export default astroRehypeRelativeMarkdownLinks;

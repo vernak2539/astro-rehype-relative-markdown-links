@@ -41,7 +41,8 @@ const OptionsSchema = z.object({
     .default(defaultTrailingSlash),
 });
 
-/** @param {import('./index').Options} options */
+/** @typedef {import('./index').Options} Options */
+/** @type {import('unified').Plugin<[(Options | null | undefined)?], import('hast').Root>} */
 function astroRehypeRelativeMarkdownLinks(opts = {}) {
   const { success, data: options, error } = OptionsSchema.safeParse(opts);
 

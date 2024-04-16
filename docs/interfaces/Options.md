@@ -39,7 +39,7 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Defined in
 
-[index.d.ts:52](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L52)
+[src/index.d.ts:55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L55)
 
 ___
 
@@ -76,7 +76,7 @@ set this value and the default of `subdirectory` will be used.
 
 #### Defined in
 
-[index.d.ts:36](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L36)
+[src/index.d.ts:39](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L39)
 
 ___
 
@@ -98,7 +98,7 @@ This defines where the content (i.e. md, mdx, etc. files) is stored. This should
 
 #### Defined in
 
-[index.d.ts:14](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L14)
+[src/index.d.ts:17](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L17)
 
 ___
 
@@ -144,4 +144,4 @@ When set to `'ignore'` (the default), the following will occur:
 
 #### Defined in
 
-[index.d.ts:80](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L80)
+[src/index.d.ts:83](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L83)
