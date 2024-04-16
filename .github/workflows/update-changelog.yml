@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   update_changelog:
     runs-on: ubuntu-latest
@@ -16,13 +19,15 @@ jobs:
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
         run: gem install github_changelog_generator
-      - name: "Update CHANGELOG.md"
+      - name: "Generate and commit CHANGELOG.md"
         run: |
           github_changelog_generator
           git add CHANGELOG.md
-      - name: "Commit changes"
-        uses: devops-infra/action-commit-push@master
-        with:
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-          commit_prefix: "[skip ci]"
-          commit_message: "Update CHANGELOG.md"
+          if [ ! -n "$(git status -s)" ]; then
+            echo "NOTHING TO COMMIT"
+          else
+            git config user.name "Alex Vernacchia"
+            git config user.email "vernak2539@users.noreply.github.com"
+            git commit -m "[skip ci] Update CHANGELOG.md"
+            git push --no-verify
+          fi
