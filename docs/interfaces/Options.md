@@ -2,6 +2,12 @@
 
 # Interface: Options
 
+## Hierarchy
+
+- `input`\<`OptionsSchemaType`\>
+
+  ↳ **`Options`**
+
 ## Table of contents
 
 ### Properties
@@ -37,15 +43,19 @@ In the example below, `astro dev` will start your server at `/docs`.
 }
 ```
 
+#### Inherited from
+
+z.input.basePath
+
 #### Defined in
 
-[src/index.d.ts:55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L55)
+[src/options.mjs:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L50)
 
 ___
 
 ### collectionPathMode
 
-• `Optional` **collectionPathMode**: [`CollectionPathMode`](../README.md#collectionpathmode)
+• `Optional` **collectionPathMode**: ``"root"`` \| ``"subdirectory"``
 
 **`Name`**
 
@@ -74,9 +84,13 @@ set this value and the default of `subdirectory` will be used.
 }
 ```
 
+#### Inherited from
+
+z.input.collectionPathMode
+
 #### Defined in
 
-[src/index.d.ts:39](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L39)
+[src/options.mjs:33](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L33)
 
 ___
 
@@ -96,15 +110,19 @@ contentPath
 
 This defines where the content (i.e. md, mdx, etc. files) is stored. This should be a path relative to the root directory
 
+#### Inherited from
+
+z.input.contentPath
+
 #### Defined in
 
-[src/index.d.ts:17](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L17)
+[src/options.mjs:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L12)
 
 ___
 
 ### trailingSlash
 
-• `Optional` **trailingSlash**: [`TrailingSlash`](../README.md#trailingslash)
+• `Optional` **trailingSlash**: ``"always"`` \| ``"never"`` \| ``"ignore"``
 
 **`Name`**
 
@@ -123,8 +141,8 @@ Allows you to control the behavior for how trailing slashes should be handled on
 
 When set to `'ignore'` (the default), the following will occur:
   - If there is not a custom slug on the target file, the markdown link itself will determine if there is a trailing slash.
-      - `[Example](./my-doc.md/))` will result in a trailing slash
-      - `[Example](./my-doc.md))` will not result in a trailing slash
+      - `[Example](./my-doc.md/)` will result in a trailing slash
+      - `[Example](./my-doc.md)` will not result in a trailing slash
   - If there is a custom slug on the target file, the custom slug determines if there is a trailing slash.
       - `slug: my-doc/` will result in a trailing slash
       - `slug: my-doc` will not result in a trailing slash
@@ -142,6 +160,10 @@ When set to `'ignore'` (the default), the following will occur:
 
 [https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro](https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro)
 
+#### Inherited from
+
+z.input.trailingSlash
+
 #### Defined in
 
-[src/index.d.ts:83](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L83)
+[src/options.mjs:77](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L77)

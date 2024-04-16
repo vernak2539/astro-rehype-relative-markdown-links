@@ -3,7 +3,6 @@ import * as path from "path";
 import * as fs from "fs";
 import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
-import { z } from "zod";
 import {
   replaceExt,
   isValidRelativeLink,
@@ -14,6 +13,7 @@ import {
   resolveSlug,
   applyTrailingSlash,
 } from "./utils.mjs";
+import { validateOptions } from "./options.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
@@ -21,45 +21,15 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 
 const PATH_SEGMENT_EMPTY = "";
 
-// This is very specific to Astro
-const defaultContentPath = ["src", "content"].join(path.sep);
-
-/** @type {import("./index.d.ts").CollectionPathMode} */
-const defaultCollectionPathMode = "subdirectory";
-
-/** @type {import("./index.d.ts").TrailingSlash} */
-const defaultTrailingSlash = "ignore";
-
-const OptionsSchema = z.object({
-  contentPath: z.string().default(defaultContentPath),
-  collectionPathMode: z
-    .enum(["root", "subdirectory"])
-    .default(defaultCollectionPathMode),
-  basePath: z.string().optional(),
-  trailingSlash: z
-    .enum(["ignore", "always", "never"])
-    .default(defaultTrailingSlash),
-});
-
-/** 
- * @typedef {import('./index.d.ts').CollectionPathMode} CollectionPathMode 
- * @typedef {import('./index.d.ts').TrailingSlash} TrailingSlash 
- * @typedef {import('./index.d.ts').Options} Options 
- */
+/** @typedef {import('./options.d.ts').Options} Options */
 /**
  * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
- * 
+ *
  * @type {import('unified').Plugin<[(Options | null | undefined)?], import('hast').Root>}
  * @see {@link Options}
  */
 function astroRehypeRelativeMarkdownLinks(opts = {}) {
-  const parsed = OptionsSchema.safeParse(opts);
-
-  if (!parsed.success) {
-    throw parsed.error;
-  }
-
-  const options = parsed.data;
+  const options = validateOptions(opts);
 
   return (tree, file) => {
     visit(tree, "element", (node) => {

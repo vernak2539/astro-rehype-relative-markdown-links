@@ -145,6 +145,7 @@ __metadata:
     auto-changelog: "npm:^2.4.0"
     catch-unknown: "npm:^2.0.0"
     debug: "npm:^4.3.4"
+    esmock: "npm:^2.6.4"
     github-slugger: "npm:^2.0.0"
     gray-matter: "npm:^4.0.3"
     prettier: "npm:^4.0.0-alpha.8"
@@ -296,6 +297,13 @@ __metadata:
   version: 4.5.0
   resolution: "entities@npm:4.5.0"
   checksum: 10c0/5b039739f7621f5d1ad996715e53d964035f75ad3b9a4d38c6b3804bb226e282ffeae2443624d8fdd9c47d8e926ae9ac009c54671243f0c3294c26af7cc85250
+  languageName: node
+  linkType: hard
+
+"esmock@npm:^2.6.4":
+  version: 2.6.4
+  resolution: "esmock@npm:2.6.4"
+  checksum: 10c0/749feda1d267aff12e37eb189e3382c6a2c4f28c8384d31cc3e85308ac76011f032299b77023fa05d6d0aba802c3401ac54275e9377919d00b804ef619f17d44
   languageName: node
   linkType: hard
 

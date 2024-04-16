@@ -1,4 +1,4 @@
-import type { TrailingSlash, Options } from "./index.d.ts";
+import type { Options } from "./options.d.ts";
 
 export type SplitPathFromQueryAndFragmentFn = (
   path: string,
@@ -15,7 +15,7 @@ export type ResolveSlug = (
 export type ApplyTrailingSlash = (
   originalUrl: string,
   resolvedUrl: string,
-  trailingSlash: TrailingSlash,
+  trailingSlash: Options["trailingSlash"],
 ) => string;
 export type NormaliseAstroOutputPath = (
   initialPath: string,

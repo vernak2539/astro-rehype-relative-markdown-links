@@ -15,6 +15,7 @@
   "files": [
     "src/index.mjs",
     "src/utils.mjs",
+    "src/options.mjs",
     "src/**/*.d.ts",
     "README.md"
   ],
@@ -34,7 +35,7 @@
     "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src",
     "changelog": "auto-changelog -p",
     "prettier": "prettier ./src/** -w",
-    "test": "node --test",
+    "test": "node --loader=esmock --test",
     "type-check": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -53,6 +54,7 @@
     "@types/debug": "^4.1.12",
     "@types/node": "^18.17.8",
     "auto-changelog": "^2.4.0",
+    "esmock": "^2.6.4",
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1",
     "typedoc": "^0.25.13",

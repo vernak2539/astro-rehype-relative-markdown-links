@@ -8,34 +8,9 @@ astro-rehype-relative-markdown-links
 
 - [Options](interfaces/Options.md)
 
-### Type Aliases
-
-- [CollectionPathMode](README.md#collectionpathmode)
-- [TrailingSlash](README.md#trailingslash)
-
 ### Functions
 
 - [default](README.md#default)
-
-## Type Aliases
-
-### CollectionPathMode
-
-Ƭ **CollectionPathMode**: ``"subdirectory"`` \| ``"root"``
-
-#### Defined in
-
-[src/index.d.ts:4](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L4)
-
-___
-
-### TrailingSlash
-
-Ƭ **TrailingSlash**: ``"always"`` \| ``"never"`` \| ``"ignore"``
-
-#### Defined in
-
-[src/index.d.ts:6](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L6)
 
 ## Functions
 
@@ -62,4 +37,4 @@ Rehype plugin for Astro to add support for transforming relative links in MD and
 
 #### Defined in
 
-[src/index.mjs:55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.mjs#L55)
+[src/index.mjs:31](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.mjs#L31)
