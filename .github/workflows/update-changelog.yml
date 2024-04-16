@@ -11,22 +11,18 @@ jobs:
       name: npm-publish
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: ruby/setup-ruby@v1
-      - name: "Update CHANGELOG.md"
+      - name: "Install github_changelog_generator"
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
         run: gem install github_changelog_generator
-      - name: "Commit CHANGELOG.md"
+      - name: "Update CHANGELOG.md"
         run: |
           github_changelog_generator
           git add CHANGELOG.md
-          if [ ! -n "$(git status -s)" ]; then
-            echo "NOTHING TO COMMIT"
-          else
-            git config user.name "Alex Vernacchia"
-            git config user.email "vernak2539@users.noreply.github.com"
-            git commit -m "[skip ci] Update CHANGELOG.md"
-            git push --no-verify
-          fi
+      - name: "Commit changes"
+        uses: devops-infra/action-commit-push@master
+        with:
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
+          commit_prefix: "[skip ci]"
+          commit_message: "Update CHANGELOG.md"
