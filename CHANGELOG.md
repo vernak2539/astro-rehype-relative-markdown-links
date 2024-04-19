@@ -1,5 +1,30 @@
 # Changelog
 
+## [v0.13.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.1) (2024-04-19)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.0...v0.13.1)
+
+**Closed issues:**
+
+- bug: Links are generated for excluded content collection files [\#25](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/25)
+
+**Merged pull requests:**
+
+- fix: exclude files with underscore in path under content dir [\#37](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/37) ([techfg](https://github.com/techfg))
+
+## [v0.13.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.0) (2024-04-19)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.12.2...v0.13.0)
+
+**Closed issues:**
+
+- bug: transforms `href` of non-anchor elements [\#33](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/33)
+
+**Merged pull requests:**
+
+- fix\(changelog\): trigger update-changelog workflow from publish [\#44](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/44) ([vernak2539](https://github.com/vernak2539))
+- fix: only transform anchor elements [\#34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/34) ([techfg](https://github.com/techfg))
+
 ## [v0.12.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.12.2) (2024-04-19)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.12.1...v0.12.2)
