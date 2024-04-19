@@ -40,5 +40,5 @@ jobs:
             git config user.name "Alex Vernacchia"
             git config user.email "vernak2539@users.noreply.github.com"
             git commit -m "[skip ci] Update CHANGELOG.md"
-            git push --no-verify
+            git push origin main --no-verify
           fi
