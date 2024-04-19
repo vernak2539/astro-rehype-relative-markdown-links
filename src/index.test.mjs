@@ -4,11 +4,32 @@ import { fileURLToPath, pathToFileURL } from "url";
 import path, { dirname } from "path";
 import { rehype } from "rehype";
 import { visit } from "unist-util-visit";
+import esmock from "esmock";
+import { validateOptions as validateOptionsOriginal } from "./options.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 import astroRehypeRelativeMarkdownLinks from "./index.mjs";
+
+/*
+  NOTE ON ESMOCK USAGE
+
+  node:test does not provide a stock way of mocking sub-modules.  There is work being done on this (see
+  links below) but for now some type of module loader is required.  Esmock (https://github.com/iambumblehead/esmock) 
+  seems to address what is needed for our use cases for now although there doesn't seem to be a simple way for a simple spy
+  as you need to swap in the original manually.  If/When node:test supports this natively, esmock can be removed.
+
+  ** IMPORTANT ** According to esmock wiki, when using esmock < Node 20.6.0, the `--loader` command line
+  argument is needed when running tests.  In my tests while adding esmock, I was successfully able to run
+  tests on Node 18.19.1 & 20.11.1 without this flag but I did add it to package.json 'test' script given
+  the esmock documentation (see note under install command at https://github.com/iambumblehead/esmock/wiki#install).
+
+  For tracking stock functionality of module mocking with node:test, see:
+  - https://github.com/nodejs/help/issues/4298
+  - https://github.com/nodejs/node/issues/51164
+  - https://github.com/nodejs/node/issues/51164#issuecomment-2034518078
+*/
 
 function testSetupRehype(options = {}) {
   return (tree, file) => {
@@ -327,86 +348,31 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
   });
 
   describe("config option validation", () => {
-    test("should error when contentPath is not a string", async () => {
-      await assert.rejects(
-        async () => {
-          await rehype()
-            .use(testSetupRehype)
-            .use(astroRehypeRelativeMarkdownLinks, { contentPath: 1 })
-            .process("");
+    const runValidationTest = async (context, options) => {
+      const validateOptionsMock = context.mock.fn(validateOptionsOriginal);
+      const astroRehypeRelativeMarkdownLinksMock = await esmock("./index.mjs", {
+        "./options.mjs": {
+          validateOptions: validateOptionsMock,
         },
-        (err) => {
-          assert.strictEqual(err.name, "ZodError");
-          assert.deepStrictEqual(JSON.parse(err.message), [
-            {
-              code: "invalid_type",
-              expected: "string",
-              received: "number",
-              path: ["contentPath"],
-              message: "Expected string, received number",
-            },
-          ]);
+      });
+      const input = '<a href="./fixtures/test.md">foo</a>';
+      await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinksMock, options)
+        .process(input);
 
-          return true;
-        },
-      );
-    });
-
-    test("should error when collectionPathMode is not a subdirectory or root", async () => {
-      await assert.rejects(
-        async () => {
-          await rehype()
-            .use(testSetupRehype)
-            .use(astroRehypeRelativeMarkdownLinks, {
-              collectionPathMode: "not_supported",
-            })
-            .process("");
-        },
-        (err) => {
-          assert.strictEqual(err.name, "ZodError");
-          assert.deepStrictEqual(JSON.parse(err.message), [
-            {
-              code: "invalid_enum_value",
-              message:
-                "Invalid enum value. Expected 'root' | 'subdirectory', received 'not_supported'",
-              options: ["root", "subdirectory"],
-              path: ["collectionPathMode"],
-              received: "not_supported",
-            },
-          ]);
-
-          return true;
-        },
-      );
-    });
-
-    test('should error when trailingSlash is not "ignore", "always", or "never"', async () => {
-      await assert.rejects(
-        async () => {
-          await rehype()
-            .use(testSetupRehype)
-            .use(astroRehypeRelativeMarkdownLinks, {
-              trailingSlash: "not_supported",
-            })
-            .process("");
-        },
-        (err) => {
-          assert.strictEqual(err.name, "ZodError");
-          assert.deepStrictEqual(JSON.parse(err.message), [
-            {
-              code: "invalid_enum_value",
-              message:
-                "Invalid enum value. Expected 'ignore' | 'always' | 'never', received 'not_supported'",
-              options: ["ignore", "always", "never"],
-              path: ["trailingSlash"],
-              received: "not_supported",
-            },
-          ]);
-
-          return true;
-        },
-      );
-    });
+      assert.equal(validateOptionsMock.mock.calls.length, 1);
+    };
+    test("should validate options when options not provided", async (context) =>
+      await runValidationTest(context));
+    test("should validate options when options is null", async (context) =>
+      await runValidationTest(context, null));
+    test("should validate options when options is undefined", async (context) =>
+      await runValidationTest(context, undefined));
+    test("should validate options when options is empty object", async (context) =>
+      await runValidationTest(context, {}));
+    test("should validate options when options contains properties", async (context) =>
+      await runValidationTest(context, { contentPath: "src" }));
   });
 
   describe("config option - basePath", () => {
