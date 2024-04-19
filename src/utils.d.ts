@@ -22,3 +22,4 @@ export type NormaliseAstroOutputPath = (
 ) => string;
 export type Slash = (path: string, sep: string) => string;
 export type NormalizePath = (path: string) => string;
+export type ShouldProcessFile = (path: string) => boolean;
