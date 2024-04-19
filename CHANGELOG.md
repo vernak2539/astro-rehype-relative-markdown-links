@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.12.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.12.2) (2024-04-19)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.12.1...v0.12.2)
+
+**Merged pull requests:**
+
+- chore: generate changelog before publish and push [\#43](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/43) ([vernak2539](https://github.com/vernak2539))
+- chore: single source of truth for options [\#40](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/40) ([techfg](https://github.com/techfg))
+
 ## [v0.12.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.12.1) (2024-04-16)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.12.0...v0.12.1)
