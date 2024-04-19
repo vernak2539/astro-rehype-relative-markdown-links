@@ -17,7 +17,8 @@
     "src/utils.mjs",
     "src/options.mjs",
     "src/**/*.d.ts",
-    "README.md"
+    "README.md",
+    "docs/**/*.md"
   ],
   "repository": {
     "type": "git",
