@@ -31,14 +31,5 @@ jobs:
         run: yarn npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: "Commit CHANGELOG.md"
-        run: |
-          git add CHANGELOG.md
-          if [ ! -n "$(git status -s)" ]; then
-            echo "NOTHING TO COMMIT"
-          else
-            git config user.name "Alex Vernacchia"
-            git config user.email "vernak2539@users.noreply.github.com"
-            git commit -m "[skip ci] Update CHANGELOG.md"
-            git push origin main --no-verify
-          fi
+      - name: "Trigger update-changelog.yml workflow"
+        run: gh workflow run update-changelog.yml --ref main
