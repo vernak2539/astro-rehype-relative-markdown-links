@@ -281,6 +281,19 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     assert.equal(actual, expected);
   });
 
+  test("should not transform non-anchor elements", async () => {
+    const input = '<div href="./fixtures/test.md">foo</div>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><div href="./fixtures/test.md">foo</div></body></html>';
+
+    assert.equal(actual, expected);
+  });
+
   describe("absolute paths", () => {
     test("should not replace absolute path if file exists", async () => {
       const absolutePath = path.resolve("./fixtures/test.md");
