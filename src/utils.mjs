@@ -2,18 +2,19 @@ import path from "path";
 import { statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
+import { asError } from "catch-unknown";
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
   typeof process !== "undefined" && process.platform === "win32";
 const windowsSlashRE = /\\/g;
 
-/** @type {import('./utils').Slash} */
+/** @type {import('./utils.d.ts').Slash} */
 function slash(npath, sep) {
   return npath.replace(windowsSlashRE, sep);
 }
 
-/** @type {import('./utils').NormalizePath} */
+/** @type {import('./utils.d.ts').NormalizePath} */
 function normalizePath(npath) {
   return path.posix.normalize(isWindows ? slash(npath, path.posix.sep) : npath);
 }
@@ -24,7 +25,7 @@ export const FILE_PATH_SEPARATOR = path.sep;
 /** @type {string} */
 export const URL_PATH_SEPARATOR = "/";
 
-/** @type {import('./utils').ReplaceExtFn} */
+/** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
   if (typeof npath !== "string" || npath.length === 0) {
     return npath;
@@ -33,7 +34,7 @@ export const replaceExt = (npath, ext) => {
   return npath.replace(new RegExp(path.extname(npath) + "$"), ext);
 };
 
-/** @type {import('./utils').IsValidRelativeLinkFn} */
+/** @type {import('./utils.d.ts').IsValidRelativeLinkFn} */
 export const isValidRelativeLink = (link) => {
   if (!link) {
     return false;
@@ -50,7 +51,7 @@ export const isValidRelativeLink = (link) => {
   return true;
 };
 
-/** @type {import('./utils').IsValidFile} */
+/** @type {import('./utils.d.ts').IsValidFile} */
 export const isValidFile = (path) => {
   if (!path) {
     return false;
@@ -58,8 +59,9 @@ export const isValidFile = (path) => {
 
   try {
     return statSync(path).isFile();
-  } catch (error) {
-    if (error.code === "ENOENT") {
+  } catch (err) {
+    const error = asError(err);
+    if ("code" in error && error.code === "ENOENT") {
       return false;
     }
 
@@ -67,7 +69,7 @@ export const isValidFile = (path) => {
   }
 };
 
-/** @type {import('./utils').SplitPathFromQueryAndFragmentFn} */
+/** @type {import('./utils.d.ts').SplitPathFromQueryAndFragmentFn} */
 export const splitPathFromQueryAndFragment = (url) => {
   const indexQuery = url.indexOf("?");
   const indexHash = url.indexOf("#");
@@ -92,10 +94,7 @@ export const splitPathFromQueryAndFragment = (url) => {
   return [decodeURI(splitUrl), splitQueryStringAndHash];
 };
 
-/**
- * @param {string} initialPath
- * @param {import('./index').Options} options
- */
+/** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
 export const normaliseAstroOutputPath = (initialPath, options = {}) => {
   const buildPath = () => {
     if (!options.basePath) {
@@ -109,14 +108,14 @@ export const normaliseAstroOutputPath = (initialPath, options = {}) => {
     return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
   };
 
-  if (!initialPath || typeof initialPath !== "string") {
-    return;
+  if (!initialPath) {
+    return initialPath;
   }
 
   return normalizePath(buildPath());
 };
 
-/** @type {import('./utils').GenerateSlug} */
+/** @type {import('./utils.d.ts').GenerateSlug} */
 export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
@@ -124,12 +123,12 @@ export const generateSlug = (pathSegments) => {
     .replace(/\/index$/, "");
 };
 
-/** @type {import('./utils').ResolveSlug} */
+/** @type {import('./utils.d.ts').ResolveSlug} */
 export const resolveSlug = (generatedSlug, frontmatterSlug) => {
   return z.string().default(generatedSlug).parse(frontmatterSlug);
 };
 
-/** @type {import('./utils').ApplyTrailingSlash} */
+/** @type {import('./utils.d.ts').ApplyTrailingSlash} */
 export const applyTrailingSlash = (
   origUrl,
   resolvedUrl,

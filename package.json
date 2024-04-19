@@ -15,6 +15,7 @@
   "files": [
     "src/index.mjs",
     "src/utils.mjs",
+    "src/options.mjs",
     "src/**/*.d.ts",
     "README.md"
   ],
@@ -31,21 +32,27 @@
   "packageManager": "yarn@4.1.1",
   "scripts": {
     "pre-release": "yarn run changelog && yarn run prettier && yarn run generate-docs",
-    "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src/index.d.ts",
+    "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src",
     "prettier": "prettier ./src/** -w",
-    "test": "node --test"
+    "test": "node --loader=esmock --test",
+    "type-check": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "catch-unknown": "^2.0.0",
     "debug": "^4.3.4",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
-    "unist-util-visit": "^4.1.2",
+    "unified": "^11.0.4",
+    "unist-util-visit": "^5.0.0",
     "zod": "^3.22.4"
   },
   "peerDependencies": {
     "astro": ">=2.x <5"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "@types/node": "^18.17.8",
+    "esmock": "^2.6.4",
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.1",
     "typedoc": "^0.25.13",

@@ -8,27 +8,33 @@ astro-rehype-relative-markdown-links
 
 - [Options](interfaces/Options.md)
 
-### Type Aliases
+### Functions
 
-- [CollectionPathMode](README.md#collectionpathmode)
-- [TrailingSlash](README.md#trailingslash)
+- [default](README.md#default)
 
-## Type Aliases
+## Functions
 
-### CollectionPathMode
+### default
 
-Ƭ **CollectionPathMode**: ``"subdirectory"`` \| ``"root"``
+▸ **default**(`this`, `...parameters`): `undefined` \| `void` \| `Transformer`\<`Root`, `Root`\>
+
+Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `this` | `Processor`\<`undefined`, `undefined`, `undefined`, `undefined`, `undefined`\> |
+| `...parameters` | [(null \| Options)?] |
+
+#### Returns
+
+`undefined` \| `void` \| `Transformer`\<`Root`, `Root`\>
+
+**`See`**
+
+[Options](interfaces/Options.md)
 
 #### Defined in
 
-[index.d.ts:1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L1)
-
-___
-
-### TrailingSlash
-
-Ƭ **TrailingSlash**: ``"always"`` \| ``"never"`` \| ``"ignore"``
-
-#### Defined in
-
-[index.d.ts:3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L3)
+[src/index.mjs:33](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.mjs#L33)
