@@ -1,3 +1,3 @@
 ---
-slug: dir-test-custom-slug/slug-without-trailing-slash
+slug: slug-without-trailing-slash
 ---
