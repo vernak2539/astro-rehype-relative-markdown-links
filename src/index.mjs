@@ -66,7 +66,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const urlFileContent = fs.readFileSync(urlFilePath);
       const { data: frontmatter } = matter(urlFileContent);
       const frontmatterSlug = frontmatter.slug;
-      const contentDir = path.resolve(options.contentPath);
+      const contentDir = path.resolve(options.srcDir, "content");
       const collectionPathMode = options.collectionPathMode;
       const trailingSlashMode = options.trailingSlash;
 
@@ -112,12 +112,10 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const collectionName = path
         .dirname(relativeToContentPath)
         .split(FILE_PATH_SEPARATOR)[0];
-      const collectionPathSegment =
-        collectionPathMode === "root" ? PATH_SEGMENT_EMPTY : collectionName;
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
       const relativeToCollectionPath = path.relative(
-        collectionPathSegment,
+        collectionName,
         relativeToContentPath,
       );
       // md/mdx extentions should not be in the final url
@@ -135,9 +133,9 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       //        directory name of the content collection maps 1:1 to the site page path serviing the content collection
       //        page (see details above)
       const resolvedUrl = [
-        collectionPathSegment === PATH_SEGMENT_EMPTY
+        collectionPathMode === "root"
           ? ""
-          : URL_PATH_SEPARATOR + collectionPathSegment,
+          : URL_PATH_SEPARATOR + collectionName,
         resolvedSlug,
       ].join(URL_PATH_SEPARATOR);
 
@@ -159,6 +157,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       // Debugging
       debug("--------------------------------------");
       debug("BasePath                             : %s", options.basePath);
+      debug("SrcDir                               : %s", options.srcDir)
       debug("ContentDir                           : %s", contentDir);
       debug("CollectionPathMode                   : %s", collectionPathMode);
       debug("TrailingSlashMode                    : %s", trailingSlashMode);
@@ -173,7 +172,6 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       debug("URL file                             : %s", urlFilePath);
       debug("URL file relative to content path    : %s", relativeToContentPath);
       debug("Collection Name                      : %s", collectionName);
-      debug("Collection Path Segment              : %s", collectionPathSegment);
       debug(
         "URL file relative to collection path : %s",
         relativeToCollectionPath,

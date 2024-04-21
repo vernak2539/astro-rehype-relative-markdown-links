@@ -1,32 +1,39 @@
 import { z } from "zod";
-import path from "path";
 
 export const OptionsSchema = z.object({
   /**
-   * @name contentPath
-   * @default `src/content`
+   * @name srcDir
+   * @reference https://docs.astro.build/en/reference/configuration-reference/#srcdir
+   * @default `./src`
    * @description
-   *
-   * This defines where the content (i.e. md, mdx, etc. files) is stored. This should be a path relative to the root directory
+   * 
+   * Set the directory that Astro will read your site from.
+   * 
+   * The value can be either an absolute file system path or a path relative to the project root.
+   * @example
+   * ```js
+   * {
+   *   srcDir: './www'
+   * }
+   * ```
    */
-  contentPath: z.string().default(["src", "content"].join(path.sep)),
+  srcDir: z.string().default("./src"),
   /**
    * @name collectionPathMode
    * @default `subdirectory`
    * @description
    *
-   * Where you store your collections:
-   *   - `subdirectory` - Subdirectories under `contentPath` (ex: `src/content/docs/index.md` where `docs` is the content collection subdirectory of the contentPath `src/content`)
-   *   - `root` - Directly inside `contentPath` (ex: `src/content/docs/index.md` where `src/content/docs` is the `contentPath`)
+   * Set how the path to the referenced markdown file should be resolved:
+   *   - `'subdirectory'` - Prefix the path with the name of the content collection (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/docs/guides/my-guide`)
+   *   - `'root'` - Resolve the path as the site root (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/guides/my-guide`)
    *
-   * Use the `root` configuration option when you are explicitly setting the {@link contentPath} property to something other than `src/content` and you want the directory you specify
-   * for {@link contentPath} to be treated a single content collection as if it where located in the site root.  In most scenarios, you should set this value to `subdirectory` or not
-   * set this value and the default of `subdirectory` will be used.
+   * Use the `subdirectory` configuration option when you are treating your content collection as if it were located in the site root (ex: `src/pages`). In most scenarios, you should set this value to `prefix` or not
+   * set this value and the default of `prefix` will be used.
    * @example
    * ```js
    * {
-   *   // Use 'subdirectory' mode
-   *   collectionPathMode: 'subdirectory'
+   *   // Use 'root' mode
+   *   collectionPathMode: 'root'
    * }
    * ```
    */
