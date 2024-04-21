@@ -401,14 +401,14 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       await runValidationTest(context, { contentPath: "src" }));
   });
 
-  describe("config option - basePath", () => {
+  describe("config option - base", () => {
     test("should prefix base to output on file paths that exist", async () => {
       const input = '<a href="./fixtures/test.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
         .use(astroRehypeRelativeMarkdownLinks, {
           contentPath: "src",
-          basePath: "/testBase",
+          base: "/testBase",
         })
         .process(input);
 
