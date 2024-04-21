@@ -34,20 +34,20 @@ export const OptionsSchema = z.object({
     .union([z.literal("subdirectory"), z.literal("root")])
     .default("subdirectory"),
   /**
-   * @name basePath
+   * @name base
    * @reference https://docs.astro.build/en/reference/configuration-reference/#base
    * @description
    * The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
-   *
+   * @example
    * In the example below, `astro dev` will start your server at `/docs`.
-   *
+   * 
    * ```js
    * {
    *   base: '/docs'
    * }
    * ```
    */
-  basePath: z.string().optional(),
+  base: z.string().optional(),
   /**
    * @name trailingSlash
    * @default `ignore`

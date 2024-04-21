@@ -155,7 +155,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // Debugging
       debug("--------------------------------------");
-      debug("BasePath                             : %s", options.basePath);
+      debug("Base path                            : %s", options.base);
       debug("ContentDir                           : %s", contentDir);
       debug("CollectionPathMode                   : %s", collectionPathMode);
       debug("TrailingSlashMode                    : %s", trailingSlashMode);
