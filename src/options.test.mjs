@@ -5,7 +5,7 @@ import path from "path";
 
 /** @type {import('./options.d.ts').Options} */
 const defaultOptions = {
-  contentPath: ["src", "content"].join(path.sep),
+  srcDir: "./src",
   trailingSlash: "ignore",
   collectionPathMode: "subdirectory",
 };
@@ -54,7 +54,7 @@ describe("validateOptions", () => {
     });
 
     test("should return specified property value with remaining defaults", async () => {
-      const options = { contentPath: "foo/bar" };
+      const options = { srcDir: "foo/bar" };
       expectsValidOptions(options, {
         ...defaultOptions,
         ...options,
@@ -144,17 +144,17 @@ describe("validateOptions", () => {
     });
   });
 
-  describe("contentPath", () => {
-    test("should have expected contentPath default", () => {
-      expectsValidOption({}, "contentPath", defaultOptions.contentPath);
+  describe("srcDir", () => {
+    test("should have expected srcDir default", () => {
+      expectsValidOption({}, "srcDir", defaultOptions.srcDir);
     });
 
-    test("should be contentPath value specified when string", () => {
-      expectsValidOption({ contentPath: "foobar" }, "contentPath", "foobar");
+    test("should be srcDir value specified when string", () => {
+      expectsValidOption({ srcDir: "foobar" }, "srcDir", "foobar");
     });
 
-    test("should fail when contentPath not a string", () => {
-      expectsZodError({ contentPath: {} }, "invalid_type");
+    test("should fail when srcDir not a string", () => {
+      expectsZodError({ srcDir: {} }, "invalid_type");
     });
   });
 });
