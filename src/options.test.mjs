@@ -1,13 +1,16 @@
 import { describe, test } from "node:test";
 import { validateOptions } from "./options.mjs";
 import assert from "node:assert";
-import path from "path";
+
+/** @type {import('./options.d.ts').CollectionConfig} */
+const defaultCollectionConfig = {};
 
 /** @type {import('./options.d.ts').Options} */
 const defaultOptions = {
   srcDir: "./src",
   trailingSlash: "ignore",
-  collectionPathMode: "subdirectory",
+  collectionBase: "name",
+  collections: {},
 };
 
 describe("validateOptions", () => {
@@ -32,7 +35,7 @@ describe("validateOptions", () => {
 
   const expectsValidOption = (options, option, expected) => {
     const actual = validateOptions(options);
-    assert.equal(actual[option], expected);
+    assert.deepStrictEqual(actual[option], expected);
   };
 
   describe("defaults", () => {
@@ -62,37 +65,62 @@ describe("validateOptions", () => {
     });
   });
 
-  describe("collectionPathMode", () => {
-    test("should have expected collectionPathMode default", () => {
+  describe("collectionBase", () => {
+    test("should have expected collectionBase default", () => {
+      expectsValidOption({}, "collectionBase", defaultOptions.collectionBase);
+    });
+
+    test("should be collectionBase name when name specified", () => {
+      expectsValidOption({ collectionBase: "name" }, "collectionBase", "name");
+    });
+
+    test("should be collectionBase false when false specified", () => {
+      expectsValidOption({ collectionBase: false }, "collectionBase", false);
+    });
+
+    test("should error when collectionBase is a string", () => {
+      expectsZodError({ collectionBase: "foobar" }, "invalid_union");
+    });
+
+    test("should fail when collectionBase is an object", () => {
+      expectsZodError({ collectionBase: {} }, "invalid_union");
+    });
+  });
+
+  describe("collections", () => {
+    test("should have expected collections default", () => {
+      expectsValidOption({}, "collections", defaultOptions.collections);
+    });
+
+    test("should contain empty collection when empty collection specified", () => {
+      const expected = { docs: {} };
+      expectsValidOption({ collections: expected }, "collections", expected);
+    });
+
+    test("should contain base false for collection when base false specified", () => {
+      const expected = { docs: { base: false } };
+      expectsValidOption({ collections: expected }, "collections", expected);
+    });
+
+    test("should contain collection defaults when collection contains invalid collection key", () => {
       expectsValidOption(
-        {},
-        "collectionPathMode",
-        defaultOptions.collectionPathMode,
+        { collections: { docs: { thisdoesnotexistonschema: "foo" } } },
+        "collections",
+        { docs: defaultCollectionConfig },
       );
     });
 
-    test("should be collectionPathMode subdirectory when subdirectory specified", () => {
-      expectsValidOption(
-        { collectionPathMode: "subdirectory" },
-        "collectionPathMode",
-        "subdirectory",
-      );
+    test("should contain multiple collections when multiple collections specified", () => {
+      const expected = { docs: { base: false }, newsletter: { base: "name" } };
+      expectsValidOption({ collections: expected }, "collections", expected);
     });
 
-    test("should be collectionPathMode root when root specified", () => {
-      expectsValidOption(
-        { collectionPathMode: "root" },
-        "collectionPathMode",
-        "root",
-      );
+    test("should error when collections is not an object", () => {
+      expectsZodError({ collections: false }, "invalid_type");
     });
 
-    test("should error when collectionPathMode is not a subdirectory or root", () => {
-      expectsZodError({ collectionPathMode: "foobar" }, "invalid_union");
-    });
-
-    test("should fail when collectionPathMode is not a string", () => {
-      expectsZodError({ collectionPathMode: {} }, "invalid_union");
+    test("should error when collections contains numeric key", () => {
+      expectsZodError({ collections: { 5: "name" } }, "invalid_type");
     });
   });
 

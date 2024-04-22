@@ -10,6 +10,7 @@ import {
   generateSlug,
   resolveSlug,
   applyTrailingSlash,
+  resolveCollectionBase,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -264,13 +265,17 @@ describe("isValidFile", () => {
   });
 
   test("return false if relative path to .mdx file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/content/docs/does-not-exist.mdx");
+    const actual = isValidFile(
+      "./src/fixtures/content/docs/does-not-exist.mdx",
+    );
 
     assert.equal(actual, false);
   });
 
   test("return false if relative path to a file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/content/docs/does-not-exist.txt");
+    const actual = isValidFile(
+      "./src/fixtures/content/docs/does-not-exist.txt",
+    );
 
     assert.equal(actual, false);
   });
@@ -401,5 +406,71 @@ describe("applyTrailingSlash", () => {
 
       assert.equal(actual, "/foo");
     });
+  });
+});
+
+describe("resolveCollectionBase", () => {
+  test("returns absolute collection name path when top-level name and no collection override", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: "name",
+      collections: {},
+    });
+    assert.equal(actual, "/docs");
+  });
+
+  test("returns absolute collection name path when top-level false and collection override name", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: false,
+      collections: { docs: { base: "name" } },
+    });
+    assert.equal(actual, "/docs");
+  });
+
+  test("returns absolute collection name path when top-level name and collection override name", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: "name",
+      collections: { docs: { base: "name" } },
+    });
+    assert.equal(actual, "/docs");
+  });
+
+  test("returns absolute collection name path when top-level name and no collection override matches collection name", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: "name",
+      collections: { fake: { base: false } },
+    });
+    assert.equal(actual, "/docs");
+  });
+
+  test("returns empty string when top-level false and no collection override", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: false,
+      collections: {},
+    });
+    assert.equal(actual, "");
+  });
+
+  test("returns empty string when top-level name and collection override false", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: "name",
+      collections: { docs: { base: false } },
+    });
+    assert.equal(actual, "");
+  });
+
+  test("returns empty string when top-level false and collection override false", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: false,
+      collections: { docs: { base: false } },
+    });
+    assert.equal(actual, "");
+  });
+
+  test("returns empty string when top-level false and no collection override matches collection name", () => {
+    const actual = resolveCollectionBase("docs", {
+      collectionBase: false,
+      collections: { fake: { base: "name" } },
+    });
+    assert.equal(actual, "");
   });
 });
