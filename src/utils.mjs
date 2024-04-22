@@ -165,10 +165,18 @@ export function shouldProcessFile(npath) {
 
 /** @type {import('./utils.d.ts').ResolveCollectionBase} */
 export function resolveCollectionBase(collectionName, options) {
-  const customBaseMode = options.collections[collectionName]?.base;
+  const config = options.collections[collectionName];
+  const customBaseMode = config?.base;
+  const customCollectionName = config?.name;
   const effectiveBaseMode =
     customBaseMode === false || typeof customBaseMode === "string"
       ? customBaseMode
       : options.collectionBase;
-  return effectiveBaseMode === false ? "" : URL_PATH_SEPARATOR + collectionName;
+  const effectiveCollectionName =
+    typeof customCollectionName === "string"
+      ? customCollectionName
+      : collectionName;
+  return effectiveBaseMode === false
+    ? ""
+    : URL_PATH_SEPARATOR + effectiveCollectionName;
 }

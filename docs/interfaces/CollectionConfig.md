@@ -13,6 +13,7 @@
 ### Properties
 
 - [base](CollectionConfig.md#base)
+- [name](CollectionConfig.md#name)
 
 ## Properties
 
@@ -35,3 +36,29 @@ z.input.base
 #### Defined in
 
 [src/options.mjs:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L12)
+
+___
+
+### name
+
+• `Optional` **name**: `string`
+
+**`Name`**
+
+name
+
+**`Description`**
+
+Override the name of the collection from disk.
+
+Use this option when your collection page path does not correspond to the name of the collection on disk (ex. `src/content/docs/reference.md` resolves to a page path of /my-docs/reference).
+
+When not specified, the name of the collection from disk will be used where applicable.
+
+#### Inherited from
+
+z.input.name
+
+#### Defined in
+
+[src/options.mjs:23](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L23)
