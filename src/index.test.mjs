@@ -496,60 +496,82 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
   });
 
   describe("config option - collections", async () => {
-    test("should apply base when top-level collectionBase is false and collection level is 'name'", async () => {
-      const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
-      const { value: actual } = await rehype()
-        .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, {
-          srcDir: "src/fixtures",
-          collectionBase: false,
-          collections: {
-            docs: { base: "name" },
-          },
-        })
-        .process(input);
+    describe("collections:base", () => {
+      test("should apply base when top-level collectionBase is false and collection level is 'name'", async () => {
+        const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: false,
+            collections: {
+              docs: { base: "name" },
+            },
+          })
+          .process(input);
 
-      const expected =
-        '<html><head></head><body><a href="/docs/test">foo</a></body></html>';
+        const expected =
+          '<html><head></head><body><a href="/docs/test">foo</a></body></html>';
 
-      assert.equal(actual, expected);
+        assert.equal(actual, expected);
+      });
+
+      test("should not apply base when top-level collectionBase is name and collection level is false", async () => {
+        const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              docs: { base: false },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should not apply base when top-level collectionBase is not specified and collection level is false", async () => {
+        const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collections: {
+              docs: { base: false },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
     });
 
-    test("should not apply base when top-level collectionBase is name and collection level is false", async () => {
-      const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
-      const { value: actual } = await rehype()
-        .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, {
-          srcDir: "src/fixtures",
-          collectionBase: "name",
-          collections: {
-            docs: { base: false },
-          },
-        })
-        .process(input);
+    describe("collections:name", async () => {
+      test("should contain name from override when name override specified", async () => {
+        const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collections: {
+              docs: { name: "my-docs" },
+            },
+          })
+          .process(input);
 
-      const expected =
-        '<html><head></head><body><a href="/test">foo</a></body></html>';
+        const expected =
+          '<html><head></head><body><a href="/my-docs/test">foo</a></body></html>';
 
-      assert.equal(actual, expected);
-    });
-
-    test("should not apply base when top-level collectionBase is not specified and collection level is false", async () => {
-      const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
-      const { value: actual } = await rehype()
-        .use(testSetupRehype)
-        .use(astroRehypeRelativeMarkdownLinks, {
-          srcDir: "src/fixtures",
-          collections: {
-            docs: { base: false },
-          },
-        })
-        .process(input);
-
-      const expected =
-        '<html><head></head><body><a href="/test">foo</a></body></html>';
-
-      assert.equal(actual, expected);
+        assert.equal(actual, expected);
+      });
     });
   });
 

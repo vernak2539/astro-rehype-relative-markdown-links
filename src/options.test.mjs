@@ -88,39 +88,61 @@ describe("validateOptions", () => {
   });
 
   describe("collections", () => {
-    test("should have expected collections default", () => {
-      expectsValidOption({}, "collections", defaultOptions.collections);
+    describe("collections:core", () => {
+      test("should have expected collections default", () => {
+        expectsValidOption({}, "collections", defaultOptions.collections);
+      });
+
+      test("should contain empty collection when empty collection specified", () => {
+        const expected = { docs: {} };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain collection defaults when collection contains invalid collection key", () => {
+        expectsValidOption(
+          { collections: { docs: { thisdoesnotexistonschema: "foo" } } },
+          "collections",
+          { docs: defaultCollectionConfig },
+        );
+      });
+
+      test("should error when collections is not an object", () => {
+        expectsZodError({ collections: false }, "invalid_type");
+      });
+
+      test("should error when collections contains numeric key", () => {
+        expectsZodError({ collections: { 5: "name" } }, "invalid_type");
+      });
     });
 
-    test("should contain empty collection when empty collection specified", () => {
-      const expected = { docs: {} };
-      expectsValidOption({ collections: expected }, "collections", expected);
+    describe("collections:base", () => {
+      test("should contain base false for collection when base false specified", () => {
+        const expected = { docs: { base: false } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain multiple collections when multiple collections specified", () => {
+        const expected = {
+          docs: { base: false },
+          newsletter: { base: "name" },
+        };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
     });
 
-    test("should contain base false for collection when base false specified", () => {
-      const expected = { docs: { base: false } };
-      expectsValidOption({ collections: expected }, "collections", expected);
-    });
+    describe("collections:name", () => {
+      test("should contain name when name specified", () => {
+        const expected = { docs: { name: "my-docs" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
 
-    test("should contain collection defaults when collection contains invalid collection key", () => {
-      expectsValidOption(
-        { collections: { docs: { thisdoesnotexistonschema: "foo" } } },
-        "collections",
-        { docs: defaultCollectionConfig },
-      );
-    });
-
-    test("should contain multiple collections when multiple collections specified", () => {
-      const expected = { docs: { base: false }, newsletter: { base: "name" } };
-      expectsValidOption({ collections: expected }, "collections", expected);
-    });
-
-    test("should error when collections is not an object", () => {
-      expectsZodError({ collections: false }, "invalid_type");
-    });
-
-    test("should error when collections contains numeric key", () => {
-      expectsZodError({ collections: { 5: "name" } }, "invalid_type");
+      test("should contain multiple collections when multiple collections specified", () => {
+        const expected = {
+          docs: { name: "my-docs" },
+          newsletter: { name: "my-newsletter" },
+        };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
     });
   });
 
