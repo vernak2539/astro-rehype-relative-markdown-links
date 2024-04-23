@@ -1,7 +1,5 @@
 import { visit } from "unist-util-visit";
 import * as path from "path";
-import * as fs from "fs";
-import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
 import {
   replaceExt,
@@ -16,6 +14,7 @@ import {
   FILE_PATH_SEPARATOR,
   shouldProcessFile,
   resolveCollectionBase,
+  getMatter,
 } from "./utils.mjs";
 import { validateOptions } from "./options.mjs";
 
@@ -65,9 +64,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       }
 
       // read gray matter from href file
-      const urlFileContent = fs.readFileSync(urlFilePath);
-      const { data: frontmatter } = matter(urlFileContent);
-      const frontmatterSlug = frontmatter.slug;
+      const { slug: frontmatterSlug } = getMatter(urlFilePath);
       const contentDir = path.resolve(options.srcDir, "content");
       const trailingSlashMode = options.trailingSlash;
 

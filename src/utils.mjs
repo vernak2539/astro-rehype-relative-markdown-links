@@ -1,8 +1,9 @@
 import path from "path";
-import { statSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 import { asError } from "catch-unknown";
+import matter from "gray-matter";
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
@@ -179,4 +180,18 @@ export function resolveCollectionBase(collectionName, options) {
   return effectiveBaseMode === false
     ? ""
     : URL_PATH_SEPARATOR + effectiveCollectionName;
+}
+
+/** @type {Record<string, import('./utils.d.ts').MatterData>} */
+const matterCache = {};
+/** @type {import('./utils.d.ts').GetMatter} */
+export function getMatter(npath) {
+  const readMatter = () => {
+    const content = readFileSync(npath);
+    const { data: frontmatter } = matter(content);
+    matterCache[npath] = frontmatter;
+    return frontmatter;
+  };
+
+  return matterCache[npath] || readMatter();
 }

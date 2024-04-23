@@ -27,3 +27,5 @@ export type ResolveCollectionBase = (
   collectionName: string,
   options: EffectiveOptions,
 ) => string;
+export type MatterData = { slug?: string };
+export type GetMatter = (path: string) => MatterData;
