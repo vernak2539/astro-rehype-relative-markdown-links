@@ -97,8 +97,10 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
         KNOWN LIMITATIONS/ISSUES
         - Astro allows mapping a content collection to multiple site paths (as mentioned above).  The current approach of this library
         assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name (or custom slug).  
-        For example, if you have a content collection at src/content/blogs but your site page path is at /pages/my-blog/[...slug].astro and you do not
-        have a custom slug, the default functionality of this library will not work currently.  See https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/24.
+        For example, if you have a content collection at src/content/blogs but your site page path is at /pages/my-blog/[...slug].astro and you have not
+        overridden the collection name to `my-blog` via options.<collectionname>.name, the default functionality of this library will not work currently.
+        Note, that even when overridden via options, if you map multiple page paths to the same collection (e.g., /pages/my-blog/[...slug].astro &
+        /pages/another-blog/[...slug.astro].astro), the `name` option value will be used for both.
       */
 
       // determine the path of the target file relative to the content path
