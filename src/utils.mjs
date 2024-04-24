@@ -175,12 +175,15 @@ export function resolveCollectionBase(collectionOptions) {
 
 /** @type {Record<string, import('./utils.d.ts').MatterData>} */
 const matterCache = {};
+const matterCacheEnabled = process.env.MATTER_CACHE_DISABLE !== "true";
 /** @type {import('./utils.d.ts').GetMatter} */
 export function getMatter(npath) {
   const readMatter = () => {
     const content = readFileSync(npath);
     const { data: frontmatter } = matter(content);
-    matterCache[npath] = frontmatter;
+    if (matterCacheEnabled) {
+      matterCache[npath] = frontmatter;
+    }
     return frontmatter;
   };
 
