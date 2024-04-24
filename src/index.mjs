@@ -16,7 +16,7 @@ import {
   resolveCollectionBase,
   getMatter,
 } from "./utils.mjs";
-import { validateOptions } from "./options.mjs";
+import { validateOptions, mergeCollectionOptions } from "./options.mjs";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
@@ -110,11 +110,14 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const collectionName = path
         .dirname(relativeToContentPath)
         .split(FILE_PATH_SEPARATOR)[0];
+      // flatten options merging any collection overrides
+      const collectionOptions = mergeCollectionOptions(collectionName, options);
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
+      const collectionDir = path.join(contentDir, collectionName);
       const relativeToCollectionPath = path.relative(
-        collectionName,
-        relativeToContentPath,
+        collectionDir,
+        urlFilePath,
       );
       // md/mdx extentions should not be in the final url
       const withoutFileExt = replaceExt(relativeToCollectionPath, "");
@@ -125,10 +128,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       // if we have a custom slug, use it, else use the default
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
       // determine the collection base based on specified options
-      const resolvedCollectionBase = resolveCollectionBase(
-        collectionName,
-        options,
-      );
+      const resolvedCollectionBase = resolveCollectionBase(collectionOptions);
 
       // content collection slugs are relative to content collection root (or site root if collectionPathMode is `root`)
       // so build url including the content collection name (if applicable) and the pages slug
@@ -152,13 +152,23 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
         webPathFinal += urlQueryStringAndFragmentPart;
       }
 
-      webPathFinal = normaliseAstroOutputPath(webPathFinal, options);
+      webPathFinal = normaliseAstroOutputPath(webPathFinal, collectionOptions);
 
       // Debugging
       debug("--------------------------------------");
       debug("BasePath                             : %s", options.basePath);
       debug("SrcDir                               : %s", options.srcDir);
       debug("ContentDir                           : %s", contentDir);
+      debug("CollectionDir                        : %s", collectionDir);
+      debug("Collection Name from Disk            : %s", collectionName);
+      debug(
+        "Resolved Collection Name Option      : %s",
+        collectionOptions.collectionName,
+      );
+      debug(
+        "Resolved Collection Base Option      : %s",
+        collectionOptions.collectionBase,
+      );
       debug(
         "Resolved Collection Base             : %s",
         resolvedCollectionBase,
@@ -174,7 +184,6 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       );
       debug("URL file                             : %s", urlFilePath);
       debug("URL file relative to content path    : %s", relativeToContentPath);
-      debug("Collection Name                      : %s", collectionName);
       debug(
         "URL file relative to collection path : %s",
         relativeToCollectionPath,

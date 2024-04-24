@@ -143,3 +143,14 @@ export const validateOptions = (options) => {
 
   return result.data;
 };
+
+/** @type {import('./options.d.ts').MergeCollectionOptions} */
+export const mergeCollectionOptions = (collectionName, options) => {
+  const config = options.collections[collectionName] || {};
+  const { base = options.collectionBase, name = collectionName } = config;
+  return {
+    ...options,
+    collectionBase: base,
+    collectionName: name,
+  };
+};
