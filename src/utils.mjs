@@ -95,17 +95,19 @@ export const splitPathFromQueryAndFragment = (url) => {
 };
 
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
-export const normaliseAstroOutputPath = (initialPath, options) => {
+export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   const buildPath = () => {
-    if (!options.basePath) {
+    if (!collectionOptions.basePath) {
       return initialPath;
     }
 
-    if (options.basePath.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(options.basePath, initialPath);
+    if (collectionOptions.basePath.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(collectionOptions.basePath, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
+    return (
+      URL_PATH_SEPARATOR + path.join(collectionOptions.basePath, initialPath)
+    );
   };
 
   if (!initialPath) {
@@ -164,19 +166,8 @@ export function shouldProcessFile(npath) {
 }
 
 /** @type {import('./utils.d.ts').ResolveCollectionBase} */
-export function resolveCollectionBase(collectionName, options) {
-  const config = options.collections[collectionName];
-  const customBaseMode = config?.base;
-  const customCollectionName = config?.name;
-  const effectiveBaseMode =
-    customBaseMode === false || typeof customBaseMode === "string"
-      ? customBaseMode
-      : options.collectionBase;
-  const effectiveCollectionName =
-    typeof customCollectionName === "string"
-      ? customCollectionName
-      : collectionName;
-  return effectiveBaseMode === false
+export function resolveCollectionBase(collectionOptions) {
+  return collectionOptions.collectionBase === false
     ? ""
-    : URL_PATH_SEPARATOR + effectiveCollectionName;
+    : URL_PATH_SEPARATOR + collectionOptions.collectionName;
 }

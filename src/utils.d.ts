@@ -1,4 +1,4 @@
-import type { EffectiveOptions } from "./options.d.ts";
+import type { EffectiveCollectionOptions } from "./options.d.ts";
 
 export type SplitPathFromQueryAndFragmentFn = (
   path: string,
@@ -14,16 +14,15 @@ export type ResolveSlug = (
 export type ApplyTrailingSlash = (
   originalUrl: string,
   resolvedUrl: string,
-  trailingSlash: EffectiveOptions["trailingSlash"],
+  trailingSlash: EffectiveCollectionOptions["trailingSlash"],
 ) => string;
 export type NormaliseAstroOutputPath = (
   initialPath: string,
-  options: EffectiveOptions,
+  collectionOptions: EffectiveCollectionOptions,
 ) => string;
 export type Slash = (path: string, sep: string) => string;
 export type NormalizePath = (path: string) => string;
 export type ShouldProcessFile = (path: string) => boolean;
 export type ResolveCollectionBase = (
-  collectionName: string,
-  options: EffectiveOptions,
+  collectionOptions: EffectiveCollectionOptions,
 ) => string;

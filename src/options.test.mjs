@@ -1,5 +1,5 @@
 import { describe, test } from "node:test";
-import { validateOptions } from "./options.mjs";
+import { mergeCollectionOptions, validateOptions } from "./options.mjs";
 import assert from "node:assert";
 
 /** @type {import('./options.d.ts').CollectionConfig} */
@@ -287,6 +287,99 @@ describe("validateOptions", () => {
 
     test("should error when srcDir is null", () => {
       expectsZodError({ srcDir: null }, "invalid_type");
+    });
+  });
+});
+
+describe("mergeCollectionOptions", () => {
+  describe("collectionBase", () => {
+    test("collectionBase should be name when top-level name and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should name when top-level false and collection override name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { docs: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be name when top-level name and collection override name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be name when top-level name and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { fake: { base: false } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be false when top-level false and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false top-level name and collection override false", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: false } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false when top-level false and collection override false", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { docs: { base: false } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false when top-level false and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+  });
+
+  describe("collectionName", () => {
+    test("collectionName should contain name from parameter when no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collections: {},
+      });
+      assert.equal(actual.collectionName, "docs");
+    });
+
+    test("collectionName should contain name from collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { name: "my-docs" } },
+      });
+      assert.equal(actual.collectionName, "my-docs");
+    });
+
+    test("collectionName should contain name from parameter when no collection overrides matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { fake: { name: "my-docs" } },
+      });
+      assert.equal(actual.collectionName, "docs");
     });
   });
 });
