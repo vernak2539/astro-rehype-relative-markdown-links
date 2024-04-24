@@ -128,6 +128,11 @@ describe("validateOptions", () => {
     });
 
     describe("collections:base", () => {
+      test("should contain base name for collection when base name specified", () => {
+        const expected = { docs: { base: "name" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
       test("should contain base false for collection when base false specified", () => {
         const expected = { docs: { base: false } };
         expectsValidOption({ collections: expected }, "collections", expected);

@@ -410,19 +410,23 @@ describe("applyTrailingSlash", () => {
 });
 
 describe("resolveCollectionBase", () => {
-  test("should return absolute collection name path when base is name", () => {
-    const actual = resolveCollectionBase({
-      collectionBase: "name",
-      collectionName: "docs",
+  describe("collectionBase:name", () => {
+    test("should return absolute collection name path when collectionBase is name", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: "name",
+        collectionName: "docs",
+      });
+      assert.equal(actual, "/docs");
     });
-    assert.equal(actual, "/docs");
   });
 
-  test("should return empty string when base is false", () => {
-    const actual = resolveCollectionBase({
-      collectionBase: false,
-      collectionName: undefined,
+  describe("collectionBase:false", () => {
+    test("should return empty string when collectionBase is false", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: false,
+        collectionName: undefined,
+      });
+      assert.equal(actual, "");
     });
-    assert.equal(actual, "");
   });
 });
