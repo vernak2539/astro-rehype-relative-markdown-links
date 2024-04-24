@@ -205,7 +205,7 @@ describe("resolveSlug", () => {
 
 describe("normaliseAstroOutputPath", () => {
   describe("prefix base to path", () => {
-    test("base with no slashes", () => {
+    test("should prefix base with no slashes", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "base",
       });
@@ -213,7 +213,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start", () => {
+    test("should prefix base with slash at start", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "/base",
       });
@@ -221,7 +221,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at end", () => {
+    test("should prefix base with slash at end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "base/",
       });
@@ -229,7 +229,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start and end", () => {
+    test("should prefix base with slash at start and end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "/base/",
       });
