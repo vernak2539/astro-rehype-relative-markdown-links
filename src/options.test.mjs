@@ -78,12 +78,20 @@ describe("validateOptions", () => {
       expectsValidOption({ collectionBase: false }, "collectionBase", false);
     });
 
-    test("should error when collectionBase is a string", () => {
+    test("should error when collectionBase is a string containing an invalid value", () => {
       expectsZodError({ collectionBase: "foobar" }, "invalid_union");
     });
 
-    test("should fail when collectionBase is an object", () => {
+    test("should error when collectionBase is a number", () => {
+      expectsZodError({ collectionBase: 5 }, "invalid_union");
+    });
+
+    test("should error when collectionBase is an object", () => {
       expectsZodError({ collectionBase: {} }, "invalid_union");
+    });
+
+    test("should error when collectionBase is null", () => {
+      expectsZodError({ collectionBase: null }, "invalid_union");
     });
   });
 
@@ -113,6 +121,10 @@ describe("validateOptions", () => {
       test("should error when collections contains numeric key", () => {
         expectsZodError({ collections: { 5: "name" } }, "invalid_type");
       });
+
+      test("should error when collections is null", () => {
+        expectsZodError({ collections: null }, "invalid_type");
+      });
     });
 
     describe("collections:base", () => {
@@ -128,6 +140,34 @@ describe("validateOptions", () => {
         };
         expectsValidOption({ collections: expected }, "collections", expected);
       });
+
+      test("should error when base is a string containing an invalid value", () => {
+        expectsZodError(
+          { collections: { docs: { base: "foobar" } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is a number", () => {
+        expectsZodError(
+          { collections: { docs: { base: 5 } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is an object", () => {
+        expectsZodError(
+          { collections: { docs: { base: {} } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is null", () => {
+        expectsZodError(
+          { collections: { docs: { base: null } } },
+          "invalid_union",
+        );
+      });
     });
 
     describe("collections:name", () => {
@@ -142,6 +182,24 @@ describe("validateOptions", () => {
           newsletter: { name: "my-newsletter" },
         };
         expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should error when name is a number", () => {
+        expectsZodError({ collections: { docs: { name: 5 } } }, "invalid_type");
+      });
+
+      test("should error when name is an object", () => {
+        expectsZodError(
+          { collections: { docs: { name: {} } } },
+          "invalid_type",
+        );
+      });
+
+      test("should error when name is null", () => {
+        expectsZodError(
+          { collections: { docs: { name: null } } },
+          "invalid_type",
+        );
       });
     });
   });
@@ -175,8 +233,16 @@ describe("validateOptions", () => {
       expectsZodError({ trailingSlash: "foobar" }, "invalid_union");
     });
 
-    test("should fail when trailingSlash is not a string", () => {
+    test("should error when trailingSlash is a number", () => {
+      expectsZodError({ trailingSlash: 5 }, "invalid_union");
+    });
+
+    test("should error when trailingSlash is a object", () => {
       expectsZodError({ trailingSlash: {} }, "invalid_union");
+    });
+
+    test("should error when trailingSlash is null", () => {
+      expectsZodError({ trailingSlash: null }, "invalid_union");
     });
   });
 
@@ -189,8 +255,16 @@ describe("validateOptions", () => {
       expectsValidOption({ basePath: "foobar" }, "basePath", "foobar");
     });
 
-    test("should fail when baesPath not a string", () => {
+    test("should error when basePath is a number", () => {
+      expectsZodError({ basePath: 5 }, "invalid_type");
+    });
+
+    test("should error when basePath is a object", () => {
       expectsZodError({ basePath: {} }, "invalid_type");
+    });
+
+    test("should error when basePath is null", () => {
+      expectsZodError({ basePath: null }, "invalid_type");
     });
   });
 
@@ -203,8 +277,16 @@ describe("validateOptions", () => {
       expectsValidOption({ srcDir: "foobar" }, "srcDir", "foobar");
     });
 
-    test("should fail when srcDir not a string", () => {
+    test("should error when srcDir is a number", () => {
+      expectsZodError({ srcDir: 5 }, "invalid_type");
+    });
+
+    test("should error when srcDir is a object", () => {
       expectsZodError({ srcDir: {} }, "invalid_type");
+    });
+
+    test("should error when srcDir is null", () => {
+      expectsZodError({ srcDir: null }, "invalid_type");
     });
   });
 });
