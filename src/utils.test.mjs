@@ -16,6 +16,7 @@ import {
   resolveSlug,
   applyTrailingSlash,
   resolveCollectionBase,
+  FILE_PATH_SEPARATOR,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -485,7 +486,7 @@ describe("resolveCollectionBase", () => {
         "docs",
         "/content/docs/foo/bar/test.md",
         "/content/docs",
-        "../..",
+        ["..", ".."].join(FILE_PATH_SEPARATOR),
       );
     });
 
@@ -550,7 +551,7 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
       "/content/docs/foo/bar/bang/test.md",
       "/content/docs",
       "foo/test2",
-      "../../test2",
+      ["..", "..", "test2"].join(FILE_PATH_SEPARATOR),
     );
   });
 
@@ -560,7 +561,7 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
       "/content/docs/foo/bar/test.md",
       "/content/docs",
       "foo/bar/bang/my-page",
-      "bang/my-page",
+      ["bang", "my-page"].join(FILE_PATH_SEPARATOR),
     );
   });
 
@@ -570,7 +571,7 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
       "/content/docs/foo/bar/bang/test.md",
       "/content/docs",
       "foo/bar/fiddle/my-page",
-      "../fiddle/my-page",
+      ["..", "fiddle", "my-page"].join(FILE_PATH_SEPARATOR),
     );
   });
 
@@ -590,7 +591,7 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
       "/content/docs/test.md",
       "/content/docs",
       "test2",
-      "../test2",
+      ["..", "test2"].join(FILE_PATH_SEPARATOR),
     );
   });
 });
