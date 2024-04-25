@@ -1,5 +1,10 @@
 import { test, describe } from "node:test";
 import assert from "node:assert";
+import esmock from "esmock";
+
+/*
+  NOTE ON ESMOCK USAGE - See details in index.test.mjs
+*/
 
 import {
   isValidRelativeLink,
@@ -236,6 +241,15 @@ describe("normaliseAstroOutputPath", () => {
 
       assert.equal(actual, "/base/foo-testing-test");
     });
+
+    test("should not prefix base when collectionBase is collectionRelative", () => {
+      const actual = normaliseAstroOutputPath("/foo-testing-test", {
+        basePath: "/base",
+        collectionBase: "collectionRelative",
+      });
+
+      assert.equal(actual, "/foo-testing-test");
+    });
   });
 });
 
@@ -427,6 +441,72 @@ describe("resolveCollectionBase", () => {
         collectionName: undefined,
       });
       assert.equal(actual, "");
+    });
+  });
+
+  describe("collectionBase:collectionRelative", () => {
+    const runRelativeTest = async (
+      fileContent,
+      collectionName,
+      currentFile,
+      collectionDir,
+      expected,
+    ) => {
+      const { resolveCollectionBase: resolveCollectionBaseMock } = await esmock(
+        "./utils.mjs",
+        {
+          fs: { readFileSync: () => fileContent },
+        },
+      );
+
+      const actual = resolveCollectionBaseMock(
+        {
+          collectionBase: "collectionRelative",
+          collectionName: collectionName,
+        },
+        { currentFile, collectionDir },
+      );
+      assert.equal(actual, expected);
+    };
+
+    test("should return relative path in current dir based on file path when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "",
+        "docs",
+        "/content/docs/test.md",
+        "/content/docs",
+        ".",
+      );
+    });
+
+    test("should return relative path up two dirs based on file path when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "",
+        "docs",
+        "/content/docs/foo/bar/test.md",
+        "/content/docs",
+        "../..",
+      );
+    });
+
+    test("should return relative path in current dir based on custom slug when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "---\nslug: hello\n---",
+        "docs",
+        "/content/docs/foo/bar/test.md",
+        "/content/docs",
+        ".",
+      );
+    });
+
+    test("should return relative path up one dir based on custom slug when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "---\nslug: foo/hello\n---",
+        "docs",
+        "/content/docs/test.md",
+        "/content/docs",
+        "..",
+      );
     });
   });
 });

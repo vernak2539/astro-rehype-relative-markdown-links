@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-const CollectionBase = z.union([z.literal("name"), z.literal(false)]);
+const CollectionBase = z.union([
+  z.literal("name"),
+  z.literal("collectionRelative"),
+  z.literal(false),
+]);
 
 export const CollectionConfigSchema = z.object({
   /**
@@ -47,19 +51,31 @@ export const OptionsSchema = z.object({
    * @default `"name"`
    * @description
    *
-   * Set how the base segment of the URL path to the referenced markdown file should be derived:
-   *   - `"name"` - Apply the name on disk of the content collection (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/docs/guides/my-guide`)
-   *   - `false` - Do not apply a base (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/guides/my-guide`)
+   * Set how the URL path to the referenced markdown file should be derived:
+   *   - `"name"` - An absolute path prefixed with the optional {@link basePath} followed by the collection name
+   *   - `false` - An absolute path prefixed with the optional {@link basePath}
+   *   - `"collectionRelative"` - A relative path from the collection directory
    *
-   * Use `false` when you are treating your content collection as if it were located in the site root (ex: `src/pages`). In most scenarios, you should set this value to `"name"` or not
-   * set this value and the default of `"name"` will be used.
+   * For example, given a file `./guides/section/my-guide.md` referenced from `./guides/section/my-other-guide.md` with
+   * the link `[My Guide](./my-guide.md)` in the content collection `docs`, the transformed url would be:
+   *   - `"name"`: `[/basePath]/docs/guides/section/my-guide`
+   *   - `false`: `[/basePath]/guides/section/my-guide`
+   *   - `"collectionRelative"`: `../../guides/section/my-guide`
    *
-   * Note that this is a top-level option and will apply to all content collections.  If you have multiple collections and only want one of them to be treated as the site root, you should set this value to `"name"` (or leave the default)
-   * and use the {@link collections} option to control the behavior for the specific content collection.
+   * Use `false` or `"collectionRelative"` when you are treating your content collection as if it were located in the site
+   * root (ex: `src/content/docs/test.md` resolves to the page path `/test` instead of the typical `/docs/test`).
+   *
+   * Use `"collectionRelative"` when you are serving your content collection pages from multiple page path roots that use a
+   * common content collection (ex: `/my-blog/test` and `/your-blog/test` both point to the file `./src/content/posts/test.md`
+   * in the content collection `posts`).
+   *
+   * Note that this is a top-level option and will apply to all content collections.  If you have multiple content collections
+   * and want the behavior to be different on a per content collection basis, add the collection(s) to the {@link collections}
+   * option and provide a value for collection specific {@link CollectionConfig base} option.
    * @example
    * ```js
    * {
-   *   // Do not apply a base segment to the transformed URL path
+   *   // Do not apply a collection name segment to the generated absolute URL path
    *   collectionBase: false
    * }
    * ```
@@ -71,13 +87,13 @@ export const OptionsSchema = z.object({
    * @default `{}`
    * @description
    *
-   * Specify a mapping of collections where the key is the name of a collection on disk and the value is an object of collection specific configuration which will override any top-level
-   * configuration where applicable.
+   * Specify a mapping of collections where the `key` is the name of a collection on disk and the value is a {@link CollectionConfig}
+   * which will override any top-level configuration where applicable.
    *
    * @example
    * ```js
    * {
-   *   // Do not apply a base segment to the transformed URL for the collection `docs`
+   *   // Do not apply a collection name segment to the generated absolute URL path for the collection `docs`
    *   collections: {
    *     docs: {
    *       base: false
@@ -94,11 +110,11 @@ export const OptionsSchema = z.object({
    * @description
    * The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
    *
-   * In the example below, `astro dev` will start your server at `/docs`.
+   * In the example below, `astro dev` will start your server at `/my-site`.
    *
    * ```js
    * {
-   *   base: '/docs'
+   *   base: '/my-site'
    * }
    * ```
    */

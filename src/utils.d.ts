@@ -23,8 +23,19 @@ export type NormaliseAstroOutputPath = (
 export type Slash = (path: string, sep: string) => string;
 export type NormalizePath = (path: string) => string;
 export type ShouldProcessFile = (path: string) => boolean;
+export type ProcessingDetails = {
+  currentFile: string;
+  collectionDir: string;
+};
+export type GetCurrentFileSlugDirPath = (
+  processingDetails: ProcessingDetails,
+) => string;
+export type getRelativePathFromCurrentFileToCollection = (
+  processingDetails: ProcessingDetails,
+) => string;
 export type ResolveCollectionBase = (
   collectionOptions: EffectiveCollectionOptions,
+  processingDetails: ProcessingDetails,
 ) => string;
 export type MatterData = { slug?: string };
 export type GetMatter = (path: string) => MatterData;

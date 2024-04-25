@@ -19,7 +19,7 @@
 
 ### base
 
-• `Optional` **base**: ``false`` \| ``"name"``
+• `Optional` **base**: ``false`` \| ``"name"`` \| ``"collectionRelative"``
 
 **`Name`**
 
@@ -35,7 +35,7 @@ z.input.base
 
 #### Defined in
 
-[src/options.mjs:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L12)
+[src/options.mjs:16](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L16)
 
 ___
 
@@ -61,4 +61,4 @@ z.input.name
 
 #### Defined in
 
-[src/options.mjs:23](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L23)
+[src/options.mjs:27](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L27)

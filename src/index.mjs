@@ -128,7 +128,10 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       // if we have a custom slug, use it, else use the default
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
       // determine the collection base based on specified options
-      const resolvedCollectionBase = resolveCollectionBase(collectionOptions);
+      const resolvedCollectionBase = resolveCollectionBase(collectionOptions, {
+        currentFile,
+        collectionDir,
+      });
 
       // content collection slugs are relative to content collection root (or site root if collectionPathMode is `root`)
       // so build url including the content collection name (if applicable) and the pages slug

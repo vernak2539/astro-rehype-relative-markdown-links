@@ -78,6 +78,14 @@ describe("validateOptions", () => {
       expectsValidOption({ collectionBase: false }, "collectionBase", false);
     });
 
+    test("should be collectionBase collectionRelative when collectionRelative specified", () => {
+      expectsValidOption(
+        { collectionBase: "collectionRelative" },
+        "collectionBase",
+        "collectionRelative",
+      );
+    });
+
     test("should error when collectionBase is a string containing an invalid value", () => {
       expectsZodError({ collectionBase: "foobar" }, "invalid_union");
     });
@@ -135,6 +143,11 @@ describe("validateOptions", () => {
 
       test("should contain base false for collection when base false specified", () => {
         const expected = { docs: { base: false } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain base collectionRelative for collection when base collectionRelative specified", () => {
+        const expected = { docs: { base: "collectionRelative" } };
         expectsValidOption({ collections: expected }, "collections", expected);
       });
 
@@ -360,6 +373,38 @@ describe("mergeCollectionOptions", () => {
         collections: { fake: { base: "name" } },
       });
       assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be collectionRelative when top-level collectionRelative and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "collectionRelative",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be collectionRelative top-level name and collection override collectionRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "collectionRelative" } },
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be collectionRelative when top-level collectionRelative and collection override collectionRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "collectionRelative",
+        collections: { docs: { base: "collectionRelative" } },
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be collectionRelative when top-level collectionRelative and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "collectionRelative",
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
     });
   });
 

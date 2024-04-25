@@ -20,6 +20,57 @@ function normalizePath(npath) {
   return path.posix.normalize(isWindows ? slash(npath, path.posix.sep) : npath);
 }
 
+/** @type {import('./utils.d.ts').GetCurrentFileSlugDirPath} */
+function getCurrentFileSlugDirPath(processingDetails) {
+  /*
+    To determine "where we are", we use the slug from the current file (if there is one) or we use the physical path on disk of 
+    the current file. Note that if Astro's getStaticPaths is manipulating the slug in a way that is not consistent with the slug 
+    in the file or the structure on disk, relative path resolution may be incorrect.  This is no different than any other part 
+    of this plugin since we assume across the board that the page paths are either the path from the slug or the path of the 
+    physical file ondisk, either relative to the collection directory itself.  
+  */
+  const { currentFile, collectionDir } = processingDetails;
+  const { slug: frontmatterSlug } = getMatter(currentFile);
+  const relativeToCollectionPath = path.relative(collectionDir, currentFile);
+
+  /*
+    resolveSlug will ensure that any custom slug present is valid or return the file path if no custom slug is present. We don't 
+    generate an actual slug for the file path on disk for a few reasons:
+    1. It could modify the number of path segments (e.g., strip periods from relative ('.', '..') segments, etc.) which would cause 
+        relative path resolution to be incorrect
+    2. Don't need the actual slug because we're not building a webpath from it, we only need the correct number of path segments so
+        we can build the proper relative path to the collection directory from where we are
+    3. The number of segments in the generated slug and the actual file path would be the same regardless
+  */
+  const resolvedSlug = resolveSlug(relativeToCollectionPath, frontmatterSlug);
+
+  // append the resolved slug to the collecton directory to create a fully qualified path
+  const resolvedSlugPath = path.join(collectionDir, resolvedSlug);
+
+  // get the directory containing the page - note that the page itself could be a directory in the URL world but in the file
+  // world its a file and we need to determine how many directories to travel to get to the collection directory
+  return path.dirname(resolvedSlugPath);
+}
+
+/**
+ * Build a relative path that takes us from "where we are" to the "collection directory".
+ *
+ * For example, if we are in `/src/content/docs/foo/bar/test.md`, "we are at" `/docs/foo/bar/test`
+ * and the "collection directory" would be `../..`.  Similarly, if "we are at" `/docs/foo/test.md`,
+ * the "collection directory" would be `.`.
+ *
+ * @type {import('./utils.d.ts').getRelativePathFromCurrentFileToCollection}
+ */
+function getRelativePathFromCurrentFileToCollection(processingDetails) {
+  // "where we are"
+  const resolvedSlugDirPath = getCurrentFileSlugDirPath(processingDetails);
+  // determine relative path from current file "directory" to the collection directory
+  // resolving to current directory ('.') if the page is in the root of the collection directory
+  return (
+    path.relative(resolvedSlugDirPath, processingDetails.collectionDir) || "."
+  );
+}
+
 /** @type {string} */
 export const FILE_PATH_SEPARATOR = path.sep;
 
@@ -98,7 +149,10 @@ export const splitPathFromQueryAndFragment = (url) => {
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
 export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   const buildPath = () => {
-    if (!collectionOptions.basePath) {
+    if (
+      !collectionOptions.basePath ||
+      collectionOptions.collectionBase === "collectionRelative"
+    ) {
       return initialPath;
     }
 
@@ -167,10 +221,12 @@ export function shouldProcessFile(npath) {
 }
 
 /** @type {import('./utils.d.ts').ResolveCollectionBase} */
-export function resolveCollectionBase(collectionOptions) {
+export function resolveCollectionBase(collectionOptions, processingDetails) {
   return collectionOptions.collectionBase === false
     ? ""
-    : URL_PATH_SEPARATOR + collectionOptions.collectionName;
+    : collectionOptions.collectionBase === "collectionRelative"
+      ? getRelativePathFromCurrentFileToCollection(processingDetails)
+      : URL_PATH_SEPARATOR + collectionOptions.collectionName;
 }
 
 /** @type {Record<string, import('./utils.d.ts').MatterData>} */
