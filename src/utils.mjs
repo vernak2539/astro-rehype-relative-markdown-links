@@ -260,7 +260,7 @@ export function getRelativePathFromCurrentFileToDestination(processingDetails) {
 
 /** @type {Record<string, import('./utils.d.ts').MatterData>} */
 const matterCache = {};
-const matterCacheEnabled = process.env.MATTER_CACHE_DISABLE !== "true";
+const matterCacheEnabled = process.env.ARRML_MATTER_CACHE_DISABLE !== "true";
 /** @type {import('./utils.d.ts').GetMatter} */
 export function getMatter(npath) {
   const readMatter = () => {
