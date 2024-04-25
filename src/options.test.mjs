@@ -86,6 +86,14 @@ describe("validateOptions", () => {
       );
     });
 
+    test("should be collectionBase pathRelative when pathRelative specified", () => {
+      expectsValidOption(
+        { collectionBase: "pathRelative" },
+        "collectionBase",
+        "pathRelative",
+      );
+    });
+
     test("should error when collectionBase is a string containing an invalid value", () => {
       expectsZodError({ collectionBase: "foobar" }, "invalid_union");
     });
@@ -148,6 +156,11 @@ describe("validateOptions", () => {
 
       test("should contain base collectionRelative for collection when base collectionRelative specified", () => {
         const expected = { docs: { base: "collectionRelative" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain base pathRelative for collection when base pathRelative specified", () => {
+        const expected = { docs: { base: "pathRelative" } };
         expectsValidOption({ collections: expected }, "collections", expected);
       });
 
@@ -405,6 +418,38 @@ describe("mergeCollectionOptions", () => {
         collections: { fake: { base: "name" } },
       });
       assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be pathRelative when top-level pathRelative and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "pathRelative",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+
+    test("collectionBase should be pathRelative top-level name and collection override pathRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "pathRelative" } },
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+
+    test("collectionBase should be pathRelative when top-level pathRelative and collection override pathRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "pathRelative",
+        collections: { docs: { base: "pathRelative" } },
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+
+    test("collectionBase should be pathRelative when top-level pathRelative and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "pathRelative",
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
     });
   });
 

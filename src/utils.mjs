@@ -64,6 +64,7 @@ function getCurrentFileSlugDirPath(processingDetails) {
 function getRelativePathFromCurrentFileToCollection(processingDetails) {
   // "where we are"
   const resolvedSlugDirPath = getCurrentFileSlugDirPath(processingDetails);
+
   // determine relative path from current file "directory" to the collection directory
   // resolving to current directory ('.') if the page is in the root of the collection directory
   return (
@@ -151,7 +152,8 @@ export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   const buildPath = () => {
     if (
       !collectionOptions.basePath ||
-      collectionOptions.collectionBase === "collectionRelative"
+      collectionOptions.collectionBase === "collectionRelative" ||
+      collectionOptions.collectionBase === "pathRelative"
     ) {
       return initialPath;
     }
@@ -227,6 +229,33 @@ export function resolveCollectionBase(collectionOptions, processingDetails) {
     : collectionOptions.collectionBase === "collectionRelative"
       ? getRelativePathFromCurrentFileToCollection(processingDetails)
       : URL_PATH_SEPARATOR + collectionOptions.collectionName;
+}
+
+/**
+ * Build a relative path that takes us from "where we are" to "where we are going".
+ *
+ * For example, if we are in `/src/content/docs/foo/bar/test.md` and going to
+ * `/src/content/docs/foo/fiddly/guide.md`, "we are at" `/docs/foo/bar/test`
+ * and "going to" `/docs/foo/fiddly/guide` which would result in `../fiddly/guide`.
+ * Similarly, if "we are at" `/docs/foo/bar/test.md` and "going to" `/docs/foo/bar/reference.md`,
+ * the result would be "reference" because they are in the same directory.
+ *
+ * @type {import('./utils.d.ts').getRelativePathFromCurrentFileToCollection}
+ */
+/** @type {import('./utils.d.ts').GetRelativePathFromCurrentFileToDestination} */
+export function getRelativePathFromCurrentFileToDestination(processingDetails) {
+  // "where we are"
+  const resolvedSlugDirPath = getCurrentFileSlugDirPath(processingDetails);
+
+  // "where we are going" after applying the collection directory
+  // because destinationSlug is relative to collection directory
+  const destinationPath = path.join(
+    processingDetails.collectionDir,
+    processingDetails.destinationSlug,
+  );
+
+  // determine relative path from the current file "directory" to the destination
+  return path.relative(resolvedSlugDirPath, destinationPath);
 }
 
 /** @type {Record<string, import('./utils.d.ts').MatterData>} */

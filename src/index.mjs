@@ -15,6 +15,7 @@ import {
   shouldProcessFile,
   resolveCollectionBase,
   getMatter,
+  getRelativePathFromCurrentFileToDestination,
 } from "./utils.mjs";
 import { validateOptions, mergeCollectionOptions } from "./options.mjs";
 
@@ -128,19 +129,24 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       // if we have a custom slug, use it, else use the default
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
       // determine the collection base based on specified options
-      const resolvedCollectionBase = resolveCollectionBase(collectionOptions, {
+      /** @type {import('./utils.d.ts').ProcessingDetails} */
+      const processingDetails = {
         currentFile,
         collectionDir,
-      });
-
+        destinationSlug: resolvedSlug,
+      };
       // content collection slugs are relative to content collection root (or site root if collectionPathMode is `root`)
       // so build url including the content collection name (if applicable) and the pages slug
       // NOTE - When there is a content collection name being applied, this only handles situations where the physical
       //        directory name of the content collection maps 1:1 to the site page path serviing the content collection
       //        page (see details above)
-      const resolvedUrl = [resolvedCollectionBase, resolvedSlug].join(
-        URL_PATH_SEPARATOR,
-      );
+      const resolvedUrl =
+        collectionOptions.collectionBase === "pathRelative"
+          ? getRelativePathFromCurrentFileToDestination(processingDetails)
+          : [
+              resolveCollectionBase(collectionOptions, processingDetails),
+              resolvedSlug,
+            ].join(URL_PATH_SEPARATOR);
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
       let webPathFinal = applyTrailingSlash(
@@ -171,10 +177,6 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       debug(
         "Resolved Collection Base Option      : %s",
         collectionOptions.collectionBase,
-      );
-      debug(
-        "Resolved Collection Base             : %s",
-        resolvedCollectionBase,
       );
       debug("TrailingSlashMode                    : %s", trailingSlashMode);
       debug("md/mdx AST Current File              : %s", currentFile);

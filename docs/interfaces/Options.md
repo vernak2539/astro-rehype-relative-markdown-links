@@ -50,13 +50,13 @@ z.input.basePath
 
 #### Defined in
 
-[src/options.mjs:121](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L121)
+[src/options.mjs:124](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L124)
 
 ___
 
 ### collectionBase
 
-• `Optional` **collectionBase**: ``false`` \| ``"name"`` \| ``"collectionRelative"``
+• `Optional` **collectionBase**: ``false`` \| ``"name"`` \| ``"collectionRelative"`` \| ``"pathRelative"``
 
 **`Name`**
 
@@ -72,17 +72,19 @@ Set how the URL path to the referenced markdown file should be derived:
   - `"name"` - An absolute path prefixed with the optional [basePath](Options.md#basepath) followed by the collection name
   - `false` - An absolute path prefixed with the optional [basePath](Options.md#basepath)
   - `"collectionRelative"` - A relative path from the collection directory
+  - `"pathRelative"` - A relative path from the current page path
 
 For example, given a file `./guides/section/my-guide.md` referenced from `./guides/section/my-other-guide.md` with
 the link `[My Guide](./my-guide.md)` in the content collection `docs`, the transformed url would be:
   - `"name"`: `[/basePath]/docs/guides/section/my-guide`
   - `false`: `[/basePath]/guides/section/my-guide`
   - `"collectionRelative"`: `../../guides/section/my-guide`
+  - `"pathRelative"`: `my-guide`
 
-Use `false` or `"collectionRelative"` when you are treating your content collection as if it were located in the site
+Use `false`, `"collectionRelative"`, or `"pathRelative"` when you are treating your content collection as if it were located in the site
 root (ex: `src/content/docs/test.md` resolves to the page path `/test` instead of the typical `/docs/test`).
 
-Use `"collectionRelative"` when you are serving your content collection pages from multiple page path roots that use a
+Use `"collectionRelative"` or `"pathRelative"` when you are serving your content collection pages from multiple page path roots that use a
 common content collection (ex: `/my-blog/test` and `/your-blog/test` both point to the file `./src/content/posts/test.md`
 in the content collection `posts`).
 
@@ -109,13 +111,13 @@ z.input.collectionBase
 
 #### Defined in
 
-[src/options.mjs:84](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L84)
+[src/options.mjs:87](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L87)
 
 ___
 
 ### collections
 
-• `Optional` **collections**: `Record`\<`string`, \{ `base?`: ``false`` \| ``"name"`` \| ``"collectionRelative"`` ; `name?`: `string`  }\>
+• `Optional` **collections**: `Record`\<`string`, \{ `base?`: ``false`` \| ``"name"`` \| ``"collectionRelative"`` \| ``"pathRelative"`` ; `name?`: `string`  }\>
 
 **`Name`**
 
@@ -153,7 +155,7 @@ z.input.collections
 
 #### Defined in
 
-[src/options.mjs:106](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L106)
+[src/options.mjs:109](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L109)
 
 ___
 
@@ -193,7 +195,7 @@ z.input.srcDir
 
 #### Defined in
 
-[src/options.mjs:48](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L48)
+[src/options.mjs:49](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L49)
 
 ___
 
@@ -243,4 +245,4 @@ z.input.trailingSlash
 
 #### Defined in
 
-[src/options.mjs:148](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L148)
+[src/options.mjs:151](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L151)

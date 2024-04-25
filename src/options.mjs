@@ -3,6 +3,7 @@ import { z } from "zod";
 const CollectionBase = z.union([
   z.literal("name"),
   z.literal("collectionRelative"),
+  z.literal("pathRelative"),
   z.literal(false),
 ]);
 
@@ -55,17 +56,19 @@ export const OptionsSchema = z.object({
    *   - `"name"` - An absolute path prefixed with the optional {@link basePath} followed by the collection name
    *   - `false` - An absolute path prefixed with the optional {@link basePath}
    *   - `"collectionRelative"` - A relative path from the collection directory
+   *   - `"pathRelative"` - A relative path from the current page path
    *
    * For example, given a file `./guides/section/my-guide.md` referenced from `./guides/section/my-other-guide.md` with
    * the link `[My Guide](./my-guide.md)` in the content collection `docs`, the transformed url would be:
    *   - `"name"`: `[/basePath]/docs/guides/section/my-guide`
    *   - `false`: `[/basePath]/guides/section/my-guide`
    *   - `"collectionRelative"`: `../../guides/section/my-guide`
+   *   - `"pathRelative"`: `my-guide`
    *
-   * Use `false` or `"collectionRelative"` when you are treating your content collection as if it were located in the site
+   * Use `false`, `"collectionRelative"`, or `"pathRelative"` when you are treating your content collection as if it were located in the site
    * root (ex: `src/content/docs/test.md` resolves to the page path `/test` instead of the typical `/docs/test`).
    *
-   * Use `"collectionRelative"` when you are serving your content collection pages from multiple page path roots that use a
+   * Use `"collectionRelative"` or `"pathRelative"` when you are serving your content collection pages from multiple page path roots that use a
    * common content collection (ex: `/my-blog/test` and `/your-blog/test` both point to the file `./src/content/posts/test.md`
    * in the content collection `posts`).
    *

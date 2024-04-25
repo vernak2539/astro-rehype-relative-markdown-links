@@ -510,3 +510,87 @@ describe("resolveCollectionBase", () => {
     });
   });
 });
+
+describe("getRelativePathFromCurrentFileToDestination", () => {
+  const runRelativeTest = async (
+    fileContent,
+    currentFile,
+    collectionDir,
+    destinationSlug,
+    expected,
+  ) => {
+    const {
+      getRelativePathFromCurrentFileToDestination:
+        getRelativePathFromCurrentFileToDestinationMock,
+    } = await esmock("./utils.mjs", {
+      fs: { readFileSync: () => fileContent },
+    });
+
+    const actual = getRelativePathFromCurrentFileToDestinationMock({
+      currentFile,
+      collectionDir,
+      destinationSlug,
+    });
+    assert.equal(actual, expected);
+  };
+
+  test("should return relative path in current dir based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "foo/bar/bang/test2",
+      "test2",
+    );
+  });
+
+  test("should return relative path up two dirs based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "foo/test2",
+      "../../test2",
+    );
+  });
+
+  test("should return relative path down one dir based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/test.md",
+      "/content/docs",
+      "foo/bar/bang/my-page",
+      "bang/my-page",
+    );
+  });
+
+  test("should return relative path up one, over and down one based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "foo/bar/fiddle/my-page",
+      "../fiddle/my-page",
+    );
+  });
+
+  test("should return relative path in current dir based on custom slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: iamroot\n---",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "test2",
+      "test2",
+    );
+  });
+
+  test("should return relative path up one dir based on custom slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: iamroot/iampage\n---",
+      "/content/docs/test.md",
+      "/content/docs",
+      "test2",
+      "../test2",
+    );
+  });
+});

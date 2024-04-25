@@ -820,6 +820,265 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       });
     });
 
+    describe("collections:base:pathRelative", () => {
+      test("should contain relative path in same directory as cwd when top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input =
+          '<a href="./fixtures/content/relative-tests/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="fixtures/content/relative-tests/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path in same directory when top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="test2.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/relative-tests/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="test2">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path in same directory when top-level collectionBase is pathRelative and no collection level override", async () => {
+        const input = '<a href="test2.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/relative-tests/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="test2">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path down when top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="./dir-child-3.md/test-me-out.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/relative-tests/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="dir-child-3md/test-me-out">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path up and over when top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="../test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/test-me-out.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path up, over and down when top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="../dir-child-3.md/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/test-me-out.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../dir-child-3md/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path in same directory when link is sibling and top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="./test2.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/dir-grandchild-1/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="test2">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path up and over when link is first cousin and top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="../dir-grandchild-2/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/dir-grandchild-1/test2.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../dir-grandchild-2/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path up, over and down based when current has custom slug matching physical collection directory structure and top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="../../dir-child-2/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/dir-grandchild-1/test-custom-slug.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../../dir-child-2/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path down based when current has custom slug pointing to collection root and top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="../../dir-child-2/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/dir-grandchild-1/test-custom-slug-is-collection-root.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="dir-child-2/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path up, over and down when custom slug ends with forward slash and collectionBase at collection level is pathRelative", async () => {
+        const input = '<a href="../dir-child-2/test.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-1/test-custom-slug-with-forward-slash.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../dir-child-2/test">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path up, over and down without base path when base path specified and top-level collectionBase is name and collection level is pathRelative", async () => {
+        const input = '<a href="../dir-child-3.md/test-me-out.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/relative-tests/dir-child-2/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            basePath: "/testBase",
+            collectionBase: "name",
+            collections: {
+              "relative-tests": { base: "pathRelative" },
+            },
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../dir-child-3md/test-me-out">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+    });
+
     describe("collections:name", async () => {
       test("should contain name from override when name override specified", async () => {
         const input = '<a href="./fixtures/content/docs/test.md">foo</a>';

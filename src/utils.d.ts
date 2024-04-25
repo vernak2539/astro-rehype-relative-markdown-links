@@ -26,11 +26,15 @@ export type ShouldProcessFile = (path: string) => boolean;
 export type ProcessingDetails = {
   currentFile: string;
   collectionDir: string;
+  destinationSlug: string;
 };
 export type GetCurrentFileSlugDirPath = (
   processingDetails: ProcessingDetails,
 ) => string;
 export type getRelativePathFromCurrentFileToCollection = (
+  processingDetails: ProcessingDetails,
+) => string;
+export type GetRelativePathFromCurrentFileToDestination = (
   processingDetails: ProcessingDetails,
 ) => string;
 export type ResolveCollectionBase = (
