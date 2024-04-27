@@ -78,7 +78,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       .process(input);
 
     const expected =
-      '<html><head></head><body><a href="/dir-test-custom-slug/">foo</a></body></html>';
+      '<html><head></head><body><a href="/dir-test-custom-slug">foo</a></body></html>';
 
     assert.equal(actual, expected);
   });
@@ -97,7 +97,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     assert.equal(actual, expected);
   });
 
-  test("should transform non-root collection index.md paths", async () => {
+  test("should transform collection child directory index.md paths", async () => {
     const input = '<a href="./fixtures/dir-test/index.md">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
@@ -106,6 +106,19 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
     const expected =
       '<html><head></head><body><a href="/fixtures/dir-test">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });
+
+  test("should transform collection grandchild directory index.md paths", async () => {
+    const input = '<a href="./fixtures/dir-test/dir-test-child/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/fixtures/dir-test/dir-test-child">foo</a></body></html>';
 
     assert.equal(actual, expected);
   });
@@ -472,7 +485,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       assert.equal(actual, expected);
     });
 
-    test("should transform subdir index.md when content path same as collection path", async () => {
+    test("should transform collection child directory index.md when content path same as collection path", async () => {
       const input = '<a href="./fixtures/dir-test/index.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
@@ -484,6 +497,22 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
       const expected =
         '<html><head></head><body><a href="/dir-test">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should transform collection grandchild directory index.md when content path same as collection path", async () => {
+      const input = '<a href="./fixtures/dir-test/dir-test-child/index.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, {
+          contentPath: "src/fixtures",
+          collectionPathMode: "root",
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/dir-test/dir-test-child">foo</a></body></html>';
 
       assert.equal(actual, expected);
     });
