@@ -140,7 +140,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
       let webPathFinal = applyTrailingSlash(
-        (frontmatterSlug === PATH_SEGMENT_EMPTY
+        (collectionPathMode === 'root' && frontmatterSlug === PATH_SEGMENT_EMPTY
           ? URL_PATH_SEPARATOR
           : frontmatterSlug) || urlPathPart,
         resolvedUrl,
