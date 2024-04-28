@@ -95,17 +95,19 @@ export const splitPathFromQueryAndFragment = (url) => {
 };
 
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
-export const normaliseAstroOutputPath = (initialPath, options = {}) => {
+export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   const buildPath = () => {
-    if (!options.basePath) {
+    if (!collectionOptions.basePath) {
       return initialPath;
     }
 
-    if (options.basePath.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(options.basePath, initialPath);
+    if (collectionOptions.basePath.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(collectionOptions.basePath, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
+    return (
+      URL_PATH_SEPARATOR + path.join(collectionOptions.basePath, initialPath)
+    );
   };
 
   if (!initialPath) {
@@ -156,9 +158,16 @@ export const applyTrailingSlash = (
   return resolvedUrl;
 };
 
-/** @type {import('./utils').ShouldProcessFile} */
+/** @type {import('./utils.d.ts').ShouldProcessFile} */
 export function shouldProcessFile(npath) {
   // Astro excludes files that include underscore in any segment of the path under contentDIr
   // see https://github.com/withastro/astro/blob/0fec72b35cccf80b66a85664877ca9dcc94114aa/packages/astro/src/content/utils.ts#L253
   return !npath.split(path.sep).some((p) => p && p.startsWith("_"));
+}
+
+/** @type {import('./utils.d.ts').ResolveCollectionBase} */
+export function resolveCollectionBase(collectionOptions) {
+  return collectionOptions.collectionBase === false
+    ? ""
+    : URL_PATH_SEPARATOR + collectionOptions.collectionName;
 }

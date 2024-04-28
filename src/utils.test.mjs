@@ -10,6 +10,7 @@ import {
   generateSlug,
   resolveSlug,
   applyTrailingSlash,
+  resolveCollectionBase,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -204,7 +205,7 @@ describe("resolveSlug", () => {
 
 describe("normaliseAstroOutputPath", () => {
   describe("prefix base to path", () => {
-    test("base with no slashes", () => {
+    test("should prefix base with no slashes", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "base",
       });
@@ -212,7 +213,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start", () => {
+    test("should prefix base with slash at start", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "/base",
       });
@@ -220,7 +221,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at end", () => {
+    test("should prefix base with slash at end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "base/",
       });
@@ -228,7 +229,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start and end", () => {
+    test("should prefix base with slash at start and end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "/base/",
       });
@@ -240,37 +241,41 @@ describe("normaliseAstroOutputPath", () => {
 
 describe("isValidFile", () => {
   test("return true if relative path to .md file exists", () => {
-    const actual = isValidFile("./src/fixtures/test.md");
+    const actual = isValidFile("./src/fixtures/content/docs/test.md");
 
     assert.equal(actual, true);
   });
 
   test("return true if relative path to .mdx file that exists", () => {
-    const actual = isValidFile("./src/fixtures/test.mdx");
+    const actual = isValidFile("./src/fixtures/content/docs/test.mdx");
 
     assert.equal(actual, true);
   });
 
   test("return true if relative path to a file exists", () => {
-    const actual = isValidFile("./src/fixtures/test.txt");
+    const actual = isValidFile("./src/fixtures/content/docs/test.txt");
 
     assert.equal(actual, true);
   });
 
   test("return false if relative path to .md file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/does-not-exist.md");
+    const actual = isValidFile("./src/fixtures/content/docs/does-not-exist.md");
 
     assert.equal(actual, false);
   });
 
   test("return false if relative path to .mdx file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/does-not-exist.mdx");
+    const actual = isValidFile(
+      "./src/fixtures/content/docs/does-not-exist.mdx",
+    );
 
     assert.equal(actual, false);
   });
 
   test("return false if relative path to a file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/does-not-exist.txt");
+    const actual = isValidFile(
+      "./src/fixtures/content/docs/does-not-exist.txt",
+    );
 
     assert.equal(actual, false);
   });
@@ -294,31 +299,31 @@ describe("isValidFile", () => {
   });
 
   test("return false if path is a directory ending in .md that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.md");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.md");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory ending in .md/ that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.md/");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.md/");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory ending in .mdx that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.mdx");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.mdx");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory ending in .mdx/ that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.mdx/");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.mdx/");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.txt");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.txt");
 
     assert.equal(actual, false);
   });
@@ -400,6 +405,28 @@ describe("applyTrailingSlash", () => {
       const actual = applyTrailingSlash("./foo.md", "/foo/", "ignore");
 
       assert.equal(actual, "/foo");
+    });
+  });
+});
+
+describe("resolveCollectionBase", () => {
+  describe("collectionBase:name", () => {
+    test("should return absolute collection name path when collectionBase is name", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: "name",
+        collectionName: "docs",
+      });
+      assert.equal(actual, "/docs");
+    });
+  });
+
+  describe("collectionBase:false", () => {
+    test("should return empty string when collectionBase is false", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: false,
+        collectionName: undefined,
+      });
+      assert.equal(actual, "");
     });
   });
 });
