@@ -109,6 +109,13 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const collectionName = path
         .dirname(relativeToContentPath)
         .split(FILE_PATH_SEPARATOR)[0];
+      // if linked file is outside of a collection directory
+      if (
+        collectionName === ".." ||
+        (collectionPathMode !== "root" && collectionName === ".")
+      ) {
+        return;
+      }
       const collectionPathSegment =
         collectionPathMode === "root" ? PATH_SEGMENT_EMPTY : collectionName;
       // determine the path of the target file relative to the collection
