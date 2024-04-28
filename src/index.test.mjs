@@ -403,7 +403,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
         const { value: actual } = await rehype()
           .use(testSetupRehype)
           .use(astroRehypeRelativeMarkdownLinks, {
-            src: "src/fixtures",
+            srcDir: "src/fixtures",
             collectionBase: false,
           })
           .process(input);
