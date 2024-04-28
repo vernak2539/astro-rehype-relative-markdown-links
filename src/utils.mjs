@@ -27,11 +27,16 @@ function getCurrentFileSlugDirPath(processingDetails) {
     the current file. Note that if Astro's getStaticPaths is manipulating the slug in a way that is not consistent with the slug 
     in the file or the structure on disk, relative path resolution may be incorrect.  This is no different than any other part 
     of this plugin since we assume across the board that the page paths are either the path from the slug or the path of the 
-    physical file ondisk, either relative to the collection directory itself.  
+    physical file on disk, either relative to the collection directory itself.  
   */
   const { currentFile, collectionDir } = processingDetails;
   const { slug: frontmatterSlug } = getMatter(currentFile);
-  const relativeToCollectionPath = path.relative(collectionDir, currentFile);
+
+  // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
+  // so we know the collection directory is the slug directory
+  if (frontmatterSlug === PATH_SEGMENT_EMPTY) {
+    return collectionDir;
+  }
 
   /*
     resolveSlug will ensure that any custom slug present is valid or return the file path if no custom slug is present. We don't 
@@ -42,6 +47,7 @@ function getCurrentFileSlugDirPath(processingDetails) {
         we can build the proper relative path to the collection directory from where we are
     3. The number of segments in the generated slug and the actual file path would be the same regardless
   */
+  const relativeToCollectionPath = path.relative(collectionDir, currentFile);
   const resolvedSlug = resolveSlug(relativeToCollectionPath, frontmatterSlug);
 
   // append the resolved slug to the collecton directory to create a fully qualified path
@@ -77,6 +83,12 @@ export const FILE_PATH_SEPARATOR = path.sep;
 
 /** @type {string} */
 export const URL_PATH_SEPARATOR = "/";
+
+/** @type {string } */
+export const PATH_SEGMENT_EMPTY = "";
+
+/** @type {RegExp} */
+export const PATH_SEGMENT_INDEX_REGEX = /\/index$/;
 
 /** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
@@ -179,7 +191,7 @@ export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
     .join(URL_PATH_SEPARATOR)
-    .replace(/\/index$/, "");
+    .replace(PATH_SEGMENT_INDEX_REGEX, "");
 };
 
 /** @type {import('./utils.d.ts').ResolveSlug} */
@@ -255,7 +267,7 @@ export function getRelativePathFromCurrentFileToDestination(processingDetails) {
   );
 
   // determine relative path from the current file "directory" to the destination
-  return path.relative(resolvedSlugDirPath, destinationPath);
+  return path.relative(resolvedSlugDirPath, destinationPath) || ".";
 }
 
 /** @type {Record<string, import('./utils.d.ts').MatterData>} */

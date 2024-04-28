@@ -509,6 +509,16 @@ describe("resolveCollectionBase", () => {
         "..",
       );
     });
+
+    test("should return relative path in current dir based on empty custom slug when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "---\nslug: ''\n---",
+        "docs",
+        "/content/docs/index.md",
+        "/content/docs",
+        ".",
+      );
+    });
   });
 });
 
@@ -575,7 +585,7 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
     );
   });
 
-  test("should return relative path in current dir based on custom slug when collectionBase is pathRelative", async (t) => {
+  test("should return relative path in current dir based on custom current file slug when collectionBase is pathRelative", async (t) => {
     await runRelativeTest(
       "---\nslug: iamroot\n---",
       "/content/docs/foo/bar/bang/test.md",
@@ -585,13 +595,53 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
     );
   });
 
-  test("should return relative path up one dir based on custom slug when collectionBase is pathRelative", async (t) => {
+  test("should return relative path up one dir based on custom current file slug when collectionBase is pathRelative", async (t) => {
     await runRelativeTest(
       "---\nslug: iamroot/iampage\n---",
       "/content/docs/test.md",
       "/content/docs",
       "test2",
       ["..", "test2"].join(FILE_PATH_SEPARATOR),
+    );
+  });
+
+  test("should return relative path in current dir based on empty current file slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: ''\n---",
+      "/content/docs/index.md",
+      "/content/docs",
+      "test2",
+      "test2",
+    );
+  });
+
+  test("should return relative path down one dir based on empty current file slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: ''\n---",
+      "/content/docs/index.md",
+      "/content/docs",
+      "foo/test2",
+      "foo/test2",
+    );
+  });
+
+  test("should return relative path in current dir based on empty destination slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: test\n---",
+      "/content/docs/test.md",
+      "/content/docs",
+      "",
+      ".",
+    );
+  });
+
+  test("should return relative path in parent dir based on empty destination slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: foo/test\n---",
+      "/content/docs/foo/test.md",
+      "/content/docs",
+      "",
+      "..",
     );
   });
 });

@@ -818,6 +818,173 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
         assert.equal(actual, expected);
       });
+
+      test("should contain relative path and index for root collection index.md when collectionBase is collectionRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="index">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for root collection index.md with empty string custom slug when linked from self and collectionBase is collectionRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="./">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for root collection index.md with empty string custom slug when linked from different page in collection root when collectionBase is collectionRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="./">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for root collection index.md with empty string custom slug when linked from collection child directory and collectionBase is collectionRelative", async () => {
+        const input = '<a href="../index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug/subdir/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path for root collection index.md paths with non-empty string custom slug when collectionBase is collectionRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug-2/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="myindex">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection child directory index.md paths when linked from same directory and collectionBase is collectionRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/dir-test/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../dir-test/">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection child directory index.md when linked from parent directory and collectionBase is collectionRelative", async () => {
+        const input = '<a href="./dir-test/index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="dir-test/">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection grandchild directory index.md paths when linked from same directory and collectionBase is collectionRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/docs/dir-test/dir-test-child/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../../dir-test/dir-test-child/">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection grandchild directory index.md when linked from parent directory and collectionBase is collectionRelative", async () => {
+        const input = '<a href="./dir-test/dir-test-child/index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "collectionRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="dir-test/dir-test-child/">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
     });
 
     describe("collections:base:pathRelative", () => {
@@ -1074,6 +1241,173 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
         const expected =
           '<html><head></head><body><a href="../dir-child-3md/test-me-out">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path and index for root collection index.md when collectionBase is pathRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="index">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for root collection index.md with empty string custom slug when linked from self and collectionBase is pathRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="./">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for root collection index.md with empty string custom slug when linked from different page in collection root when collectionBase is pathRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="./">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for root collection index.md with empty string custom slug when linked from collection child directory and collectionBase is pathRelative", async () => {
+        const input = '<a href="../index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug/subdir/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="../">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path for root collection index.md paths with non-empty string custom slug when collectionBase is pathRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/dir-test-custom-slug-2/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="myindex">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection child directory index.md paths when linked from same directory and collectionBase is pathRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/dir-test/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="./">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection child directory index.md when linked from parent directory and collectionBase is pathRelative", async () => {
+        const input = '<a href="./dir-test/index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="dir-test/">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection grandchild directory index.md paths when linked from same directory and collectionBase is pathRelative", async () => {
+        const input = '<a href="./index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath:
+              "./src/fixtures/content/docs/dir-test/dir-test-child/index.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="./">foo</a></body></html>';
+
+        assert.equal(actual, expected);
+      });
+
+      test("should contain relative path ending with forward slash for collection grandchild directory index.md when linked from parent directory and collectionBase is pathRelative", async () => {
+        const input = '<a href="./dir-test/dir-test-child/index.md">foo</a>';
+        const { value: actual } = await rehype()
+          .use(testSetupRehype, {
+            currentFilePath: "./src/fixtures/content/docs/test.md",
+          })
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: "pathRelative",
+          })
+          .process(input);
+
+        const expected =
+          '<html><head></head><body><a href="dir-test/dir-test-child/">foo</a></body></html>';
 
         assert.equal(actual, expected);
       });
