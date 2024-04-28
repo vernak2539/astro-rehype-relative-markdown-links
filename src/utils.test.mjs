@@ -621,7 +621,7 @@ describe("getRelativePathFromCurrentFileToDestination", () => {
       "/content/docs/index.md",
       "/content/docs",
       "foo/test2",
-      "foo/test2",
+      ["foo", "test2"].join(FILE_PATH_SEPARATOR)
     );
   });
 
