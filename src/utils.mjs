@@ -1,8 +1,9 @@
 import path from "path";
-import { statSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 import { asError } from "catch-unknown";
+import matter from "gray-matter";
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
@@ -19,11 +20,78 @@ function normalizePath(npath) {
   return path.posix.normalize(isWindows ? slash(npath, path.posix.sep) : npath);
 }
 
+/** @type {import('./utils.d.ts').GetCurrentFileSlugDirPath} */
+function getCurrentFileSlugDirPath(processingDetails) {
+  /*
+    To determine "where we are", we use the slug from the current file (if there is one) or we use the physical path on disk of 
+    the current file. Note that if Astro's getStaticPaths is manipulating the slug in a way that is not consistent with the slug 
+    in the file or the structure on disk, relative path resolution may be incorrect.  This is no different than any other part 
+    of this plugin since we assume across the board that the page paths are either the path from the slug or the path of the 
+    physical file on disk, either relative to the collection directory itself.  
+  */
+  const { currentFile, collectionDir } = processingDetails;
+  const { slug: frontmatterSlug } = getMatter(currentFile);
+
+  // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
+  // so we know the collection directory is the slug directory
+  if (frontmatterSlug === PATH_SEGMENT_EMPTY) {
+    return collectionDir;
+  }
+
+  /*
+    resolveSlug will ensure that any custom slug present is valid or return the file path if no custom slug is present. We don't 
+    generate an actual slug for the file path on disk for a few reasons:
+    1. It could modify the number of path segments (e.g., strip periods from relative ('.', '..') segments, etc.) which would cause 
+        relative path resolution to be incorrect
+    2. Don't need the actual slug because we're not building a webpath from it, we only need the correct number of path segments so
+        we can build the proper relative path to the collection directory from where we are
+    3. The number of segments in the generated slug and the actual file path would be the same regardless
+  */
+  const relativeToCollectionPath = path.relative(collectionDir, currentFile);
+  const resolvedSlug = resolveSlug(relativeToCollectionPath, frontmatterSlug);
+
+  // append the resolved slug to the collecton directory to create a fully qualified path
+  const resolvedSlugPath = path.join(collectionDir, resolvedSlug);
+
+  // get the directory containing the page - note that the page itself could be a directory in the URL world but in the file
+  // world its a file and we need to determine how many directories to travel to get to the collection directory
+  return path.dirname(resolvedSlugPath);
+}
+
+/**
+ * Build a relative path that takes us from "where we are" to the "collection directory".
+ *
+ * For example, if we are in `/src/content/docs/foo/bar/test.md`, "we are at" `/docs/foo/bar/test`
+ * and the "collection directory" would be `../..`.  Similarly, if "we are at" `/docs/foo/test.md`,
+ * the "collection directory" would be `.`.
+ *
+ * @type {import('./utils.d.ts').getRelativePathFromCurrentFileToCollection}
+ */
+function getRelativePathFromCurrentFileToCollection(processingDetails) {
+  // "where we are"
+  const resolvedSlugDirPath = getCurrentFileSlugDirPath(processingDetails);
+
+  // determine relative path from current file "directory" to the collection directory
+  // resolving to current directory ('.') if the page is in the root of the collection directory
+  return (
+    path.relative(resolvedSlugDirPath, processingDetails.collectionDir) || "."
+  );
+}
+
 /** @type {string} */
 export const FILE_PATH_SEPARATOR = path.sep;
 
 /** @type {string} */
 export const URL_PATH_SEPARATOR = "/";
+
+/** @type {string } */
+export const PATH_SEGMENT_EMPTY = "";
+
+/** @type {RegExp} */
+export const URL_PATH_SEGMENT_INDEX_REGEX = /\/index$/;
+
+/** @type {RegExp} */
+export const FILE_PATH_SEGMENT_INDEX_REGEX = /[\\/]index$/;
 
 /** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
@@ -95,17 +163,23 @@ export const splitPathFromQueryAndFragment = (url) => {
 };
 
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
-export const normaliseAstroOutputPath = (initialPath, options = {}) => {
+export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   const buildPath = () => {
-    if (!options.basePath) {
+    if (
+      !collectionOptions.basePath ||
+      collectionOptions.collectionBase === "collectionRelative" ||
+      collectionOptions.collectionBase === "pathRelative"
+    ) {
       return initialPath;
     }
 
-    if (options.basePath.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(options.basePath, initialPath);
+    if (collectionOptions.basePath.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(collectionOptions.basePath, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
+    return (
+      URL_PATH_SEPARATOR + path.join(collectionOptions.basePath, initialPath)
+    );
   };
 
   if (!initialPath) {
@@ -120,7 +194,7 @@ export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
     .join(URL_PATH_SEPARATOR)
-    .replace(/\/index$/, "");
+    .replace(URL_PATH_SEGMENT_INDEX_REGEX, "");
 };
 
 /** @type {import('./utils.d.ts').ResolveSlug} */
@@ -156,9 +230,62 @@ export const applyTrailingSlash = (
   return resolvedUrl;
 };
 
-/** @type {import('./utils').ShouldProcessFile} */
+/** @type {import('./utils.d.ts').ShouldProcessFile} */
 export function shouldProcessFile(npath) {
   // Astro excludes files that include underscore in any segment of the path under contentDIr
   // see https://github.com/withastro/astro/blob/0fec72b35cccf80b66a85664877ca9dcc94114aa/packages/astro/src/content/utils.ts#L253
   return !npath.split(path.sep).some((p) => p && p.startsWith("_"));
+}
+
+/** @type {import('./utils.d.ts').ResolveCollectionBase} */
+export function resolveCollectionBase(collectionOptions, processingDetails) {
+  return collectionOptions.collectionBase === false
+    ? ""
+    : collectionOptions.collectionBase === "collectionRelative"
+      ? getRelativePathFromCurrentFileToCollection(processingDetails)
+      : URL_PATH_SEPARATOR + collectionOptions.collectionName;
+}
+
+/**
+ * Build a relative path that takes us from "where we are" to "where we are going".
+ *
+ * For example, if we are in `/src/content/docs/foo/bar/test.md` and going to
+ * `/src/content/docs/foo/fiddly/guide.md`, "we are at" `/docs/foo/bar/test`
+ * and "going to" `/docs/foo/fiddly/guide` which would result in `../fiddly/guide`.
+ * Similarly, if "we are at" `/docs/foo/bar/test.md` and "going to" `/docs/foo/bar/reference.md`,
+ * the result would be "reference" because they are in the same directory.
+ *
+ * @type {import('./utils.d.ts').getRelativePathFromCurrentFileToCollection}
+ */
+/** @type {import('./utils.d.ts').GetRelativePathFromCurrentFileToDestination} */
+export function getRelativePathFromCurrentFileToDestination(processingDetails) {
+  // "where we are"
+  const resolvedSlugDirPath = getCurrentFileSlugDirPath(processingDetails);
+
+  // "where we are going" after applying the collection directory
+  // because destinationSlug is relative to collection directory
+  const destinationPath = path.join(
+    processingDetails.collectionDir,
+    processingDetails.destinationSlug,
+  );
+
+  // determine relative path from the current file "directory" to the destination
+  return path.relative(resolvedSlugDirPath, destinationPath) || ".";
+}
+
+/** @type {Record<string, import('./utils.d.ts').MatterData>} */
+const matterCache = {};
+const matterCacheEnabled = process.env.ARRML_MATTER_CACHE_DISABLE !== "true";
+/** @type {import('./utils.d.ts').GetMatter} */
+export function getMatter(npath) {
+  const readMatter = () => {
+    const content = readFileSync(npath);
+    const { data: frontmatter } = matter(content);
+    if (matterCacheEnabled) {
+      matterCache[npath] = frontmatter;
+    }
+    return frontmatter;
+  };
+
+  return matterCache[npath] || readMatter();
 }

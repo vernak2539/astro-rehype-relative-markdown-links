@@ -1,13 +1,16 @@
 import { describe, test } from "node:test";
-import { validateOptions } from "./options.mjs";
+import { mergeCollectionOptions, validateOptions } from "./options.mjs";
 import assert from "node:assert";
-import path from "path";
+
+/** @type {import('./options.d.ts').CollectionConfig} */
+const defaultCollectionConfig = {};
 
 /** @type {import('./options.d.ts').Options} */
 const defaultOptions = {
-  contentPath: ["src", "content"].join(path.sep),
+  srcDir: "./src",
   trailingSlash: "ignore",
-  collectionPathMode: "subdirectory",
+  collectionBase: "name",
+  collections: {},
 };
 
 describe("validateOptions", () => {
@@ -32,7 +35,7 @@ describe("validateOptions", () => {
 
   const expectsValidOption = (options, option, expected) => {
     const actual = validateOptions(options);
-    assert.equal(actual[option], expected);
+    assert.deepStrictEqual(actual[option], expected);
   };
 
   describe("defaults", () => {
@@ -54,7 +57,7 @@ describe("validateOptions", () => {
     });
 
     test("should return specified property value with remaining defaults", async () => {
-      const options = { contentPath: "foo/bar" };
+      const options = { srcDir: "foo/bar" };
       expectsValidOptions(options, {
         ...defaultOptions,
         ...options,
@@ -62,37 +65,173 @@ describe("validateOptions", () => {
     });
   });
 
-  describe("collectionPathMode", () => {
-    test("should have expected collectionPathMode default", () => {
+  describe("collectionBase", () => {
+    test("should have expected collectionBase default", () => {
+      expectsValidOption({}, "collectionBase", defaultOptions.collectionBase);
+    });
+
+    test("should be collectionBase name when name specified", () => {
+      expectsValidOption({ collectionBase: "name" }, "collectionBase", "name");
+    });
+
+    test("should be collectionBase false when false specified", () => {
+      expectsValidOption({ collectionBase: false }, "collectionBase", false);
+    });
+
+    test("should be collectionBase collectionRelative when collectionRelative specified", () => {
       expectsValidOption(
-        {},
-        "collectionPathMode",
-        defaultOptions.collectionPathMode,
+        { collectionBase: "collectionRelative" },
+        "collectionBase",
+        "collectionRelative",
       );
     });
 
-    test("should be collectionPathMode subdirectory when subdirectory specified", () => {
+    test("should be collectionBase pathRelative when pathRelative specified", () => {
       expectsValidOption(
-        { collectionPathMode: "subdirectory" },
-        "collectionPathMode",
-        "subdirectory",
+        { collectionBase: "pathRelative" },
+        "collectionBase",
+        "pathRelative",
       );
     });
 
-    test("should be collectionPathMode root when root specified", () => {
-      expectsValidOption(
-        { collectionPathMode: "root" },
-        "collectionPathMode",
-        "root",
-      );
+    test("should error when collectionBase is a string containing an invalid value", () => {
+      expectsZodError({ collectionBase: "foobar" }, "invalid_union");
     });
 
-    test("should error when collectionPathMode is not a subdirectory or root", () => {
-      expectsZodError({ collectionPathMode: "foobar" }, "invalid_union");
+    test("should error when collectionBase is a number", () => {
+      expectsZodError({ collectionBase: 5 }, "invalid_union");
     });
 
-    test("should fail when collectionPathMode is not a string", () => {
-      expectsZodError({ collectionPathMode: {} }, "invalid_union");
+    test("should error when collectionBase is an object", () => {
+      expectsZodError({ collectionBase: {} }, "invalid_union");
+    });
+
+    test("should error when collectionBase is null", () => {
+      expectsZodError({ collectionBase: null }, "invalid_union");
+    });
+  });
+
+  describe("collections", () => {
+    describe("collections:core", () => {
+      test("should have expected collections default", () => {
+        expectsValidOption({}, "collections", defaultOptions.collections);
+      });
+
+      test("should contain empty collection when empty collection specified", () => {
+        const expected = { docs: {} };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain collection defaults when collection contains invalid collection key", () => {
+        expectsValidOption(
+          { collections: { docs: { thisdoesnotexistonschema: "foo" } } },
+          "collections",
+          { docs: defaultCollectionConfig },
+        );
+      });
+
+      test("should error when collections is not an object", () => {
+        expectsZodError({ collections: false }, "invalid_type");
+      });
+
+      test("should error when collections contains numeric key", () => {
+        expectsZodError({ collections: { 5: "name" } }, "invalid_type");
+      });
+
+      test("should error when collections is null", () => {
+        expectsZodError({ collections: null }, "invalid_type");
+      });
+    });
+
+    describe("collections:base", () => {
+      test("should contain base name for collection when base name specified", () => {
+        const expected = { docs: { base: "name" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain base false for collection when base false specified", () => {
+        const expected = { docs: { base: false } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain base collectionRelative for collection when base collectionRelative specified", () => {
+        const expected = { docs: { base: "collectionRelative" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain base pathRelative for collection when base pathRelative specified", () => {
+        const expected = { docs: { base: "pathRelative" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain multiple collections when multiple collections specified", () => {
+        const expected = {
+          docs: { base: false },
+          newsletter: { base: "name" },
+        };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should error when base is a string containing an invalid value", () => {
+        expectsZodError(
+          { collections: { docs: { base: "foobar" } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is a number", () => {
+        expectsZodError(
+          { collections: { docs: { base: 5 } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is an object", () => {
+        expectsZodError(
+          { collections: { docs: { base: {} } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is null", () => {
+        expectsZodError(
+          { collections: { docs: { base: null } } },
+          "invalid_union",
+        );
+      });
+    });
+
+    describe("collections:name", () => {
+      test("should contain name when name specified", () => {
+        const expected = { docs: { name: "my-docs" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain multiple collections when multiple collections specified", () => {
+        const expected = {
+          docs: { name: "my-docs" },
+          newsletter: { name: "my-newsletter" },
+        };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should error when name is a number", () => {
+        expectsZodError({ collections: { docs: { name: 5 } } }, "invalid_type");
+      });
+
+      test("should error when name is an object", () => {
+        expectsZodError(
+          { collections: { docs: { name: {} } } },
+          "invalid_type",
+        );
+      });
+
+      test("should error when name is null", () => {
+        expectsZodError(
+          { collections: { docs: { name: null } } },
+          "invalid_type",
+        );
+      });
     });
   });
 
@@ -125,8 +264,16 @@ describe("validateOptions", () => {
       expectsZodError({ trailingSlash: "foobar" }, "invalid_union");
     });
 
-    test("should fail when trailingSlash is not a string", () => {
+    test("should error when trailingSlash is a number", () => {
+      expectsZodError({ trailingSlash: 5 }, "invalid_union");
+    });
+
+    test("should error when trailingSlash is a object", () => {
       expectsZodError({ trailingSlash: {} }, "invalid_union");
+    });
+
+    test("should error when trailingSlash is null", () => {
+      expectsZodError({ trailingSlash: null }, "invalid_union");
     });
   });
 
@@ -139,22 +286,195 @@ describe("validateOptions", () => {
       expectsValidOption({ basePath: "foobar" }, "basePath", "foobar");
     });
 
-    test("should fail when baesPath not a string", () => {
+    test("should error when basePath is a number", () => {
+      expectsZodError({ basePath: 5 }, "invalid_type");
+    });
+
+    test("should error when basePath is a object", () => {
       expectsZodError({ basePath: {} }, "invalid_type");
+    });
+
+    test("should error when basePath is null", () => {
+      expectsZodError({ basePath: null }, "invalid_type");
     });
   });
 
-  describe("contentPath", () => {
-    test("should have expected contentPath default", () => {
-      expectsValidOption({}, "contentPath", defaultOptions.contentPath);
+  describe("srcDir", () => {
+    test("should have expected srcDir default", () => {
+      expectsValidOption({}, "srcDir", defaultOptions.srcDir);
     });
 
-    test("should be contentPath value specified when string", () => {
-      expectsValidOption({ contentPath: "foobar" }, "contentPath", "foobar");
+    test("should be srcDir value specified when string", () => {
+      expectsValidOption({ srcDir: "foobar" }, "srcDir", "foobar");
     });
 
-    test("should fail when contentPath not a string", () => {
-      expectsZodError({ contentPath: {} }, "invalid_type");
+    test("should error when srcDir is a number", () => {
+      expectsZodError({ srcDir: 5 }, "invalid_type");
+    });
+
+    test("should error when srcDir is a object", () => {
+      expectsZodError({ srcDir: {} }, "invalid_type");
+    });
+
+    test("should error when srcDir is null", () => {
+      expectsZodError({ srcDir: null }, "invalid_type");
+    });
+  });
+});
+
+describe("mergeCollectionOptions", () => {
+  describe("collectionBase", () => {
+    test("collectionBase should be name when top-level name and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should name when top-level false and collection override name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { docs: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be name when top-level name and collection override name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be name when top-level name and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { fake: { base: false } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be false when top-level false and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false top-level name and collection override false", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: false } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false when top-level false and collection override false", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { docs: { base: false } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false when top-level false and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be collectionRelative when top-level collectionRelative and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "collectionRelative",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be collectionRelative top-level name and collection override collectionRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "collectionRelative" } },
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be collectionRelative when top-level collectionRelative and collection override collectionRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "collectionRelative",
+        collections: { docs: { base: "collectionRelative" } },
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be collectionRelative when top-level collectionRelative and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "collectionRelative",
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "collectionRelative");
+    });
+
+    test("collectionBase should be pathRelative when top-level pathRelative and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "pathRelative",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+
+    test("collectionBase should be pathRelative top-level name and collection override pathRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "pathRelative" } },
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+
+    test("collectionBase should be pathRelative when top-level pathRelative and collection override pathRelative", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "pathRelative",
+        collections: { docs: { base: "pathRelative" } },
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+
+    test("collectionBase should be pathRelative when top-level pathRelative and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "pathRelative",
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "pathRelative");
+    });
+  });
+
+  describe("collectionName", () => {
+    test("collectionName should contain name from parameter when no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collections: {},
+      });
+      assert.equal(actual.collectionName, "docs");
+    });
+
+    test("collectionName should contain name from collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { name: "my-docs" } },
+      });
+      assert.equal(actual.collectionName, "my-docs");
+    });
+
+    test("collectionName should contain name from parameter when no collection overrides matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { fake: { name: "my-docs" } },
+      });
+      assert.equal(actual.collectionName, "docs");
     });
   });
 });

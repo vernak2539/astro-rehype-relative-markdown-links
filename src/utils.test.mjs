@@ -1,5 +1,10 @@
 import { test, describe } from "node:test";
 import assert from "node:assert";
+import esmock from "esmock";
+
+/*
+  NOTE ON ESMOCK USAGE - See details in index.test.mjs
+*/
 
 import {
   isValidRelativeLink,
@@ -10,6 +15,8 @@ import {
   generateSlug,
   resolveSlug,
   applyTrailingSlash,
+  resolveCollectionBase,
+  FILE_PATH_SEPARATOR,
 } from "./utils.mjs";
 
 describe("replaceExt", () => {
@@ -204,7 +211,7 @@ describe("resolveSlug", () => {
 
 describe("normaliseAstroOutputPath", () => {
   describe("prefix base to path", () => {
-    test("base with no slashes", () => {
+    test("should prefix base with no slashes", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "base",
       });
@@ -212,7 +219,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start", () => {
+    test("should prefix base with slash at start", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "/base",
       });
@@ -220,7 +227,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at end", () => {
+    test("should prefix base with slash at end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "base/",
       });
@@ -228,49 +235,62 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start and end", () => {
+    test("should prefix base with slash at start and end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         basePath: "/base/",
       });
 
       assert.equal(actual, "/base/foo-testing-test");
     });
+
+    test("should not prefix base when collectionBase is collectionRelative", () => {
+      const actual = normaliseAstroOutputPath("/foo-testing-test", {
+        basePath: "/base",
+        collectionBase: "collectionRelative",
+      });
+
+      assert.equal(actual, "/foo-testing-test");
+    });
   });
 });
 
 describe("isValidFile", () => {
   test("return true if relative path to .md file exists", () => {
-    const actual = isValidFile("./src/fixtures/test.md");
+    const actual = isValidFile("./src/fixtures/content/docs/test.md");
 
     assert.equal(actual, true);
   });
 
   test("return true if relative path to .mdx file that exists", () => {
-    const actual = isValidFile("./src/fixtures/test.mdx");
+    const actual = isValidFile("./src/fixtures/content/docs/test.mdx");
 
     assert.equal(actual, true);
   });
 
   test("return true if relative path to a file exists", () => {
-    const actual = isValidFile("./src/fixtures/test.txt");
+    const actual = isValidFile("./src/fixtures/content/docs/test.txt");
 
     assert.equal(actual, true);
   });
 
   test("return false if relative path to .md file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/does-not-exist.md");
+    const actual = isValidFile("./src/fixtures/content/docs/does-not-exist.md");
 
     assert.equal(actual, false);
   });
 
   test("return false if relative path to .mdx file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/does-not-exist.mdx");
+    const actual = isValidFile(
+      "./src/fixtures/content/docs/does-not-exist.mdx",
+    );
 
     assert.equal(actual, false);
   });
 
   test("return false if relative path to a file does not exist", () => {
-    const actual = isValidFile("./src/fixtures/does-not-exist.txt");
+    const actual = isValidFile(
+      "./src/fixtures/content/docs/does-not-exist.txt",
+    );
 
     assert.equal(actual, false);
   });
@@ -294,31 +314,31 @@ describe("isValidFile", () => {
   });
 
   test("return false if path is a directory ending in .md that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.md");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.md");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory ending in .md/ that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.md/");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.md/");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory ending in .mdx that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.mdx");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.mdx");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory ending in .mdx/ that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.mdx/");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.mdx/");
 
     assert.equal(actual, false);
   });
 
   test("return false if path is a directory that exists", () => {
-    const actual = isValidFile("./src/fixtures/dir-exists.txt");
+    const actual = isValidFile("./src/fixtures/content/docs/dir-exists.txt");
 
     assert.equal(actual, false);
   });
@@ -401,5 +421,227 @@ describe("applyTrailingSlash", () => {
 
       assert.equal(actual, "/foo");
     });
+  });
+});
+
+describe("resolveCollectionBase", () => {
+  describe("collectionBase:name", () => {
+    test("should return absolute collection name path when collectionBase is name", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: "name",
+        collectionName: "docs",
+      });
+      assert.equal(actual, "/docs");
+    });
+  });
+
+  describe("collectionBase:false", () => {
+    test("should return empty string when collectionBase is false", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: false,
+        collectionName: undefined,
+      });
+      assert.equal(actual, "");
+    });
+  });
+
+  describe("collectionBase:collectionRelative", () => {
+    const runRelativeTest = async (
+      fileContent,
+      collectionName,
+      currentFile,
+      collectionDir,
+      expected,
+    ) => {
+      const { resolveCollectionBase: resolveCollectionBaseMock } = await esmock(
+        "./utils.mjs",
+        {
+          fs: { readFileSync: () => fileContent },
+        },
+      );
+
+      const actual = resolveCollectionBaseMock(
+        {
+          collectionBase: "collectionRelative",
+          collectionName: collectionName,
+        },
+        { currentFile, collectionDir },
+      );
+      assert.equal(actual, expected);
+    };
+
+    test("should return relative path in current dir based on file path when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "",
+        "docs",
+        "/content/docs/test.md",
+        "/content/docs",
+        ".",
+      );
+    });
+
+    test("should return relative path up two dirs based on file path when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "",
+        "docs",
+        "/content/docs/foo/bar/test.md",
+        "/content/docs",
+        ["..", ".."].join(FILE_PATH_SEPARATOR),
+      );
+    });
+
+    test("should return relative path in current dir based on custom slug when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "---\nslug: hello\n---",
+        "docs",
+        "/content/docs/foo/bar/test.md",
+        "/content/docs",
+        ".",
+      );
+    });
+
+    test("should return relative path up one dir based on custom slug when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "---\nslug: foo/hello\n---",
+        "docs",
+        "/content/docs/test.md",
+        "/content/docs",
+        "..",
+      );
+    });
+
+    test("should return relative path in current dir based on empty custom slug when collectionBase is collectionRelative", async (t) => {
+      await runRelativeTest(
+        "---\nslug: ''\n---",
+        "docs",
+        "/content/docs/index.md",
+        "/content/docs",
+        ".",
+      );
+    });
+  });
+});
+
+describe("getRelativePathFromCurrentFileToDestination", () => {
+  const runRelativeTest = async (
+    fileContent,
+    currentFile,
+    collectionDir,
+    destinationSlug,
+    expected,
+  ) => {
+    const {
+      getRelativePathFromCurrentFileToDestination:
+        getRelativePathFromCurrentFileToDestinationMock,
+    } = await esmock("./utils.mjs", {
+      fs: { readFileSync: () => fileContent },
+    });
+
+    const actual = getRelativePathFromCurrentFileToDestinationMock({
+      currentFile,
+      collectionDir,
+      destinationSlug,
+    });
+    assert.equal(actual, expected);
+  };
+
+  test("should return relative path in current dir based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "foo/bar/bang/test2",
+      "test2",
+    );
+  });
+
+  test("should return relative path up two dirs based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "foo/test2",
+      ["..", "..", "test2"].join(FILE_PATH_SEPARATOR),
+    );
+  });
+
+  test("should return relative path down one dir based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/test.md",
+      "/content/docs",
+      "foo/bar/bang/my-page",
+      ["bang", "my-page"].join(FILE_PATH_SEPARATOR),
+    );
+  });
+
+  test("should return relative path up one, over and down one based on file path when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "foo/bar/fiddle/my-page",
+      ["..", "fiddle", "my-page"].join(FILE_PATH_SEPARATOR),
+    );
+  });
+
+  test("should return relative path in current dir based on custom current file slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: iamroot\n---",
+      "/content/docs/foo/bar/bang/test.md",
+      "/content/docs",
+      "test2",
+      "test2",
+    );
+  });
+
+  test("should return relative path up one dir based on custom current file slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: iamroot/iampage\n---",
+      "/content/docs/test.md",
+      "/content/docs",
+      "test2",
+      ["..", "test2"].join(FILE_PATH_SEPARATOR),
+    );
+  });
+
+  test("should return relative path in current dir based on empty current file slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: ''\n---",
+      "/content/docs/index.md",
+      "/content/docs",
+      "test2",
+      "test2",
+    );
+  });
+
+  test("should return relative path down one dir based on empty current file slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: ''\n---",
+      "/content/docs/index.md",
+      "/content/docs",
+      "foo/test2",
+      ["foo", "test2"].join(FILE_PATH_SEPARATOR)
+    );
+  });
+
+  test("should return relative path in current dir based on empty destination slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: test\n---",
+      "/content/docs/test.md",
+      "/content/docs",
+      "",
+      ".",
+    );
+  });
+
+  test("should return relative path in parent dir based on empty destination slug when collectionBase is pathRelative", async (t) => {
+    await runRelativeTest(
+      "---\nslug: foo/test\n---",
+      "/content/docs/foo/test.md",
+      "/content/docs",
+      "",
+      "..",
+    );
   });
 });
