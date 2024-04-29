@@ -88,7 +88,10 @@ export const URL_PATH_SEPARATOR = "/";
 export const PATH_SEGMENT_EMPTY = "";
 
 /** @type {RegExp} */
-export const PATH_SEGMENT_INDEX_REGEX = /\/index$/;
+export const URL_PATH_SEGMENT_INDEX_REGEX = /\/index$/;
+
+/** @type {RegExp} */
+export const FILE_PATH_SEGMENT_INDEX_REGEX = /[\\/]index$/;
 
 /** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
@@ -191,7 +194,7 @@ export const generateSlug = (pathSegments) => {
   return pathSegments
     .map((segment) => githubSlug(segment))
     .join(URL_PATH_SEPARATOR)
-    .replace(PATH_SEGMENT_INDEX_REGEX, "");
+    .replace(URL_PATH_SEGMENT_INDEX_REGEX, "");
 };
 
 /** @type {import('./utils.d.ts').ResolveSlug} */

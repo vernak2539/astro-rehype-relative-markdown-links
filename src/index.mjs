@@ -13,7 +13,7 @@ import {
   URL_PATH_SEPARATOR,
   FILE_PATH_SEPARATOR,
   PATH_SEGMENT_EMPTY,
-  PATH_SEGMENT_INDEX_REGEX,
+  FILE_PATH_SEGMENT_INDEX_REGEX,
   shouldProcessFile,
   resolveCollectionBase,
   getMatter,
@@ -141,7 +141,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const isIndexPage =
         frontMatterSlugIsCollectionRootIndex ||
         (typeof frontmatterSlug !== "string" &&
-          withoutFileExt.match(PATH_SEGMENT_INDEX_REGEX));
+        FILE_PATH_SEGMENT_INDEX_REGEX.test(withoutFileExt));
       const resolvedUrlIsRelative =
         collectionOptions.collectionBase === "pathRelative" ||
         collectionOptions.collectionBase === "collectionRelative";
