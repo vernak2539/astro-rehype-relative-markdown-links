@@ -3,6 +3,7 @@ import { statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 import { asError } from "catch-unknown";
+import isAbsoluteUrl from "is-absolute-url";
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
@@ -40,11 +41,15 @@ export const isValidRelativeLink = (link) => {
     return false;
   }
 
-  if (!validMarkdownExtensions.includes(path.extname(link))) {
+  if (isAbsoluteUrl(link)) {
     return false;
   }
 
   if (path.isAbsolute(link)) {
+    return false;
+  }
+
+  if (!validMarkdownExtensions.includes(path.extname(link))) {
     return false;
   }
 

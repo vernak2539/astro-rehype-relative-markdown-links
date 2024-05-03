@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test, describe } from "node:test";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import path, { dirname } from "path";
 import { rehype } from "rehype";
 import { visit } from "unist-util-visit";
@@ -317,6 +317,44 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
         .process(input);
 
       const expected = `<html><head></head><body><a href="${absolutePath}">foo</a></body></html>`;
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not replace external http url", async () => {
+      const input = `<a href="https://www.foo.com/fixtures/test.md">foo</a>`;
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected = `<html><head></head><body><a href="https://www.foo.com/fixtures/test.md">foo</a></body></html>`;
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not replace invalid file url containing relative path", async () => {
+      const input = `<a href="file://./fixtures/test.md">foo</a>`;
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected = `<html><head></head><body><a href="file://./fixtures/test.md">foo</a></body></html>`;
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not replace valid file url containing absolute path", async () => {
+      const absolutePath = path.resolve("./fixtures/test.md");
+      const url = pathToFileURL(absolutePath);
+      const input = `<a href="${url}">foo</a>`;
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src" })
+        .process(input);
+
+      const expected = `<html><head></head><body><a href="${url}">foo</a></body></html>`;
 
       assert.equal(actual, expected);
     });

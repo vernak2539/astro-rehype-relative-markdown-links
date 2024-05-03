@@ -43,6 +43,7 @@
     "debug": "^4.3.4",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
+    "is-absolute-url": "^4.0.1",
     "unified": "^11.0.4",
     "unist-util-visit": "^5.0.0",
     "zod": "^3.22.4"
