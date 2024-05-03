@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.13.3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.3) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.2...v0.13.3)
+
+**Merged pull requests:**
+
+- chore: improve relative link validation [\#36](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/36) ([techfg](https://github.com/techfg))
+
 ## [v0.13.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.2) (2024-05-03)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.1...v0.13.2)
