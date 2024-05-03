@@ -1,9 +1,10 @@
 import path from "path";
-import { statSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 import { asError } from "catch-unknown";
 import isAbsoluteUrl from "is-absolute-url";
+import matter from "gray-matter";
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
@@ -166,4 +167,21 @@ export function shouldProcessFile(npath) {
   // Astro excludes files that include underscore in any segment of the path under contentDIr
   // see https://github.com/withastro/astro/blob/0fec72b35cccf80b66a85664877ca9dcc94114aa/packages/astro/src/content/utils.ts#L253
   return !npath.split(path.sep).some((p) => p && p.startsWith("_"));
+}
+
+/** @type {Record<string, import('./utils.d.ts').MatterData>} */
+const matterCache = {};
+const matterCacheEnabled = process.env.ARRML_MATTER_CACHE_DISABLE !== "true";
+/** @type {import('./utils.d.ts').GetMatter} */
+export function getMatter(npath) {
+  const readMatter = () => {
+    const content = readFileSync(npath);
+    const { data: frontmatter } = matter(content);
+    if (matterCacheEnabled) {
+      matterCache[npath] = frontmatter;
+    }
+    return frontmatter;
+  };
+
+  return matterCache[npath] || readMatter();
 }

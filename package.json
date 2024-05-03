@@ -35,7 +35,7 @@
     "pre-release": "yarn run changelog && yarn run prettier && yarn run generate-docs",
     "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src",
     "prettier": "prettier ./src/** -w",
-    "test": "node --loader=esmock --test",
+    "test": "ARRML_MATTER_CACHE_DISABLE=true node --loader=esmock --test",
     "type-check": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
