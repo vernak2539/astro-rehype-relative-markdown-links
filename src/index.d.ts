@@ -1,8 +1,8 @@
 import type { Plugin } from "unified";
 import type { Root } from "hast";
-import type { Options } from "./options.d.ts";
+import type { Options, CollectionConfig } from "./options.d.ts";
 
-export { Options };
+export { Options, CollectionConfig };
 
 /**
  * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
