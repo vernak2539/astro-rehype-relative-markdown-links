@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.13.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.2) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.1...v0.13.2)
+
+**Merged pull requests:**
+
+- fix: type import and test name [\#55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/55) ([techfg](https://github.com/techfg))
+
 ## [v0.13.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.1) (2024-04-19)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.0...v0.13.1)
