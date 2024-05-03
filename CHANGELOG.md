@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.14.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.14.1) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.14.0...v0.14.1)
+
+**Closed issues:**
+
+- bug: inconsistent application of forward slash for collection index pages [\#54](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/54)
+
+**Merged pull requests:**
+
+- fix: consistent trailing slash on `index.md` urls [\#56](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/56) ([techfg](https://github.com/techfg))
+
 ## [v0.14.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.14.0) (2024-05-03)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.3...v0.14.0)
