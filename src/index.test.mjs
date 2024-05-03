@@ -539,7 +539,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       assert.equal(actual, expected);
     });
 
-    test("should not contain trailing slash when option not specified and file contains and custom slug contains", async () => {
+    test("should contain trailing slash when option not specified and file contains and custom slug contains", async () => {
       const input =
         '<a href="./fixtures/dir-test-custom-slug/with-trailing-slash.md/">foo</a>';
       const { value: actual } = await rehype()
