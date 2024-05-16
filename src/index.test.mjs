@@ -31,10 +31,13 @@ import astroRehypeRelativeMarkdownLinks from "./index.mjs";
   - https://github.com/nodejs/node/issues/51164#issuecomment-2034518078
 */
 
+/** @param {Record<string, { currentFilePath?: string }} options */
 function testSetupRehype(options = {}) {
   return (tree, file) => {
-    visit(tree, "element", (node) => {
-      const fileInHistory = path.resolve(__dirname, __filename);
+    visit(tree, "element", () => {
+      const fileInHistory = options.currentFilePath
+        ? path.resolve(options.currentFilePath)
+        : path.resolve(__dirname, __filename);
 
       if (!file.history.includes(fileInHistory)) {
         file.history.push(fileInHistory);
@@ -373,6 +376,38 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     });
   });
 
+  describe("collection names", () => {
+    test("should not transform path outside of a content collection directory and the content directory", async () => {
+      const input = '<a href="./fixtures/test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, {
+          contentPath: "src/fixtures/dir-test",
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="./fixtures/test.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not transform path outside of a content collection directory and in the content directory", async () => {
+      const input = '<a href="../test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype, {
+          currentFilePath: "./src/fixtures/dir-test/index.md",
+        })
+        .use(astroRehypeRelativeMarkdownLinks, { contentPath: "src/fixtures" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="../test.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+  });
+
   describe("config option validation", () => {
     const runValidationTest = async (context, options) => {
       const validateOptionsMock = context.mock.fn(validateOptionsOriginal);
@@ -546,6 +581,24 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
       const expected =
         '<html><head></head><body><a href="/dir-test-custom-slug.md/test.custom.slug.in.dot.dir">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should transform path in content directory when content path same as collection path", async () => {
+      const input = '<a href="../test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype, {
+          currentFilePath: "./src/fixtures/dir-test/index.md",
+        })
+        .use(astroRehypeRelativeMarkdownLinks, {
+          contentPath: "src/fixtures",
+          collectionPathMode: "root",
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/test">foo</a></body></html>';
 
       assert.equal(actual, expected);
     });
