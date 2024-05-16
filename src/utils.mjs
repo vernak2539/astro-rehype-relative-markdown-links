@@ -103,15 +103,15 @@ export const splitPathFromQueryAndFragment = (url) => {
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
 export const normaliseAstroOutputPath = (initialPath, options = {}) => {
   const buildPath = () => {
-    if (!options.basePath) {
+    if (!options.base) {
       return initialPath;
     }
 
-    if (options.basePath.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(options.basePath, initialPath);
+    if (options.base.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(options.base, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
+    return URL_PATH_SEPARATOR + path.join(options.base, initialPath);
   };
 
   if (!initialPath) {
