@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  update_changelog:
+  update_generated_docs:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     environment:
@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: 20.x
           cache: "yarn"
+      - name: Install Dependencies
+        run: yarn --immutable
       - name: "Generate and commit ./docs"
         run: |
           yarn generate-docs
