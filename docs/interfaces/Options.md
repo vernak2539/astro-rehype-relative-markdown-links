@@ -51,7 +51,7 @@ z.input.base
 
 #### Defined in
 
-[src/options.mjs:50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L50)
+[src/options.mjs:50](https://github.com/techfg/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L50)
 
 ___
 
@@ -92,7 +92,7 @@ z.input.collectionPathMode
 
 #### Defined in
 
-[src/options.mjs:33](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L33)
+[src/options.mjs:33](https://github.com/techfg/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L33)
 
 ___
 
@@ -118,7 +118,7 @@ z.input.contentPath
 
 #### Defined in
 
-[src/options.mjs:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L12)
+[src/options.mjs:12](https://github.com/techfg/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L12)
 
 ___
 
@@ -168,4 +168,4 @@ z.input.trailingSlash
 
 #### Defined in
 
-[src/options.mjs:77](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L77)
+[src/options.mjs:77](https://github.com/techfg/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L77)
