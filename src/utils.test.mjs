@@ -207,7 +207,7 @@ describe("normaliseAstroOutputPath", () => {
   describe("prefix base to path", () => {
     test("base with no slashes", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
-        basePath: "base",
+        base: "base",
       });
 
       assert.equal(actual, "/base/foo-testing-test");
@@ -215,7 +215,7 @@ describe("normaliseAstroOutputPath", () => {
 
     test("base with slash at start", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
-        basePath: "/base",
+        base: "/base",
       });
 
       assert.equal(actual, "/base/foo-testing-test");
@@ -223,7 +223,7 @@ describe("normaliseAstroOutputPath", () => {
 
     test("base with slash at end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
-        basePath: "base/",
+        base: "base/",
       });
 
       assert.equal(actual, "/base/foo-testing-test");
@@ -231,7 +231,7 @@ describe("normaliseAstroOutputPath", () => {
 
     test("base with slash at start and end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
-        basePath: "/base/",
+        base: "/base/",
       });
 
       assert.equal(actual, "/base/foo-testing-test");

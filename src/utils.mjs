@@ -1,8 +1,10 @@
 import path from "path";
-import { statSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { slug as githubSlug } from "github-slugger";
 import { z } from "zod";
 import { asError } from "catch-unknown";
+import isAbsoluteUrl from "is-absolute-url";
+import matter from "gray-matter";
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
@@ -25,6 +27,9 @@ export const FILE_PATH_SEPARATOR = path.sep;
 /** @type {string} */
 export const URL_PATH_SEPARATOR = "/";
 
+/** @type {string} */
+export const PATH_SEGMENT_EMPTY = "";
+
 /** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
   if (typeof npath !== "string" || npath.length === 0) {
@@ -40,11 +45,15 @@ export const isValidRelativeLink = (link) => {
     return false;
   }
 
-  if (!validMarkdownExtensions.includes(path.extname(link))) {
+  if (isAbsoluteUrl(link)) {
     return false;
   }
 
   if (path.isAbsolute(link)) {
+    return false;
+  }
+
+  if (!validMarkdownExtensions.includes(path.extname(link))) {
     return false;
   }
 
@@ -97,15 +106,15 @@ export const splitPathFromQueryAndFragment = (url) => {
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
 export const normaliseAstroOutputPath = (initialPath, options) => {
   const buildPath = () => {
-    if (!options.basePath) {
+    if (!options.base) {
       return initialPath;
     }
 
-    if (options.basePath.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(options.basePath, initialPath);
+    if (options.base.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(options.base, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(options.basePath, initialPath);
+    return URL_PATH_SEPARATOR + path.join(options.base, initialPath);
   };
 
   if (!initialPath) {
@@ -163,6 +172,24 @@ export function shouldProcessFile(npath) {
   return !npath.split(path.sep).some((p) => p && p.startsWith("_"));
 }
 
+/** @type {Record<string, import('./utils.d.ts').MatterData>} */
+const matterCache = {};
+const matterCacheEnabled = process.env.ARRML_MATTER_CACHE_DISABLE !== "true";
+/** @type {import('./utils.d.ts').GetMatter} */
+export function getMatter(npath) {
+  const readMatter = () => {
+    const content = readFileSync(npath);
+    const { data: frontmatter } = matter(content);
+    if (matterCacheEnabled) {
+      matterCache[npath] = frontmatter;
+    }
+    return frontmatter;
+  };
+
+  return matterCache[npath] || readMatter();
+}
+
+
 /** @type {import('./utils.d.ts').ResolveCollectionBase} */
 export function resolveCollectionBase(collectionName, options) {
   const customBaseMode = options.collections[collectionName]?.base;
@@ -170,5 +197,5 @@ export function resolveCollectionBase(collectionName, options) {
     customBaseMode === false || typeof customBaseMode === "string"
       ? customBaseMode
       : options.collectionBase;
-  return effectiveBaseMode === false ? "" : URL_PATH_SEPARATOR + collectionName;
+  return effectiveBaseMode === false ? PATH_SEGMENT_EMPTY : URL_PATH_SEPARATOR + collectionName;
 }

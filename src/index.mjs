@@ -1,7 +1,5 @@
 import { visit } from "unist-util-visit";
 import * as path from "path";
-import * as fs from "fs";
-import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
 import {
   replaceExt,
@@ -14,7 +12,9 @@ import {
   applyTrailingSlash,
   URL_PATH_SEPARATOR,
   FILE_PATH_SEPARATOR,
+  PATH_SEGMENT_EMPTY,
   shouldProcessFile,
+  getMatter,
   resolveCollectionBase,
 } from "./utils.mjs";
 import { validateOptions } from "./options.mjs";
@@ -22,8 +22,6 @@ import { validateOptions } from "./options.mjs";
 // This package makes a lot of assumptions based on it being used with Astro
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
-
-const PATH_SEGMENT_EMPTY = "";
 
 /** @typedef {import('./options.d.ts').Options} Options */
 /** @typedef {import('./options.d.ts').CollectionConfig} CollectionConfig */
@@ -65,9 +63,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       }
 
       // read gray matter from href file
-      const urlFileContent = fs.readFileSync(urlFilePath);
-      const { data: frontmatter } = matter(urlFileContent);
-      const frontmatterSlug = frontmatter.slug;
+      const { slug: frontmatterSlug } = getMatter(urlFilePath);
       const contentDir = path.resolve(options.srcDir, "content");
       const trailingSlashMode = options.trailingSlash;
 
@@ -79,12 +75,12 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
         multiple page paths (e.g., /pages/blog/[...slug].astro) & /pages/[year]/[month]/[day]/[slug].astro) to enable reusing
         content collections.
 
-        Given this, the default behavior we follow is to to extract the collection name and include it in the generated path.  
+        Given this, the default behavior we follow is to extract the collection name and include it in the generated path.  
         Since we don't have internal info, we have to make an assumption that the site page path is mapped directly to a path 
         that starts with the collection name followed by the slug of the content collection page.  We do this by following 
         Astro's own assumptions on the directory structure of content collections - they are subdirectories of content path.
 
-        We make an expection to the above approach when the `collectionBase` (options.collectionBase or options.collections.<collectionname>.base
+        We make an exception to the above approach when the `collectionBase` (options.collectionBase or options.collections.<collectionname>.base
         is `false`.  When configured as `false`, we treat the content collection as the site root so we do not include the content collection 
         physical directory name in the transformed url.  For example, with a content collection page of of src/content/docs/page-1.md, if the 
         effective collectionBase is `false`, the url would be `/page-1` whereas with effective collectionBase of `name`, it would be `/docs/page-1`.
@@ -106,6 +102,18 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const collectionName = path
         .dirname(relativeToContentPath)
         .split(FILE_PATH_SEPARATOR)[0];
+      // determine the collection base based on specified options
+      const resolvedCollectionBase = resolveCollectionBase(
+        collectionName,
+        options,
+      );        
+      // if linked file is outside of a collection directory
+      if (
+        collectionName === ".." ||
+        (resolvedCollectionBase !== PATH_SEGMENT_EMPTY && collectionName === ".")
+      ) {
+        return;
+      }        
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
       const relativeToCollectionPath = path.relative(
@@ -120,11 +128,6 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       const generatedSlug = generateSlug(pathSegments);
       // if we have a custom slug, use it, else use the default
       const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug);
-      // determine the collection base based on specified options
-      const resolvedCollectionBase = resolveCollectionBase(
-        collectionName,
-        options,
-      );
 
       // content collection slugs are relative to content collection root (or site root if effective collectionBase is 
       // `false`) so build url including the content collection name (if applicable) and the pages slug
@@ -137,7 +140,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
       let webPathFinal = applyTrailingSlash(
-        (frontmatterSlug === PATH_SEGMENT_EMPTY
+        (resolvedCollectionBase === PATH_SEGMENT_EMPTY && frontmatterSlug === PATH_SEGMENT_EMPTY
           ? URL_PATH_SEPARATOR
           : frontmatterSlug) || urlPathPart,
         resolvedUrl,
@@ -152,7 +155,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // Debugging
       debug("--------------------------------------");
-      debug("BasePath                             : %s", options.basePath);
+      debug("Base path                            : %s", options.base);
       debug("SrcDir                               : %s", options.srcDir);
       debug("ContentDir                           : %s", contentDir);
       debug(

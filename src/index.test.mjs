@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test, describe } from "node:test";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import path, { dirname } from "path";
 import { rehype } from "rehype";
 import { visit } from "unist-util-visit";
@@ -31,10 +31,13 @@ import astroRehypeRelativeMarkdownLinks from "./index.mjs";
   - https://github.com/nodejs/node/issues/51164#issuecomment-2034518078
 */
 
+/** @param {Record<string, { currentFilePath?: string }} options */
 function testSetupRehype(options = {}) {
   return (tree, file) => {
-    visit(tree, "element", (node) => {
-      const fileInHistory = path.resolve(__dirname, __filename);
+    visit(tree, "element", () => {
+      const fileInHistory = options.currentFilePath
+        ? path.resolve(options.currentFilePath)
+        : path.resolve(__dirname, __filename);
 
       if (!file.history.includes(fileInHistory)) {
         file.history.push(fileInHistory);
@@ -79,7 +82,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       .process(input);
 
     const expected =
-      '<html><head></head><body><a href="/dir-test-custom-slug/">foo</a></body></html>';
+      '<html><head></head><body><a href="/dir-test-custom-slug">foo</a></body></html>';
 
     assert.equal(actual, expected);
   });
@@ -98,7 +101,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     assert.equal(actual, expected);
   });
 
-  test("should transform non-root collection index.md paths", async () => {
+  test("should transform collection child directory index.md paths", async () => {
     const input = '<a href="./fixtures/content/docs/dir-test/index.md">foo</a>';
     const { value: actual } = await rehype()
       .use(testSetupRehype)
@@ -107,6 +110,19 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
     const expected =
       '<html><head></head><body><a href="/docs/dir-test">foo</a></body></html>';
+
+    assert.equal(actual, expected);
+  });
+
+  test("should transform collection grandchild directory index.md paths", async () => {
+    const input = '<a href="./fixtures/content/docs/dir-test/dir-test-child/index.md">foo</a>';
+    const { value: actual } = await rehype()
+      .use(testSetupRehype)
+      .use(astroRehypeRelativeMarkdownLinks, { srcDir: "src/fixtures" })
+      .process(input);
+
+    const expected =
+      '<html><head></head><body><a href="/docs/dir-test/dir-test-child">foo</a></body></html>';
 
     assert.equal(actual, expected);
   });
@@ -328,6 +344,76 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
       assert.equal(actual, expected);
     });
+
+    test("should not replace external http url", async () => {
+      const input = `<a href="https://www.foo.com/fixtures/content/docs/test.md">foo</a>`;
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { srcDir: "src/fixtures" })
+        .process(input);
+
+      const expected = `<html><head></head><body><a href="https://www.foo.com/fixtures/content/docs/test.md">foo</a></body></html>`;
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not replace invalid file url containing relative path", async () => {
+      const input = `<a href="file://./fixtures/content/docs/test.md">foo</a>`;
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { srcDir: "src/fixtures" })
+        .process(input);
+
+      const expected = `<html><head></head><body><a href="file://./fixtures/content/docs/test.md">foo</a></body></html>`;
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not replace valid file url containing absolute path", async () => {
+      const absolutePath = path.resolve("./fixtures/content/docs/test.md");
+      const url = pathToFileURL(absolutePath);
+      const input = `<a href="${url}">foo</a>`;
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, { srcDir: "src/fixtures" })
+        .process(input);
+
+      const expected = `<html><head></head><body><a href="${url}">foo</a></body></html>`;
+
+      assert.equal(actual, expected);
+    });
+  });
+
+  describe("collection names", () => {
+    test("should not transform path outside of a content collection directory and the content directory", async () => {
+      const input = '<a href="./fixtures/test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, {
+          srcDir: "src/fixtures",
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="./fixtures/test.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should not transform path outside of a content collection directory and in the content directory", async () => {
+      const input = '<a href="../../test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype, {
+          currentFilePath: "./src/fixtures/content/docs/dir-test/index.md",
+        })
+        .use(astroRehypeRelativeMarkdownLinks, { srcDir: "src/fixtures" })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="../../test.md">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
   });
 
   describe("config option validation", () => {
@@ -358,14 +444,14 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       await runValidationTest(context, { srcDir: "src/fixtures" }));
   });
 
-  describe("config option - basePath", () => {
+  describe("config option - base", () => {
     test("should prefix base to output on file paths that exist", async () => {
       const input = '<a href="./fixtures/content/docs/test.md">foo</a>';
       const { value: actual } = await rehype()
         .use(testSetupRehype)
         .use(astroRehypeRelativeMarkdownLinks, {
           srcDir: "src/fixtures",
-          basePath: "/testBase",
+          base: "/testBase",
         })
         .process(input);
 
@@ -443,7 +529,7 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
       assert.equal(actual, expected);
     });
 
-    test("should transform subdir index.md", async () => {
+    test("should transform collection child directory index.md", async () => {
       const input =
         '<a href="./fixtures/content/docs/dir-test/index.md">foo</a>';
       const { value: actual } = await rehype()
@@ -456,6 +542,22 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
       const expected =
         '<html><head></head><body><a href="/dir-test">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should transform collection grandchild directory index.md", async () => {
+      const input = '<a href="./fixtures/content/docs/dir-test/dir-test-child/index.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype)
+        .use(astroRehypeRelativeMarkdownLinks, {
+          srcDir: "src/fixtures",
+          collectionBase: false,
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/dir-test/dir-test-child">foo</a></body></html>';
 
       assert.equal(actual, expected);
     });
@@ -490,6 +592,24 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
 
       const expected =
         '<html><head></head><body><a href="/dir-test-custom-slug.md/test.custom.slug.in.dot.dir">foo</a></body></html>';
+
+      assert.equal(actual, expected);
+    });
+
+    test("should transform path in content directory", async () => {
+      const input = '<a href="../test.md">foo</a>';
+      const { value: actual } = await rehype()
+        .use(testSetupRehype, {
+          currentFilePath: "./src/fixtures/content/docs/dir-test/index.md",
+        })
+        .use(astroRehypeRelativeMarkdownLinks, {
+          srcDir: "src/fixtures",
+          collectionBase: false,
+        })
+        .process(input);
+
+      const expected =
+        '<html><head></head><body><a href="/test">foo</a></body></html>';
 
       assert.equal(actual, expected);
     });

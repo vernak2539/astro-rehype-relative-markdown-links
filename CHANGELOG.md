@@ -1,5 +1,56 @@
 # Changelog
 
+## [v0.15.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.15.0) (2024-05-16)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.14.1...v0.15.0)
+
+**Breaking changes:**
+
+- bug: `basePath` option name should align with corresponding Astro `base` option name [\#46](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/46)
+
+**Merged pull requests:**
+
+- run tests with node.js v22.x [\#61](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/61) ([vernak2539](https://github.com/vernak2539))
+- automated doc gen: install deps [\#60](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/60) ([vernak2539](https://github.com/vernak2539))
+- update docs automatically on push to master [\#59](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/59) ([vernak2539](https://github.com/vernak2539))
+- fix: `basePath` option name should align with Astro `base` option name \(\#46\) [\#48](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/48) ([techfg](https://github.com/techfg))
+
+## [v0.14.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.14.1) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.14.0...v0.14.1)
+
+**Closed issues:**
+
+- bug: inconsistent application of forward slash for collection index pages [\#54](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/54)
+
+**Merged pull requests:**
+
+- fix: consistent trailing slash on `index.md` urls [\#56](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/56) ([techfg](https://github.com/techfg))
+
+## [v0.14.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.14.0) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.3...v0.14.0)
+
+**Merged pull requests:**
+
+- perf: cache frontmatter [\#51](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/51) ([techfg](https://github.com/techfg))
+
+## [v0.13.3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.3) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.2...v0.13.3)
+
+**Merged pull requests:**
+
+- chore: improve relative link validation [\#36](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/36) ([techfg](https://github.com/techfg))
+
+## [v0.13.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.2) (2024-05-03)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.1...v0.13.2)
+
+**Merged pull requests:**
+
+- fix: type import and test name [\#55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/55) ([techfg](https://github.com/techfg))
+
 ## [v0.13.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.13.1) (2024-04-19)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.13.0...v0.13.1)

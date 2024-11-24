@@ -12,7 +12,7 @@
 
 ### Properties
 
-- [basePath](Options.md#basepath)
+- [base](Options.md#base)
 - [collectionBase](Options.md#collectionbase)
 - [collections](Options.md#collections)
 - [srcDir](Options.md#srcdir)
@@ -20,13 +20,13 @@
 
 ## Properties
 
-### basePath
+### base
 
-• `Optional` **basePath**: `string`
+• `Optional` **base**: `string`
 
 **`Name`**
 
-basePath
+base
 
 **`Reference`**
 
@@ -35,6 +35,8 @@ https://docs.astro.build/en/reference/configuration-reference/#base
 **`Description`**
 
 The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
+
+**`Example`**
 
 In the example below, `astro dev` will start your server at `/docs`.
 
@@ -46,7 +48,7 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Inherited from
 
-z.input.basePath
+z.input.base
 
 #### Defined in
 

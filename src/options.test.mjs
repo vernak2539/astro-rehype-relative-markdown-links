@@ -158,17 +158,17 @@ describe("validateOptions", () => {
     });
   });
 
-  describe("basePath", () => {
-    test("should have expected basePath default", () => {
-      expectsValidOption({}, "basePath", defaultOptions.basePath);
+  describe("base", () => {
+    test("should have expected base default", () => {
+      expectsValidOption({}, "base", defaultOptions.base);
     });
 
-    test("should be basePath value specified when provided", () => {
-      expectsValidOption({ basePath: "foobar" }, "basePath", "foobar");
+    test("should be base value specified when provided", () => {
+      expectsValidOption({ base: "foobar" }, "base", "foobar");
     });
 
-    test("should fail when baesPath not a string", () => {
-      expectsZodError({ basePath: {} }, "invalid_type");
+    test("should fail when base not a string", () => {
+      expectsZodError({ base: {} }, "invalid_type");
     });
   });
 
