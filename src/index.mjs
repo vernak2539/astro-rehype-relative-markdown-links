@@ -1,7 +1,5 @@
 import { visit } from "unist-util-visit";
 import * as path from "path";
-import * as fs from "fs";
-import { default as matter } from "gray-matter";
 import { default as debugFn } from "debug";
 import {
   replaceExt,
@@ -14,7 +12,9 @@ import {
   applyTrailingSlash,
   URL_PATH_SEPARATOR,
   FILE_PATH_SEPARATOR,
+  PATH_SEGMENT_EMPTY,
   shouldProcessFile,
+  getMatter,
   resolveCollectionBase,
 } from "./utils.mjs";
 import { validateOptions, mergeCollectionOptions } from "./options.mjs";
@@ -22,8 +22,6 @@ import { validateOptions, mergeCollectionOptions } from "./options.mjs";
 // This package makes a lot of assumptions based on it being used with Astro
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
-
-const PATH_SEGMENT_EMPTY = "";
 
 /** @typedef {import('./options.d.ts').Options} Options */
 /** @typedef {import('./options.d.ts').CollectionConfig} CollectionConfig */
@@ -65,9 +63,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       }
 
       // read gray matter from href file
-      const urlFileContent = fs.readFileSync(urlFilePath);
-      const { data: frontmatter } = matter(urlFileContent);
-      const frontmatterSlug = frontmatter.slug;
+      const { slug: frontmatterSlug } = getMatter(urlFilePath);
       const contentDir = path.resolve(options.srcDir, "content");
       const trailingSlashMode = options.trailingSlash;
 
@@ -115,6 +111,12 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
         .split(FILE_PATH_SEPARATOR)[0];
       // flatten options merging any collection overrides
       const collectionOptions = mergeCollectionOptions(collectionName, options);
+      if (
+        collectionName === ".." ||
+        (collectionOptions.collectionBase !== false && collectionName === ".")
+      ) {
+        return;
+      }        
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
       const collectionDir = path.join(contentDir, collectionName);
@@ -144,7 +146,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
       let webPathFinal = applyTrailingSlash(
-        (frontmatterSlug === PATH_SEGMENT_EMPTY
+        (collectionOptions.collectionBase === false && frontmatterSlug === PATH_SEGMENT_EMPTY
           ? URL_PATH_SEPARATOR
           : frontmatterSlug) || urlPathPart,
         resolvedUrl,
@@ -159,7 +161,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // Debugging
       debug("--------------------------------------");
-      debug("BasePath                             : %s", options.basePath);
+      debug("Base path                            : %s", options.base);
       debug("SrcDir                               : %s", options.srcDir);
       debug("ContentDir                           : %s", contentDir);
       debug("CollectionDir                        : %s", collectionDir);

@@ -234,7 +234,7 @@ describe("validateOptions", () => {
       );
     });
 
-    test("should error when trailingSlash is not a ignore, always or never", () => {
+    test("should error when trailingSlash is not ignore, always or never", () => {
       expectsZodError({ trailingSlash: "foobar" }, "invalid_union");
     });
 
@@ -251,25 +251,25 @@ describe("validateOptions", () => {
     });
   });
 
-  describe("basePath", () => {
-    test("should have expected basePath default", () => {
-      expectsValidOption({}, "basePath", defaultOptions.basePath);
+  describe("base", () => {
+    test("should have expected base default", () => {
+      expectsValidOption({}, "base", defaultOptions.base);
     });
 
-    test("should be basePath value specified when provided", () => {
-      expectsValidOption({ basePath: "foobar" }, "basePath", "foobar");
+    test("should be base value specified when provided", () => {
+      expectsValidOption({ base: "foobar" }, "base", "foobar");
     });
 
-    test("should error when basePath is a number", () => {
-      expectsZodError({ basePath: 5 }, "invalid_type");
+    test("should error when base is a number", () => {
+      expectsZodError({ base: 5 }, "invalid_type");
     });
 
-    test("should error when basePath is a object", () => {
-      expectsZodError({ basePath: {} }, "invalid_type");
+    test("should error when base is a object", () => {
+      expectsZodError({ base: {} }, "invalid_type");
     });
 
-    test("should error when basePath is null", () => {
-      expectsZodError({ basePath: null }, "invalid_type");
+    test("should error when base is null", () => {
+      expectsZodError({ base: null }, "invalid_type");
     });
   });
 
