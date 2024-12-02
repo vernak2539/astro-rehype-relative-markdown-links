@@ -1,38 +1,82 @@
 import { z } from "zod";
-import path from "path";
 
+const CollectionBase = z.union([z.literal("name"), z.literal(false)]);
+
+export const CollectionConfigSchema = z.object({
+  /**
+   * @name base
+   * @description
+   *
+   * Override the top-level {@link Options#collectionBase collectionBase} option for this collection.
+   */
+  base: CollectionBase.optional(),
+});
+
+/** @typedef {import('./options.d.ts').CollectionConfig} CollectionConfig */
 export const OptionsSchema = z.object({
   /**
-   * @name contentPath
-   * @default `src/content`
+   * @name srcDir
+   * @reference https://docs.astro.build/en/reference/configuration-reference/#srcdir
+   * @default `./src`
    * @description
    *
-   * This defines where the content (i.e. md, mdx, etc. files) is stored. This should be a path relative to the root directory
-   */
-  contentPath: z.string().default(["src", "content"].join(path.sep)),
-  /**
-   * @name collectionPathMode
-   * @default `subdirectory`
-   * @description
+   * Set the directory that Astro will read your site from.
    *
-   * Where you store your collections:
-   *   - `subdirectory` - Subdirectories under `contentPath` (ex: `src/content/docs/index.md` where `docs` is the content collection subdirectory of the contentPath `src/content`)
-   *   - `root` - Directly inside `contentPath` (ex: `src/content/docs/index.md` where `src/content/docs` is the `contentPath`)
-   *
-   * Use the `root` configuration option when you are explicitly setting the {@link contentPath} property to something other than `src/content` and you want the directory you specify
-   * for {@link contentPath} to be treated a single content collection as if it where located in the site root.  In most scenarios, you should set this value to `subdirectory` or not
-   * set this value and the default of `subdirectory` will be used.
+   * The value can be either an absolute file system path or a path relative to the project root.
    * @example
    * ```js
    * {
-   *   // Use 'subdirectory' mode
-   *   collectionPathMode: 'subdirectory'
+   *   srcDir: './www'
    * }
    * ```
    */
-  collectionPathMode: z
-    .union([z.literal("subdirectory"), z.literal("root")])
-    .default("subdirectory"),
+  srcDir: z.string().default("./src"),
+  /**
+   * @name collectionBase
+   * @default `"name"`
+   * @description
+   *
+   * Set how the base segment of the URL path to the referenced markdown file should be derived:
+   *   - `"name"` - Apply the name on disk of the content collection (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/docs/guides/my-guide`)
+   *   - `false` - Do not apply a base (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/guides/my-guide`)
+   *
+   * Use `false` when you are treating your content collection as if it were located in the site root (ex: `src/pages`). In most scenarios, you should set this value to `"name"` or not
+   * set this value and the default of `"name"` will be used.
+   *
+   * Note that this is a top-level option and will apply to all content collections.  If you have multiple collections and only want one of them to be treated as the site root, you should set this value to `"name"` (or leave the default)
+   * and use the {@link collections} option to control the behavior for the specific content collection.
+   * @example
+   * ```js
+   * {
+   *   // Do not apply a base segment to the transformed URL path
+   *   collectionBase: false
+   * }
+   * ```
+   * @see {@link collections}
+   */
+  collectionBase: CollectionBase.default("name"),
+  /**
+   * @name collections
+   * @default `{}`
+   * @description
+   *
+   * Specify a mapping of collections where the key is the name of a collection on disk and the value is an object of collection specific configuration which will override any top-level
+   * configuration where applicable.
+   *
+   * @example
+   * ```js
+   * {
+   *   // Do not apply a base segment to the transformed URL for the collection `docs`
+   *   collections: {
+   *     docs: {
+   *       base: false
+   *     }
+   *   }
+   * }
+   * ```
+   * @see {@link CollectionConfig}
+   */
+  collections: z.record(CollectionConfigSchema).default({}),
   /**
    * @name base
    * @reference https://docs.astro.build/en/reference/configuration-reference/#base
@@ -50,15 +94,15 @@ export const OptionsSchema = z.object({
   base: z.string().optional(),
   /**
    * @name trailingSlash
-   * @default `ignore`
+   * @default `"ignore"`
    * @description
    *
    * Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
-   *   - `'always'` - Ensure urls always end with a trailing slash regardless of input
-   *   - `'never'` - Ensure urls never end with a trailing slash regardless of input
-   *   - `'ignore'` - Do not modify the url, trailing slash behavior will be determined by the file url itself or a custom slug if present.
+   *   - `"always"` - Ensure urls always end with a trailing slash regardless of input
+   *   - `"never"` - Ensure urls never end with a trailing slash regardless of input
+   *   - `"ignore"` - Do not modify the url, trailing slash behavior will be determined by the file url itself or a custom slug if present.
    *
-   * When set to `'ignore'` (the default), the following will occur:
+   * When set to `"ignore"` (the default), the following will occur:
    *   - If there is not a custom slug on the target file, the markdown link itself will determine if there is a trailing slash.
    *       - `[Example](./my-doc.md/)` will result in a trailing slash
    *       - `[Example](./my-doc.md)` will not result in a trailing slash
@@ -69,7 +113,7 @@ export const OptionsSchema = z.object({
    * ```js
    * {
    *   // Use `always` mode
-   *   trailingSlash: `always`
+   *   trailingSlash: "always"
    * }
    * ```
    * @see {@link https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro}

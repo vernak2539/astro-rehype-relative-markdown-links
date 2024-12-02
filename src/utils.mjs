@@ -27,6 +27,9 @@ export const FILE_PATH_SEPARATOR = path.sep;
 /** @type {string} */
 export const URL_PATH_SEPARATOR = "/";
 
+/** @type {string} */
+export const PATH_SEGMENT_EMPTY = "";
+
 /** @type {import('./utils.d.ts').ReplaceExtFn} */
 export const replaceExt = (npath, ext) => {
   if (typeof npath !== "string" || npath.length === 0) {
@@ -101,7 +104,7 @@ export const splitPathFromQueryAndFragment = (url) => {
 };
 
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
-export const normaliseAstroOutputPath = (initialPath, options = {}) => {
+export const normaliseAstroOutputPath = (initialPath, options) => {
   const buildPath = () => {
     if (!options.base) {
       return initialPath;
@@ -184,4 +187,15 @@ export function getMatter(npath) {
   };
 
   return matterCache[npath] || readMatter();
+}
+
+
+/** @type {import('./utils.d.ts').ResolveCollectionBase} */
+export function resolveCollectionBase(collectionName, options) {
+  const customBaseMode = options.collections[collectionName]?.base;
+  const effectiveBaseMode =
+    customBaseMode === false || typeof customBaseMode === "string"
+      ? customBaseMode
+      : options.collectionBase;
+  return effectiveBaseMode === false ? PATH_SEGMENT_EMPTY : URL_PATH_SEPARATOR + collectionName;
 }
