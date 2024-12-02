@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.16.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.16.0) (2024-11-27)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.15.0...v0.16.0)
+
+**Closed issues:**
+
+- not the right path [\#62](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/62)
+- bug: markdown links to files outside of a `content collection directory` should not be transformed [\#57](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/57)
+
+**Merged pull requests:**
+
+- fix: do not transform links outside of a content collection directory [\#58](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/58) ([techfg](https://github.com/techfg))
+
 ## [v0.15.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.15.0) (2024-05-16)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.14.1...v0.15.0)
