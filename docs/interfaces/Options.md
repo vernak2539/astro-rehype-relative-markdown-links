@@ -52,7 +52,7 @@ z.input.base
 
 #### Defined in
 
-[src/options.mjs:105](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L105)
+[src/options.mjs:94](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L94)
 
 ___
 
@@ -99,13 +99,13 @@ z.input.collectionBase
 
 #### Defined in
 
-[src/options.mjs:68](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L68)
+[src/options.mjs:57](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L57)
 
 ___
 
 ### collections
 
-• `Optional` **collections**: `Record`\<`string`, \{ `base?`: ``false`` \| ``"name"`` ; `name?`: `string`  }\>
+• `Optional` **collections**: `Record`\<`string`, \{ `base?`: ``false`` \| ``"name"``  }\>
 
 **`Name`**
 
@@ -143,7 +143,7 @@ z.input.collections
 
 #### Defined in
 
-[src/options.mjs:90](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L90)
+[src/options.mjs:79](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L79)
 
 ___
 
@@ -183,7 +183,7 @@ z.input.srcDir
 
 #### Defined in
 
-[src/options.mjs:44](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L44)
+[src/options.mjs:33](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L33)
 
 ___
 
@@ -233,4 +233,4 @@ z.input.trailingSlash
 
 #### Defined in
 
-[src/options.mjs:132](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L132)
+[src/options.mjs:121](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L121)
