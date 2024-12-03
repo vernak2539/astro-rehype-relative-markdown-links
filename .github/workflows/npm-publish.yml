@@ -28,13 +28,19 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
+      - name: Delete non-packaged files # yarn has problems when it comes to packaging, behaving differently from npm
+        run: rm -rf docs
       - name: Install Dependencies
         run: yarn --immutable
       - name: Publish
         run: yarn npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: "Trigger update-changelog.yml workflow"
+      - name: "Update Change Log (trigger update-changelog.yml workflow)"
         run: gh workflow run update-changelog.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: "Generate Docs (trigger update-generated-docs.yml workflow)"
+        run: gh workflow run update-generated-docs.yml --ref main
         env:
           GH_TOKEN: ${{ github.token }}

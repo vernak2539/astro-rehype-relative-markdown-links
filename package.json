@@ -18,7 +18,7 @@
     "src/options.mjs",
     "src/**/*.d.ts",
     "README.md",
-    "docs/**/*.md"
+    "CHANGELOG.md"
   ],
   "repository": {
     "type": "git",
