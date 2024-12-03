@@ -28,6 +28,8 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
+      - name: Delete non-packaged files # yarn has problems when it comes to packaging, behaving differently from npm
+        run: rm -rf docs
       - name: Install Dependencies
         run: yarn --immutable
       - name: Publish
