@@ -6,10 +6,9 @@ transform relative links in MD and MDX files into their final output paths.
 🚨 This is experimental and build **exclusively** for Astro. I have made a couple assumptions. They are:
 
 1. You are rendering a static site (i.e. not using SSR)
-2. **(Fixed v0.17.0)** You have a content collection residing at `src/content/<content_collection>`
+2. You have a content collection(s) residing at `src/content/<content_collection(s)>`
 3. **(Fixed v0.17.0)** You have a page that renders the above content collection at `src/pages/<content_collection>/[...slug].astro`
-
-<small>*</small> **_(Fixed v0.17.0)_** - You can now map your content collection to paths that don't match your content collection directory name.
+    - You can now map your content collection to paths that don't match your content collection directory name.
 See [docs](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/docs/interfaces/CollectionConfig.md#properties) for more information.
 
 ## Example Functionality
