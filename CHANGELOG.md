@@ -1,5 +1,28 @@
 # Changelog
 
+## [v0.17.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.17.0) (2024-12-05)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.16.0...v0.17.0)
+
+**Breaking changes:**
+
+- feat: Add srcDir & align `collection base` on a per collection basis \(remove contentPath + contentPathMode\) [\#49](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/49) ([techfg](https://github.com/techfg))
+
+**Closed issues:**
+
+- Astro v5 support? [\#66](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/66)
+- bug: `contentPath` is required in order to correctly transform when `collectionPathMode` is root [\#47](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/47)
+- feat: support mapping a content collection directory name to a site page path [\#24](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/24)
+
+**Merged pull requests:**
+
+- chore\(peerdeps\): allow for astro v5 [\#68](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/68) ([vernak2539](https://github.com/vernak2539))
+- Update readme [\#67](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/67) ([vernak2539](https://github.com/vernak2539))
+- chore\(yarn\): upgrade yarn version [\#65](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/65) ([vernak2539](https://github.com/vernak2539))
+- Update GH Actions - Align docs to releases + chores [\#64](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/64) ([vernak2539](https://github.com/vernak2539))
+- fix: remove invalid workflow dispatch property [\#63](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/63) ([techfg](https://github.com/techfg))
+- feat: add support for specifying collection names used in transformed URL paths [\#50](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/50) ([techfg](https://github.com/techfg))
+
 ## [v0.16.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.16.0) (2024-11-27)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.15.0...v0.16.0)
