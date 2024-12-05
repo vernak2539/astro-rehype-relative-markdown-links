@@ -38,22 +38,8 @@ Tested with Node.js v18 and v20 and Astro 2.x+.
 
 ## Installation
 
-**Yarn**
-
 ```bash
 yarn add astro-rehype-relative-markdown-links
-```
-
-**PNPM**
-
-```bash
-pnpm add astro-rehype-relative-markdown-links
-```
-
-**NPM**
-
-```bash
-npm install astro-rehype-relative-markdown-links
 ```
 
 ## Usage
