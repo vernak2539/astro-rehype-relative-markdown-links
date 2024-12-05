@@ -6,8 +6,11 @@ transform relative links in MD and MDX files into their final output paths.
 🚨 This is experimental and build **exclusively** for Astro. I have made a couple assumptions. They are:
 
 1. You are rendering a static site (i.e. not using SSR)
-2. You have a content collection residing at `src/content/<content_collection>`
-3. You have a page that renders the above content collection at `src/pages/<content_collection>/[...slug].astro`
+2. **(Fixed v0.17.0)** You have a content collection residing at `src/content/<content_collection>`
+3. **(Fixed v0.17.0)** You have a page that renders the above content collection at `src/pages/<content_collection>/[...slug].astro`
+
+<small>*</small> **_(Fixed v0.17.0)_** - You can now map your content collection to paths that don't match your content collection directory name.
+See [docs](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/docs/interfaces/CollectionConfig.md#properties) for more information.
 
 ## Example Functionality
 
@@ -25,32 +28,10 @@ The resulting HTML should be:
 
 It supports links with Query Strings and Hashes (e.g. `[relative link](./other-markdown.md?query=test#hash)`).
 
-## OS Support
-
-Tested with Node.js v18 and v20 and Astro 2.x+.
-
-- [x] MacOS (Ventura)
-- [x] Windows (Windows 11)
-- [x] Linux (Debian 11)
-
 ## Installation
-
-**Yarn**
 
 ```bash
 yarn add astro-rehype-relative-markdown-links
-```
-
-**PNPM**
-
-```bash
-pnpm add astro-rehype-relative-markdown-links
-```
-
-**NPM**
-
-```bash
-npm install astro-rehype-relative-markdown-links
 ```
 
 ## Usage
@@ -90,6 +71,19 @@ export default defineConfig({
 });
 ```
 
+## OS Support
+
+Tested with Node.js v18, v20, v22 and Astro >=2 <5.
+
+- [x] MacOS (Ventura)
+- [x] Windows (Windows 11)
+- [x] Linux (Debian 11)
+
+## Notes
+
+- I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
+- This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
+
 ## Debugging
 
 Using Yarn in example (sorry).
@@ -101,11 +95,6 @@ DEBUG=astro-rehype-relative-markdown-links yarn build
 
 DEBUG=astro-rehype-relative-markdown-links yarn dev
 ```
-
-## Notes
-
-- I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
-- This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
 
 ### Versions including and after `v0.9.0`
 
