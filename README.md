@@ -28,14 +28,6 @@ The resulting HTML should be:
 
 It supports links with Query Strings and Hashes (e.g. `[relative link](./other-markdown.md?query=test#hash)`).
 
-## OS Support
-
-Tested with Node.js v18 and v20 and Astro 2.x+.
-
-- [x] MacOS (Ventura)
-- [x] Windows (Windows 11)
-- [x] Linux (Debian 11)
-
 ## Installation
 
 ```bash
@@ -79,6 +71,19 @@ export default defineConfig({
 });
 ```
 
+## OS Support
+
+Tested with Node.js v18 and v20 and Astro 2.x+.
+
+- [x] MacOS (Ventura)
+- [x] Windows (Windows 11)
+- [x] Linux (Debian 11)
+
+## Notes
+
+- I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
+- This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
+
 ## Debugging
 
 Using Yarn in example (sorry).
@@ -90,11 +95,6 @@ DEBUG=astro-rehype-relative-markdown-links yarn build
 
 DEBUG=astro-rehype-relative-markdown-links yarn dev
 ```
-
-## Notes
-
-- I'm currently using this in [my blog](https://github.com/vernak2539/words-byvernacchia). Use it as an example if it's easier!
-- This rehype plugin was called `rehype-astro-relative-markdown-links` in the past. I've changed this due to rehype's naming guidelines.
 
 ### Versions including and after `v0.9.0`
 
