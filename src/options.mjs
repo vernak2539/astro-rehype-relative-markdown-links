@@ -10,6 +10,17 @@ export const CollectionConfigSchema = z.object({
    * Override the top-level {@link Options#collectionBase collectionBase} option for this collection.
    */
   base: CollectionBase.optional(),
+  /**
+   * @name name
+   * @description
+   *
+   * Override the name of the collection from disk.
+   *
+   * Use this option when your collection page path does not correspond to the name of the collection on disk (ex. `src/content/docs/reference.md` resolves to a page path of /my-docs/reference).
+   *
+   * When not specified, the name of the collection from disk will be used where applicable.
+   */
+  name: z.string().optional(),
 });
 
 /** @typedef {import('./options.d.ts').CollectionConfig} CollectionConfig */
@@ -131,4 +142,15 @@ export const validateOptions = (options) => {
   }
 
   return result.data;
+};
+
+/** @type {import('./options.d.ts').MergeCollectionOptions} */
+export const mergeCollectionOptions = (collectionName, options) => {
+  const config = options.collections[collectionName] || {};
+  const { base = options.collectionBase, name = collectionName } = config;
+  return {
+    ...options,
+    collectionBase: base,
+    collectionName: name,
+  };
 };

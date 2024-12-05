@@ -205,7 +205,7 @@ describe("resolveSlug", () => {
 
 describe("normaliseAstroOutputPath", () => {
   describe("prefix base to path", () => {
-    test("base with no slashes", () => {
+    test("should prefix base with no slashes", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         base: "base",
       });
@@ -213,7 +213,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start", () => {
+    test("should prefix base with slash at start", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         base: "/base",
       });
@@ -221,7 +221,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at end", () => {
+    test("should prefix base with slash at end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         base: "base/",
       });
@@ -229,7 +229,7 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
 
-    test("base with slash at start and end", () => {
+    test("should prefix base with slash at start and end", () => {
       const actual = normaliseAstroOutputPath("/foo-testing-test", {
         base: "/base/",
       });
@@ -410,67 +410,23 @@ describe("applyTrailingSlash", () => {
 });
 
 describe("resolveCollectionBase", () => {
-  test("returns absolute collection name path when top-level name and no collection override", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: "name",
-      collections: {},
+  describe("collectionBase:name", () => {
+    test("should return absolute collection name path when collectionBase is name", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: "name",
+        collectionName: "docs",
+      });
+      assert.equal(actual, "/docs");
     });
-    assert.equal(actual, "/docs");
   });
 
-  test("returns absolute collection name path when top-level false and collection override name", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: false,
-      collections: { docs: { base: "name" } },
+  describe("collectionBase:false", () => {
+    test("should return empty string when collectionBase is false", () => {
+      const actual = resolveCollectionBase({
+        collectionBase: false,
+        collectionName: undefined,
+      });
+      assert.equal(actual, "");
     });
-    assert.equal(actual, "/docs");
-  });
-
-  test("returns absolute collection name path when top-level name and collection override name", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: "name",
-      collections: { docs: { base: "name" } },
-    });
-    assert.equal(actual, "/docs");
-  });
-
-  test("returns absolute collection name path when top-level name and no collection override matches collection name", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: "name",
-      collections: { fake: { base: false } },
-    });
-    assert.equal(actual, "/docs");
-  });
-
-  test("returns empty string when top-level false and no collection override", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: false,
-      collections: {},
-    });
-    assert.equal(actual, "");
-  });
-
-  test("returns empty string when top-level name and collection override false", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: "name",
-      collections: { docs: { base: false } },
-    });
-    assert.equal(actual, "");
-  });
-
-  test("returns empty string when top-level false and collection override false", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: false,
-      collections: { docs: { base: false } },
-    });
-    assert.equal(actual, "");
-  });
-
-  test("returns empty string when top-level false and no collection override matches collection name", () => {
-    const actual = resolveCollectionBase("docs", {
-      collectionBase: false,
-      collections: { fake: { base: "name" } },
-    });
-    assert.equal(actual, "");
   });
 });

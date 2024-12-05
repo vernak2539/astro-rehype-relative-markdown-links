@@ -104,17 +104,17 @@ export const splitPathFromQueryAndFragment = (url) => {
 };
 
 /** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
-export const normaliseAstroOutputPath = (initialPath, options) => {
+export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   const buildPath = () => {
-    if (!options.base) {
+    if (!collectionOptions.base) {
       return initialPath;
     }
 
-    if (options.base.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(options.base, initialPath);
+    if (collectionOptions.base.startsWith(URL_PATH_SEPARATOR)) {
+      return path.join(collectionOptions.base, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(options.base, initialPath);
+    return URL_PATH_SEPARATOR + path.join(collectionOptions.base, initialPath);
   };
 
   if (!initialPath) {
@@ -191,11 +191,8 @@ export function getMatter(npath) {
 
 
 /** @type {import('./utils.d.ts').ResolveCollectionBase} */
-export function resolveCollectionBase(collectionName, options) {
-  const customBaseMode = options.collections[collectionName]?.base;
-  const effectiveBaseMode =
-    customBaseMode === false || typeof customBaseMode === "string"
-      ? customBaseMode
-      : options.collectionBase;
-  return effectiveBaseMode === false ? PATH_SEGMENT_EMPTY : URL_PATH_SEPARATOR + collectionName;
+export function resolveCollectionBase(collectionOptions) {
+  return collectionOptions.collectionBase === false
+    ? PATH_SEGMENT_EMPTY
+    : URL_PATH_SEPARATOR + collectionOptions.collectionName;
 }

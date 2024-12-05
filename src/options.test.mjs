@@ -1,5 +1,5 @@
 import { describe, test } from "node:test";
-import { validateOptions } from "./options.mjs";
+import { mergeCollectionOptions, validateOptions } from "./options.mjs";
 import assert from "node:assert";
 
 /** @type {import('./options.d.ts').CollectionConfig} */
@@ -78,49 +78,134 @@ describe("validateOptions", () => {
       expectsValidOption({ collectionBase: false }, "collectionBase", false);
     });
 
-    test("should error when collectionBase is a string", () => {
+    test("should error when collectionBase is a string containing an invalid value", () => {
       expectsZodError({ collectionBase: "foobar" }, "invalid_union");
     });
 
-    test("should fail when collectionBase is an object", () => {
+    test("should error when collectionBase is a number", () => {
+      expectsZodError({ collectionBase: 5 }, "invalid_union");
+    });
+
+    test("should error when collectionBase is an object", () => {
       expectsZodError({ collectionBase: {} }, "invalid_union");
+    });
+
+    test("should error when collectionBase is null", () => {
+      expectsZodError({ collectionBase: null }, "invalid_union");
     });
   });
 
   describe("collections", () => {
-    test("should have expected collections default", () => {
-      expectsValidOption({}, "collections", defaultOptions.collections);
+    describe("collections:core", () => {
+      test("should have expected collections default", () => {
+        expectsValidOption({}, "collections", defaultOptions.collections);
+      });
+
+      test("should contain empty collection when empty collection specified", () => {
+        const expected = { docs: {} };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain collection defaults when collection contains invalid collection key", () => {
+        expectsValidOption(
+          { collections: { docs: { thisdoesnotexistonschema: "foo" } } },
+          "collections",
+          { docs: defaultCollectionConfig },
+        );
+      });
+
+      test("should error when collections is not an object", () => {
+        expectsZodError({ collections: false }, "invalid_type");
+      });
+
+      test("should error when collections contains numeric key", () => {
+        expectsZodError({ collections: { 5: "name" } }, "invalid_type");
+      });
+
+      test("should error when collections is null", () => {
+        expectsZodError({ collections: null }, "invalid_type");
+      });
     });
 
-    test("should contain empty collection when empty collection specified", () => {
-      const expected = { docs: {} };
-      expectsValidOption({ collections: expected }, "collections", expected);
+    describe("collections:base", () => {
+      test("should contain base name for collection when base name specified", () => {
+        const expected = { docs: { base: "name" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain base false for collection when base false specified", () => {
+        const expected = { docs: { base: false } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should contain multiple collections when multiple collections specified", () => {
+        const expected = {
+          docs: { base: false },
+          newsletter: { base: "name" },
+        };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
+
+      test("should error when base is a string containing an invalid value", () => {
+        expectsZodError(
+          { collections: { docs: { base: "foobar" } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is a number", () => {
+        expectsZodError(
+          { collections: { docs: { base: 5 } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is an object", () => {
+        expectsZodError(
+          { collections: { docs: { base: {} } } },
+          "invalid_union",
+        );
+      });
+
+      test("should error when base is null", () => {
+        expectsZodError(
+          { collections: { docs: { base: null } } },
+          "invalid_union",
+        );
+      });
     });
 
-    test("should contain base false for collection when base false specified", () => {
-      const expected = { docs: { base: false } };
-      expectsValidOption({ collections: expected }, "collections", expected);
-    });
+    describe("collections:name", () => {
+      test("should contain name when name specified", () => {
+        const expected = { docs: { name: "my-docs" } };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
 
-    test("should contain collection defaults when collection contains invalid collection key", () => {
-      expectsValidOption(
-        { collections: { docs: { thisdoesnotexistonschema: "foo" } } },
-        "collections",
-        { docs: defaultCollectionConfig },
-      );
-    });
+      test("should contain multiple collections when multiple collections specified", () => {
+        const expected = {
+          docs: { name: "my-docs" },
+          newsletter: { name: "my-newsletter" },
+        };
+        expectsValidOption({ collections: expected }, "collections", expected);
+      });
 
-    test("should contain multiple collections when multiple collections specified", () => {
-      const expected = { docs: { base: false }, newsletter: { base: "name" } };
-      expectsValidOption({ collections: expected }, "collections", expected);
-    });
+      test("should error when name is a number", () => {
+        expectsZodError({ collections: { docs: { name: 5 } } }, "invalid_type");
+      });
 
-    test("should error when collections is not an object", () => {
-      expectsZodError({ collections: false }, "invalid_type");
-    });
+      test("should error when name is an object", () => {
+        expectsZodError(
+          { collections: { docs: { name: {} } } },
+          "invalid_type",
+        );
+      });
 
-    test("should error when collections contains numeric key", () => {
-      expectsZodError({ collections: { 5: "name" } }, "invalid_type");
+      test("should error when name is null", () => {
+        expectsZodError(
+          { collections: { docs: { name: null } } },
+          "invalid_type",
+        );
+      });
     });
   });
 
@@ -149,12 +234,20 @@ describe("validateOptions", () => {
       );
     });
 
-    test("should error when trailingSlash is not a ignore, always or never", () => {
+    test("should error when trailingSlash is not ignore, always or never", () => {
       expectsZodError({ trailingSlash: "foobar" }, "invalid_union");
     });
 
-    test("should fail when trailingSlash is not a string", () => {
+    test("should error when trailingSlash is a number", () => {
+      expectsZodError({ trailingSlash: 5 }, "invalid_union");
+    });
+
+    test("should error when trailingSlash is a object", () => {
       expectsZodError({ trailingSlash: {} }, "invalid_union");
+    });
+
+    test("should error when trailingSlash is null", () => {
+      expectsZodError({ trailingSlash: null }, "invalid_union");
     });
   });
 
@@ -167,8 +260,16 @@ describe("validateOptions", () => {
       expectsValidOption({ base: "foobar" }, "base", "foobar");
     });
 
-    test("should fail when base not a string", () => {
+    test("should error when base is a number", () => {
+      expectsZodError({ base: 5 }, "invalid_type");
+    });
+
+    test("should error when base is a object", () => {
       expectsZodError({ base: {} }, "invalid_type");
+    });
+
+    test("should error when base is null", () => {
+      expectsZodError({ base: null }, "invalid_type");
     });
   });
 
@@ -181,8 +282,109 @@ describe("validateOptions", () => {
       expectsValidOption({ srcDir: "foobar" }, "srcDir", "foobar");
     });
 
-    test("should fail when srcDir not a string", () => {
+    test("should error when srcDir is a number", () => {
+      expectsZodError({ srcDir: 5 }, "invalid_type");
+    });
+
+    test("should error when srcDir is a object", () => {
       expectsZodError({ srcDir: {} }, "invalid_type");
+    });
+
+    test("should error when srcDir is null", () => {
+      expectsZodError({ srcDir: null }, "invalid_type");
+    });
+  });
+});
+
+describe("mergeCollectionOptions", () => {
+  describe("collectionBase", () => {
+    test("collectionBase should be name when top-level name and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should name when top-level false and collection override name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { docs: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be name when top-level name and collection override name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be name when top-level name and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { fake: { base: false } },
+      });
+      assert.equal(actual.collectionBase, "name");
+    });
+
+    test("collectionBase should be false when top-level false and no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: {},
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false top-level name and collection override false", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { base: false } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false when top-level false and collection override false", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { docs: { base: false } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+
+    test("collectionBase should be false when top-level false and no collection override matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: false,
+        collections: { fake: { base: "name" } },
+      });
+      assert.equal(actual.collectionBase, false);
+    });
+  });
+
+  describe("collectionName", () => {
+    test("collectionName should contain name from parameter when no collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collections: {},
+      });
+      assert.equal(actual.collectionName, "docs");
+    });
+
+    test("collectionName should contain name from collection override", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { docs: { name: "my-docs" } },
+      });
+      assert.equal(actual.collectionName, "my-docs");
+    });
+
+    test("collectionName should contain name from parameter when no collection overrides matches collection name", () => {
+      const actual = mergeCollectionOptions("docs", {
+        collectionBase: "name",
+        collections: { fake: { name: "my-docs" } },
+      });
+      assert.equal(actual.collectionName, "docs");
     });
   });
 });
