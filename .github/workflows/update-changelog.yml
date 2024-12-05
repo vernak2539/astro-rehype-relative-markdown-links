@@ -15,10 +15,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
       - name: "Install github_changelog_generator"
-        env:
-          CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
         run: gem install github_changelog_generator
       - name: "Generate and commit CHANGELOG.md"
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
         run: |
           github_changelog_generator
           git add CHANGELOG.md
