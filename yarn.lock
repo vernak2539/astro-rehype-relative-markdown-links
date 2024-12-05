@@ -157,7 +157,7 @@ __metadata:
     unist-util-visit: "npm:^5.0.0"
     zod: "npm:^3.22.4"
   peerDependencies:
-    astro: ">=2.x <5"
+    astro: ">=2 <6"
   languageName: unknown
   linkType: soft
 

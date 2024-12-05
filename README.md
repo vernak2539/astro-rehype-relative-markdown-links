@@ -72,7 +72,7 @@ export default defineConfig({
 
 ## OS Support
 
-Tested with Node.js v18, v20, v22 and Astro >=2 <5.
+Tested with Node.js v18, v20, v22 and Astro >=2 <6.
 
 - [x] MacOS (Ventura)
 - [x] Windows (Windows 11)
