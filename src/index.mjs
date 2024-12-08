@@ -23,15 +23,10 @@ import { validateOptions, mergeCollectionOptions } from "./options.mjs";
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
-/** @typedef {import('./options.d.ts').Options} Options */
-/** @typedef {import('./options.d.ts').CollectionConfig} CollectionConfig */
 /**
- * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
- *
- * @type {import('unified').Plugin<[(Options | null | undefined)?], import('hast').Root>}
- * @see {@link Options}
+ * @type {import('unified').Plugin<[(import('./options.d.ts').Options | null | undefined)?], import('hast').Root>}
  */
-function astroRehypeRelativeMarkdownLinks(opts = {}) {
+function astroRehypeRelativeMarkdownLinks(opts) {
   const options = validateOptions(opts);
 
   return (tree, file) => {

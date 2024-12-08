@@ -33,7 +33,7 @@
   "packageManager": "yarn@4.5.3",
   "scripts": {
     "pre-release": "yarn run changelog && yarn run prettier && yarn run generate-docs",
-    "generate-docs": "typedoc --readme none --gitRevision main --plugin typedoc-plugin-markdown src",
+    "generate-docs": "typedoc",
     "prettier": "prettier ./src/** -w",
     "test": "ARRML_MATTER_CACHE_DISABLE=true node --loader=esmock --test",
     "type-check": "tsc --noEmit --emitDeclarationOnly false"
@@ -44,6 +44,8 @@
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "is-absolute-url": "^4.0.1",
+    "remark-toc": "^9.0.0",
+    "typedoc-plugin-remark": "^1.1.1",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "zod": "^3.23.8"
