@@ -189,7 +189,6 @@ export function getMatter(npath) {
   return matterCache[npath] || readMatter();
 }
 
-
 /** @type {import('./utils.d.ts').ResolveCollectionBase} */
 export function resolveCollectionBase(collectionOptions) {
   return collectionOptions.collectionBase === false

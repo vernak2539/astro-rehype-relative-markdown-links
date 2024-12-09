@@ -2,6 +2,7 @@ import { z } from "zod";
 import { OptionsSchema, CollectionConfigSchema } from "./options.mjs";
 
 export type OptionsSchemaType = typeof OptionsSchema;
+/** General options */
 export interface Options extends z.input<OptionsSchemaType> {}
 export interface EffectiveOptions extends z.infer<OptionsSchemaType> {}
 export interface EffectiveCollectionOptions
@@ -12,6 +13,7 @@ export type ValidateOptions = (
   options: Options | null | undefined,
 ) => EffectiveOptions;
 export type CollectionConfigSchemaType = typeof CollectionConfigSchema;
+/** Collection specific options */
 export interface CollectionConfig extends z.input<CollectionConfigSchemaType> {}
 export type MergeCollectionOptions = (
   collectionName: string,
