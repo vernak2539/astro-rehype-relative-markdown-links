@@ -29,11 +29,7 @@ jobs:
         run: yarn npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: "Update Change Log (trigger update-changelog.yml workflow)"
-        run: gh workflow run update-changelog.yml --ref main
-        env:
-          GH_TOKEN: ${{ github.token }}
-      - name: "Generate Docs (trigger update-generated-docs.yml workflow)"
-        run: gh workflow run update-generated-docs.yml --ref main
-        env:
-          GH_TOKEN: ${{ github.token }}
+  update_changelog:
+    uses: ./.github/workflows/update-changelog.yml@main
+  update_docs:
+    uses: ./.github/workflows/update-generated-docs.yml@main
