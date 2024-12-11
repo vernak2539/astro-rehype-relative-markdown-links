@@ -1,6 +1,7 @@
 name: Update Changelog
 on:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: write
