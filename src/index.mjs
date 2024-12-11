@@ -23,15 +23,10 @@ import { validateOptions, mergeCollectionOptions } from "./options.mjs";
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
-/** @typedef {import('./options.d.ts').Options} Options */
-/** @typedef {import('./options.d.ts').CollectionConfig} CollectionConfig */
 /**
- * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
- *
- * @type {import('unified').Plugin<[(Options | null | undefined)?], import('hast').Root>}
- * @see {@link Options}
+ * @type {import('unified').Plugin<[(import('./options.d.ts').Options | null | undefined)?], import('hast').Root>}
  */
-function astroRehypeRelativeMarkdownLinks(opts = {}) {
+function astroRehypeRelativeMarkdownLinks(opts) {
   const options = validateOptions(opts);
 
   return (tree, file) => {
@@ -116,7 +111,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
         (collectionOptions.collectionBase !== false && collectionName === ".")
       ) {
         return;
-      }        
+      }
       // determine the path of the target file relative to the collection
       // since the slug for content collection pages is always relative to collection root
       const collectionDir = path.join(contentDir, collectionName);
@@ -135,7 +130,7 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
       // determine the collection base based on specified options
       const resolvedCollectionBase = resolveCollectionBase(collectionOptions);
 
-      // content collection slugs are relative to content collection root (or site root if effective collectionBase is 
+      // content collection slugs are relative to content collection root (or site root if effective collectionBase is
       // `false`) so build url including the content collection name (if applicable) and the pages slug
       // NOTE - When there is a content collection name being applied, this only handles situations where the physical
       //        directory name of the content collection maps 1:1 to the site page path serving the content collection
@@ -146,7 +141,8 @@ function astroRehypeRelativeMarkdownLinks(opts = {}) {
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
       let webPathFinal = applyTrailingSlash(
-        (collectionOptions.collectionBase === false && frontmatterSlug === PATH_SEGMENT_EMPTY
+        (collectionOptions.collectionBase === false &&
+        frontmatterSlug === PATH_SEGMENT_EMPTY
           ? URL_PATH_SEPARATOR
           : frontmatterSlug) || urlPathPart,
         resolvedUrl,
