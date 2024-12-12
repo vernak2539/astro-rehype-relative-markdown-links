@@ -1,3 +1,4 @@
+# yarn dlx np patch --no-publish --message "Release v%s"
 name: Publish Package to npmjs
 on:
   push:
