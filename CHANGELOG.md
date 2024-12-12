@@ -2,19 +2,7 @@
 
 ## [v0.17.3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.17.3) (2024-12-12)
 
-[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.17.2...v0.17.3)
-
-## [v0.17.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.17.2) (2024-12-12)
-
-[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.17.1...v0.17.2)
-
-**Merged pull requests:**
-
-- Publish update [\#73](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/73) ([vernak2539](https://github.com/vernak2539))
-
-## [v0.17.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.17.1) (2024-12-12)
-
-[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.17.0...v0.17.1)
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.17.0...v0.17.3)
 
 **Closed issues:**
 
@@ -22,6 +10,7 @@
 
 **Merged pull requests:**
 
+- Publish update [\#73](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/73) ([vernak2539](https://github.com/vernak2539))
 - Update publish workflow [\#71](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/71) ([vernak2539](https://github.com/vernak2539))
 - chore: update docs [\#70](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/70) ([techfg](https://github.com/techfg))
 
