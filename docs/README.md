@@ -1,41 +1,19 @@
-astro-rehype-relative-markdown-links
-
 # astro-rehype-relative-markdown-links
 
-## Table of contents
+## Contents
 
-### Interfaces
+* [Interfaces](#interfaces)
+* [Functions](#functions)
 
-- [CollectionConfig](interfaces/CollectionConfig.md)
-- [Options](interfaces/Options.md)
+## Interfaces
 
-### Functions
-
-- [default](README.md#default)
+| Interface                                          | Description                 |
+| -------------------------------------------------- | --------------------------- |
+| [CollectionConfig](interfaces/CollectionConfig.md) | Collection specific options |
+| [Options](interfaces/Options.md)                   | General options             |
 
 ## Functions
 
-### default
-
-▸ **default**(`this`, `...parameters`): `undefined` \| `void` \| `Transformer`\<`Root`, `Root`\>
-
-Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `this` | `Processor`\<`undefined`, `undefined`, `undefined`, `undefined`, `undefined`\> |
-| `...parameters` | [(null \| Options)?] |
-
-#### Returns
-
-`undefined` \| `void` \| `Transformer`\<`Root`, `Root`\>
-
-**`See`**
-
-[Options](interfaces/Options.md)
-
-#### Defined in
-
-[src/index.mjs:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.mjs#L34)
+| Function                        | Description                                                                                                             |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [default](functions/default.md) | Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths. |

@@ -2,41 +2,35 @@
 
 # Interface: Options
 
-## Hierarchy
+General options
 
-- `input`\<`OptionsSchemaType`\>
+## Contents
 
-  ↳ **`Options`**
+* [Extends](#extends)
+* [Properties](#properties)
+  * [base?](#base)
+  * [collectionBase?](#collectionbase)
+  * [collections?](#collections)
+  * [srcDir?](#srcdir)
+  * [trailingSlash?](#trailingslash)
 
-## Table of contents
+## Extends
 
-### Properties
-
-- [base](Options.md#base)
-- [collectionBase](Options.md#collectionbase)
-- [collections](Options.md#collections)
-- [srcDir](Options.md#srcdir)
-- [trailingSlash](Options.md#trailingslash)
+* `input`\<`OptionsSchemaType`>
 
 ## Properties
 
-### base
+### base?
 
-• `Optional` **base**: `string`
-
-**`Name`**
-
-base
-
-**`Reference`**
-
-https://docs.astro.build/en/reference/configuration-reference/#base
-
-**`Description`**
+> `optional` **base**: `string`
 
 The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
 
-**`Example`**
+#### See
+
+[https://docs.astro.build/en/reference/configuration-reference/#base](https://docs.astro.build/en/reference/configuration-reference/#base)
+
+#### Example
 
 In the example below, `astro dev` will start your server at `/docs`.
 
@@ -48,39 +42,38 @@ In the example below, `astro dev` will start your server at `/docs`.
 
 #### Inherited from
 
-z.input.base
+`z.input.base`
 
 #### Defined in
 
-[src/options.mjs:105](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L105)
+[src/options.mjs:86](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L86)
 
-___
+***
 
-### collectionBase
+### collectionBase?
 
-• `Optional` **collectionBase**: ``false`` \| ``"name"``
-
-**`Name`**
-
-collectionBase
-
-**`Default`**
-
-`"name"`
-
-**`Description`**
+> `optional` **collectionBase**: `false` | `"name"`
 
 Set how the base segment of the URL path to the referenced markdown file should be derived:
-  - `"name"` - Apply the name on disk of the content collection (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/docs/guides/my-guide`)
-  - `false` - Do not apply a base (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/guides/my-guide`)
+
+* `"name"` - Apply the name on disk of the content collection (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/docs/guides/my-guide`)
+* `false` - Do not apply a base (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/guides/my-guide`)
 
 Use `false` when you are treating your content collection as if it were located in the site root (ex: `src/pages`). In most scenarios, you should set this value to `"name"` or not
 set this value and the default of `"name"` will be used.
 
-Note that this is a top-level option and will apply to all content collections.  If you have multiple collections and only want one of them to be treated as the site root, you should set this value to `"name"` (or leave the default)
-and use the [collections](Options.md#collections) option to control the behavior for the specific content collection.
+Note that this is a top-level option and will apply to all content collections.  If you have multiple content collections and want the behavior to be different on a per content collection basis, add the collection(s) to
+the [collections](Options.md#collections) option and provide a value for the [base](CollectionConfig.md#base) property.
 
-**`Example`**
+#### Default
+
+`"name"`
+
+#### See
+
+[collections](Options.md#collections)
+
+#### Example
 
 ```js
 {
@@ -89,38 +82,32 @@ and use the [collections](Options.md#collections) option to control the behavior
 }
 ```
 
-**`See`**
-
-[collections](Options.md#collections)
-
 #### Inherited from
 
-z.input.collectionBase
+`z.input.collectionBase`
 
 #### Defined in
 
-[src/options.mjs:68](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L68)
+[src/options.mjs:55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L55)
 
-___
+***
 
-### collections
+### collections?
 
-• `Optional` **collections**: `Record`\<`string`, \{ `base?`: ``false`` \| ``"name"`` ; `name?`: `string`  }\>
-
-**`Name`**
-
-collections
-
-**`Default`**
-
-`{}`
-
-**`Description`**
+> `optional` **collections**: `Record`\<`string`, \{ `base`: `false` | `"name"`; `name`: `string`; }>
 
 Specify a mapping of collections where the key is the name of a collection on disk and the value is an object of collection specific configuration which will override any top-level
 configuration where applicable.
 
-**`Example`**
+#### Default
+
+`{}`
+
+#### See
+
+[CollectionConfig](CollectionConfig.md)
+
+#### Example
 
 ```js
 {
@@ -133,43 +120,33 @@ configuration where applicable.
 }
 ```
 
-**`See`**
-
-[CollectionConfig](CollectionConfig.md)
-
 #### Inherited from
 
-z.input.collections
+`z.input.collections`
 
 #### Defined in
 
-[src/options.mjs:90](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L90)
+[src/options.mjs:73](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L73)
 
-___
+***
 
-### srcDir
+### srcDir?
 
-• `Optional` **srcDir**: `string`
-
-**`Name`**
-
-srcDir
-
-**`Reference`**
-
-https://docs.astro.build/en/reference/configuration-reference/#srcdir
-
-**`Default`**
-
-`./src`
-
-**`Description`**
+> `optional` **srcDir**: `string`
 
 Set the directory that Astro will read your site from.
 
 The value can be either an absolute file system path or a path relative to the project root.
 
-**`Example`**
+#### Default
+
+`./src`
+
+#### See
+
+[https://docs.astro.build/en/reference/configuration-reference/#srcdir](https://docs.astro.build/en/reference/configuration-reference/#srcdir)
+
+#### Example
 
 ```js
 {
@@ -179,42 +156,42 @@ The value can be either an absolute file system path or a path relative to the p
 
 #### Inherited from
 
-z.input.srcDir
+`z.input.srcDir`
 
 #### Defined in
 
-[src/options.mjs:44](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L44)
+[src/options.mjs:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L34)
 
-___
+***
 
-### trailingSlash
+### trailingSlash?
 
-• `Optional` **trailingSlash**: ``"always"`` \| ``"never"`` \| ``"ignore"``
+> `optional` **trailingSlash**: `"always"` | `"never"` | `"ignore"`
 
-**`Name`**
+Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
 
-trailingSlash
+* `"always"` - Ensure urls always end with a trailing slash regardless of input
+* `"never"` - Ensure urls never end with a trailing slash regardless of input
+* `"ignore"` - Do not modify the url, trailing slash behavior will be determined by the file url itself or a custom slug if present.
 
-**`Default`**
+When set to `"ignore"` (the default), the following will occur:
+
+* If there is not a custom slug on the target file, the markdown link itself will determine if there is a trailing slash.
+  * `[Example](./my-doc.md/)` will result in a trailing slash
+  * `[Example](./my-doc.md)` will not result in a trailing slash
+* If there is a custom slug on the target file, the custom slug determines if there is a trailing slash.
+  * `slug: my-doc/` will result in a trailing slash
+  * `slug: my-doc` will not result in a trailing slash
+
+#### Default
 
 `"ignore"`
 
-**`Description`**
+#### See
 
-Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
-  - `"always"` - Ensure urls always end with a trailing slash regardless of input
-  - `"never"` - Ensure urls never end with a trailing slash regardless of input
-  - `"ignore"` - Do not modify the url, trailing slash behavior will be determined by the file url itself or a custom slug if present.
+[https://docs.astro.build/en/reference/configuration-reference/#trailingslash](https://docs.astro.build/en/reference/configuration-reference/#trailingslash)
 
-When set to `"ignore"` (the default), the following will occur:
-  - If there is not a custom slug on the target file, the markdown link itself will determine if there is a trailing slash.
-      - `[Example](./my-doc.md/)` will result in a trailing slash
-      - `[Example](./my-doc.md)` will not result in a trailing slash
-  - If there is a custom slug on the target file, the custom slug determines if there is a trailing slash.
-      - `slug: my-doc/` will result in a trailing slash
-      - `slug: my-doc` will not result in a trailing slash
-
-**`Example`**
+#### Example
 
 ```js
 {
@@ -223,14 +200,10 @@ When set to `"ignore"` (the default), the following will occur:
 }
 ```
 
-**`See`**
-
-[https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro](https://docs.astro.build/en/reference/configuration-reference/#trailingslash|Astro)
-
 #### Inherited from
 
-z.input.trailingSlash
+`z.input.trailingSlash`
 
 #### Defined in
 
-[src/options.mjs:132](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L132)
+[src/options.mjs:110](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L110)

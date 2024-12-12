@@ -2,63 +2,51 @@
 
 # Interface: CollectionConfig
 
-## Hierarchy
+Collection specific options
 
-- `input`\<`CollectionConfigSchemaType`\>
+## Contents
 
-  ↳ **`CollectionConfig`**
+* [Extends](#extends)
+* [Properties](#properties)
+  * [base?](#base)
+  * [name?](#name)
 
-## Table of contents
+## Extends
 
-### Properties
-
-- [base](CollectionConfig.md#base)
-- [name](CollectionConfig.md#name)
+* `input`\<`CollectionConfigSchemaType`>
 
 ## Properties
 
-### base
+### base?
 
-• `Optional` **base**: ``false`` \| ``"name"``
-
-**`Name`**
-
-base
-
-**`Description`**
+> `optional` **base**: `false` | `"name"`
 
 Override the top-level [collectionBase](Options.md#collectionbase) option for this collection.
 
 #### Inherited from
 
-z.input.base
+`z.input.base`
 
 #### Defined in
 
-[src/options.mjs:12](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L12)
+[src/options.mjs:9](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L9)
 
-___
+***
 
-### name
+### name?
 
-• `Optional` **name**: `string`
-
-**`Name`**
-
-name
-
-**`Description`**
+> `optional` **name**: `string`
 
 Override the name of the collection from disk.
 
-Use this option when your collection page path does not correspond to the name of the collection on disk (ex. `src/content/docs/reference.md` resolves to a page path of /my-docs/reference).
+Use this option when your collection page path does not correspond to the name of the collection on disk (ex. `src/content/docs/reference.md` resolves to a page path of `/my-docs/reference`).
 
 When not specified, the name of the collection from disk will be used where applicable.
 
 #### Inherited from
 
-z.input.name
+`z.input.name`
 
 #### Defined in
 
-[src/options.mjs:23](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L23)
+[src/options.mjs:17](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L17)
