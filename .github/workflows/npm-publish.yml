@@ -1,8 +1,8 @@
+# yarn dlx np patch --no-publish --message "Release v%s"
 name: Publish Package to npmjs
 on:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    branches: ["main"]
 
 permissions:
   actions: write
@@ -10,6 +10,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: "startsWith(github.event.head_commit.message, 'Release v')"
     environment:
       name: npm-publish
     steps:
@@ -30,6 +31,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   update_changelog:
-    uses: ./.github/workflows/update-changelog.yml@main
+    uses: ./.github/workflows/update-changelog.yml
+    needs: publish
   update_docs:
-    uses: ./.github/workflows/update-generated-docs.yml@main
+    uses: ./.github/workflows/update-generated-docs.yml
+    needs: update_changelog
