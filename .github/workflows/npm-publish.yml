@@ -33,6 +33,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   update_changelog:
     needs: publish
+    runs-on: ubuntu-latest
+    environment:
+      name: npm-publish
     steps:
       - name: Generate CHANGELOG
         uses: ./.github/workflows/update-changelog.yml
@@ -40,6 +43,9 @@ jobs:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
   update_docs:
     needs: update_changelog
+    runs-on: ubuntu-latest
+    environment:
+      name: npm-publish
     steps:
       - name: Generate Docs
         uses: ./.github/workflows/update-generated-docs.yml
