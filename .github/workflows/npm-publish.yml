@@ -32,10 +32,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   update_changelog:
-    uses: ./.github/workflows/update-changelog.yml
     needs: publish
-    env:
-      CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
+    steps:
+      - name: Generate CHANGELOG
+        uses: ./.github/workflows/update-changelog.yml
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
   update_docs:
-    uses: ./.github/workflows/update-generated-docs.yml
     needs: update_changelog
+    steps:
+      - name: Generate Docs
+        uses: ./.github/workflows/update-generated-docs.yml
