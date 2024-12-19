@@ -110,6 +110,13 @@ export const OptionsSchema = z.object({
   trailingSlash: z
     .union([z.literal("ignore"), z.literal("always"), z.literal("never")])
     .default("ignore"),
+
+  /**
+   *
+   */
+  astroVersion: z
+    .union([z.literal(2), z.literal(3), z.literal(4), z.literal(5)])
+    .default(5),
 });
 
 /** @type {import('./options.d.ts').ValidateOptions} */

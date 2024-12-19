@@ -1,4 +1,4 @@
-import type { EffectiveCollectionOptions } from "./options.d.ts";
+import type { EffectiveCollectionOptions, Options } from "./options.d.ts";
 
 export type SplitPathFromQueryAndFragmentFn = (
   path: string,
@@ -22,7 +22,7 @@ export type NormaliseAstroOutputPath = (
 ) => string;
 export type Slash = (path: string, sep: string) => string;
 export type NormalizePath = (path: string) => string;
-export type ShouldProcessFile = (path: string) => boolean;
+export type ShouldProcessFile = (path: string, options: Options) => boolean;
 export type MatterData = { slug?: string };
 export type GetMatter = (path: string) => MatterData;
 export type ResolveCollectionBase = (
