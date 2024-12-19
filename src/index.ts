@@ -1,6 +1,8 @@
 import { visit } from "unist-util-visit";
 import * as path from "path";
 import { default as debugFn } from "debug";
+import type { Plugin } from "unified";
+import type { Root } from "hast";
 import {
   replaceExt,
   isValidRelativeLink,
@@ -27,7 +29,10 @@ import {
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
-function astroRehypeRelativeMarkdownLinks(opts: Options) {
+const astroRehypeRelativeMarkdownLinks: Plugin<
+  [(Options | null | undefined)?],
+  Root
+> = (opts) => {
   const options = validateOptions(opts);
 
   return (tree, file) => {
@@ -198,6 +203,6 @@ function astroRehypeRelativeMarkdownLinks(opts: Options) {
       node.properties.href = webPathFinal;
     });
   };
-}
+};
 
 export default astroRehypeRelativeMarkdownLinks;
