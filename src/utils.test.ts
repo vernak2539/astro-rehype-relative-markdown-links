@@ -11,7 +11,7 @@ import {
   resolveSlug,
   applyTrailingSlash,
   resolveCollectionBase,
-} from "./utils.ts";
+} from "./utils";
 
 describe("replaceExt", () => {
   test("replaces extension with another extension", () => {

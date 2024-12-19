@@ -5,12 +5,12 @@ import path, { dirname } from "path";
 import { rehype } from "rehype";
 import { visit } from "unist-util-visit";
 import esmock from "esmock";
-import { validateOptions as validateOptionsOriginal } from "./options.ts";
+import { validateOptions as validateOptionsOriginal } from "./options";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import astroRehypeRelativeMarkdownLinks from "./index.ts";
+import astroRehypeRelativeMarkdownLinks from "./index";
 
 /*
   NOTE ON ESMOCK USAGE
@@ -418,10 +418,10 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
   });
 
   describe("config option validation", () => {
-    const runValidationTest = async (context, options) => {
+    const runValidationTest = async (context, options?) => {
       const validateOptionsMock = context.mock.fn(validateOptionsOriginal);
-      const astroRehypeRelativeMarkdownLinksMock = await esmock("./index.mjs", {
-        "./options.mjs": {
+      const astroRehypeRelativeMarkdownLinksMock = await esmock("./index.ts", {
+        "./options.ts": {
           validateOptions: validateOptionsMock,
         },
       });

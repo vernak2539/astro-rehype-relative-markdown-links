@@ -30,7 +30,7 @@
     "build": "tsup",
     "generate-docs": "typedoc",
     "prettier": "prettier ./src/** -w",
-    "test": "ARRML_MATTER_CACHE_DISABLE=true node --loader tsx --loader=esmock --test test/**/*.test.ts",
+    "test": "ARRML_MATTER_CACHE_DISABLE=true node --import tsx --loader=esmock --test src/**/*.test.ts",
     "type-check": "tsc --noEmit --emitDeclarationOnly false",
     "prepare": "husky"
   },
