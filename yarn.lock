@@ -244,7 +244,9 @@ __metadata:
     esmock: "npm:^2.6.9"
     github-slugger: "npm:^2.0.0"
     gray-matter: "npm:^4.0.3"
+    husky: "npm:^9.1.7"
     is-absolute-url: "npm:^4.0.1"
+    pinst: "npm:^3.0.0"
     prettier: "npm:^4.0.0-alpha.8"
     rehype: "npm:^13.0.2"
     remark-toc: "npm:^9.0.0"
@@ -645,6 +647,15 @@ __metadata:
   version: 3.0.0
   resolution: "html-void-elements@npm:3.0.0"
   checksum: 10c0/a8b9ec5db23b7c8053876dad73a0336183e6162bf6d2677376d8b38d654fdc59ba74fdd12f8812688f7db6fad451210c91b300e472afc0909224e0a44c8610d2
+  languageName: node
+  linkType: hard
+
+"husky@npm:^9.1.7":
+  version: 9.1.7
+  resolution: "husky@npm:9.1.7"
+  bin:
+    husky: bin.js
+  checksum: 10c0/35bb110a71086c48906aa7cd3ed4913fb913823715359d65e32e0b964cb1e255593b0ae8014a5005c66a68e6fa66c38dcfa8056dbbdfb8b0187c0ffe7ee3a58f
   languageName: node
   linkType: hard
 
@@ -1576,6 +1587,15 @@ __metadata:
   dependencies:
     entities: "npm:^4.4.0"
   checksum: 10c0/297d7af8224f4b5cb7f6617ecdae98eeaed7f8cbd78956c42785e230505d5a4f07cef352af10d3006fa5c1544b76b57784d3a22d861ae071bbc460c649482bf4
+  languageName: node
+  linkType: hard
+
+"pinst@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 10c0/abb1ed62ea2acb2207a7a860715bdb26ecbde74ede8fad5f6200194f3e22db25e2b7a49af05e5cc7fc05384709c651e0000323f0077d7239060c4b68c8acd428
   languageName: node
   linkType: hard
 

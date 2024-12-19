@@ -34,7 +34,8 @@
     "generate-docs": "typedoc",
     "prettier": "prettier ./src/** -w",
     "test": "ARRML_MATTER_CACHE_DISABLE=true node --loader=esmock --test",
-    "type-check": "tsc --noEmit --emitDeclarationOnly false"
+    "type-check": "tsc --noEmit --emitDeclarationOnly false",
+    "prepare": "husky"
   },
   "dependencies": {
     "catch-unknown": "^2.0.0",
@@ -53,6 +54,8 @@
     "@types/debug": "^4.1.12",
     "@types/node": "^18.17.8",
     "esmock": "^2.6.9",
+    "husky": "^9.1.7",
+    "pinst": "^3.0.0",
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.2",
     "remark-toc": "^9.0.0",
