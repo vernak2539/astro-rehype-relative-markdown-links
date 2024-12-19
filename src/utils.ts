@@ -5,33 +5,28 @@ import { z } from "zod";
 import { asError } from "catch-unknown";
 import isAbsoluteUrl from "is-absolute-url";
 import matter from "gray-matter";
+import type { EffectiveCollectionOptions } from "./options";
+
+type MatterData = { slug?: string };
 
 const validMarkdownExtensions = [".md", ".mdx"];
 const isWindows =
   typeof process !== "undefined" && process.platform === "win32";
 const windowsSlashRE = /\\/g;
 
-/** @type {import('./utils.d.ts').Slash} */
-function slash(npath, sep) {
+function slash(npath: string, sep: string): string {
   return npath.replace(windowsSlashRE, sep);
 }
 
-/** @type {import('./utils.d.ts').NormalizePath} */
-function normalizePath(npath) {
+function normalizePath(npath: string): string {
   return path.posix.normalize(isWindows ? slash(npath, path.posix.sep) : npath);
 }
 
-/** @type {string} */
 export const FILE_PATH_SEPARATOR = path.sep;
-
-/** @type {string} */
 export const URL_PATH_SEPARATOR = "/";
-
-/** @type {string} */
 export const PATH_SEGMENT_EMPTY = "";
 
-/** @type {import('./utils.d.ts').ReplaceExtFn} */
-export const replaceExt = (npath, ext) => {
+export const replaceExt = (npath: string, ext: string): string => {
   if (typeof npath !== "string" || npath.length === 0) {
     return npath;
   }
@@ -39,8 +34,7 @@ export const replaceExt = (npath, ext) => {
   return npath.replace(new RegExp(path.extname(npath) + "$"), ext);
 };
 
-/** @type {import('./utils.d.ts').IsValidRelativeLinkFn} */
-export const isValidRelativeLink = (link) => {
+export const isValidRelativeLink = (link: string): boolean => {
   if (!link) {
     return false;
   }
@@ -60,8 +54,7 @@ export const isValidRelativeLink = (link) => {
   return true;
 };
 
-/** @type {import('./utils.d.ts').IsValidFile} */
-export const isValidFile = (path) => {
+export const isValidFile = (path: string): boolean => {
   if (!path) {
     return false;
   }
@@ -78,8 +71,9 @@ export const isValidFile = (path) => {
   }
 };
 
-/** @type {import('./utils.d.ts').SplitPathFromQueryAndFragmentFn} */
-export const splitPathFromQueryAndFragment = (url) => {
+export const splitPathFromQueryAndFragment = (
+  url: string,
+): [string, string | null] => {
   const indexQuery = url.indexOf("?");
   const indexHash = url.indexOf("#");
 
@@ -103,8 +97,10 @@ export const splitPathFromQueryAndFragment = (url) => {
   return [decodeURI(splitUrl), splitQueryStringAndHash];
 };
 
-/** @type {import('./utils.d.ts').NormaliseAstroOutputPath} */
-export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
+export const normaliseAstroOutputPath = (
+  initialPath: string,
+  collectionOptions: EffectiveCollectionOptions,
+): string => {
   const buildPath = () => {
     if (!collectionOptions.base) {
       return initialPath;
@@ -124,24 +120,24 @@ export const normaliseAstroOutputPath = (initialPath, collectionOptions) => {
   return normalizePath(buildPath());
 };
 
-/** @type {import('./utils.d.ts').GenerateSlug} */
-export const generateSlug = (pathSegments) => {
+export const generateSlug = (pathSegments: string[]): string => {
   return pathSegments
     .map((segment) => githubSlug(segment))
     .join(URL_PATH_SEPARATOR)
     .replace(/\/index$/, "");
 };
 
-/** @type {import('./utils.d.ts').ResolveSlug} */
-export const resolveSlug = (generatedSlug, frontmatterSlug) => {
+export const resolveSlug = (
+  generatedSlug: string,
+  frontmatterSlug: unknown,
+) => {
   return z.string().default(generatedSlug).parse(frontmatterSlug);
 };
 
-/** @type {import('./utils.d.ts').ApplyTrailingSlash} */
 export const applyTrailingSlash = (
-  origUrl,
-  resolvedUrl,
-  trailingSlash = "ignore",
+  origUrl: string,
+  resolvedUrl: string,
+  trailingSlash: EffectiveCollectionOptions["trailingSlash"] = "ignore",
 ) => {
   const hasTrailingSlash = resolvedUrl.endsWith(URL_PATH_SEPARATOR);
 
@@ -165,18 +161,15 @@ export const applyTrailingSlash = (
   return resolvedUrl;
 };
 
-/** @type {import('./utils.d.ts').ShouldProcessFile} */
-export function shouldProcessFile(npath) {
+export function shouldProcessFile(npath: string): boolean {
   // Astro excludes files that include underscore in any segment of the path under contentDIr
   // see https://github.com/withastro/astro/blob/0fec72b35cccf80b66a85664877ca9dcc94114aa/packages/astro/src/content/utils.ts#L253
   return !npath.split(path.sep).some((p) => p && p.startsWith("_"));
 }
 
-/** @type {Record<string, import('./utils.d.ts').MatterData>} */
-const matterCache = {};
+const matterCache: Record<string, MatterData> = {};
 const matterCacheEnabled = process.env.ARRML_MATTER_CACHE_DISABLE !== "true";
-/** @type {import('./utils.d.ts').GetMatter} */
-export function getMatter(npath) {
+export function getMatter(npath: string): MatterData {
   const readMatter = () => {
     const content = readFileSync(npath);
     const { data: frontmatter } = matter(content);
@@ -189,8 +182,9 @@ export function getMatter(npath) {
   return matterCache[npath] || readMatter();
 }
 
-/** @type {import('./utils.d.ts').ResolveCollectionBase} */
-export function resolveCollectionBase(collectionOptions) {
+export function resolveCollectionBase(
+  collectionOptions: EffectiveCollectionOptions,
+): string {
   return collectionOptions.collectionBase === false
     ? PATH_SEGMENT_EMPTY
     : URL_PATH_SEPARATOR + collectionOptions.collectionName;

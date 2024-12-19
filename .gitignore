@@ -6,3 +6,4 @@ oldtest.mjs
 !.yarn/releases
 !.yarn/plugins
 .pnp.*
+dist
