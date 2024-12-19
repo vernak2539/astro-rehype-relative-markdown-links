@@ -166,7 +166,11 @@ export const applyTrailingSlash = (
 };
 
 /** @type {import('./utils.d.ts').ShouldProcessFile} */
-export function shouldProcessFile(npath) {
+export function shouldProcessFile(npath, options) {
+  if (options.astroVersion && options.astroVersion >= 5) {
+    return true;
+  }
+
   // Astro excludes files that include underscore in any segment of the path under contentDIr
   // see https://github.com/withastro/astro/blob/0fec72b35cccf80b66a85664877ca9dcc94114aa/packages/astro/src/content/utils.ts#L253
   return !npath.split(path.sep).some((p) => p && p.startsWith("_"));
