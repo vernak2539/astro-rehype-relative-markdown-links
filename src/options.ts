@@ -119,7 +119,7 @@ export interface CollectionConfig extends z.input<CollectionConfigSchemaType> {}
 /** General options */
 export type Options = z.infer<typeof OptionsSchema>;
 interface EffectiveOptions extends Options {}
-interface EffectiveCollectionOptions
+export interface EffectiveCollectionOptions
   extends Omit<EffectiveOptions, "collections"> {
   collectionName: string;
 }
