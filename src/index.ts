@@ -16,17 +16,18 @@ import {
   shouldProcessFile,
   getMatter,
   resolveCollectionBase,
-} from "./utils.mjs";
-import { validateOptions, mergeCollectionOptions } from "./options.mjs";
+} from "./utils";
+import {
+  type Options,
+  validateOptions,
+  mergeCollectionOptions,
+} from "./options";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
-/**
- * @type {import('unified').Plugin<[(import('./options.d.ts').Options | null | undefined)?], import('hast').Root>}
- */
-function astroRehypeRelativeMarkdownLinks(opts) {
+function astroRehypeRelativeMarkdownLinks(opts: Options) {
   const options = validateOptions(opts);
 
   return (tree, file) => {
@@ -71,9 +72,9 @@ function astroRehypeRelativeMarkdownLinks(opts) {
         content collections.
 
         Given this, the default behavior we follow is to to derive the the collection name from physical name of the collection
-        directory on disk and include it in the generated path.  Since we don't have internal info, we have to make an assumption 
-        that the site page path is mapped directly to a path that starts with the collection name followed by the slug of the content 
-        collection page.  We do this by following Astro's own assumptions on the directory structure of content collections - they 
+        directory on disk and include it in the generated path.  Since we don't have internal info, we have to make an assumption
+        that the site page path is mapped directly to a path that starts with the collection name followed by the slug of the content
+        collection page.  We do this by following Astro's own assumptions on the directory structure of content collections - they
         are subdirectories of content path.
 
         We make a couple of exceptions to the above based on options specified:
@@ -81,13 +82,13 @@ function astroRehypeRelativeMarkdownLinks(opts) {
         1. By default, we derive the name of the collection from the physical name of the content collection directory, however when
            options.<collectionname>.name is specified, we use that value instead for the name of the collection.
         2. When the effective `collectionBase` (options.collectionBase or options.collections.<collectionname>.base
-           is `false`), we treat the content collection as the site root so we do not include the effective content collection 
-           name in the transformed url.  For example, with a content collection page of of src/content/docs/page-1.md, if the 
+           is `false`), we treat the content collection as the site root so we do not include the effective content collection
+           name in the transformed url.  For example, with a content collection page of of src/content/docs/page-1.md, if the
            effective collectionBase is `false`, the url would be `/page-1` whereas with effective collectionBase of `name`, it would be `/docs/page-1`.
 
         KNOWN LIMITATIONS/ISSUES
         - Astro allows mapping a content collection to multiple site paths (as mentioned above).  The current approach of this library
-        assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name (or custom slug).  
+        assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name (or custom slug).
         For example, if you have a content collection at src/content/blogs but your site page path is at /pages/my-blog/[...slug].astro and you have not
         overridden the collection name to `my-blog` via options.<collectionname>.name, the default functionality of this library will not work currently.
         Note, that even when overridden via options, if you map multiple page paths to the same collection (e.g., /pages/my-blog/[...slug].astro &

@@ -9,14 +9,11 @@
     "relative links"
   ],
   "homepage": "https://github.com/vernak2539/astro-rehype-relative-markdown-links",
-  "main": "./src/index.mjs",
   "type": "module",
-  "types": "./src/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "src/index.mjs",
-    "src/utils.mjs",
-    "src/options.mjs",
-    "src/**/*.d.ts"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -30,7 +27,7 @@
   },
   "packageManager": "yarn@4.5.3",
   "scripts": {
-    "pre-release": "yarn run changelog && yarn run prettier && yarn run generate-docs",
+    "build": "tsup",
     "generate-docs": "typedoc",
     "prettier": "prettier ./src/** -w",
     "test": "ARRML_MATTER_CACHE_DISABLE=true node --loader=esmock --test",
@@ -59,6 +56,7 @@
     "prettier": "^4.0.0-alpha.8",
     "rehype": "^13.0.2",
     "remark-toc": "^9.0.0",
+    "tsup": "^8.3.5",
     "typedoc": "^0.27.4",
     "typedoc-plugin-markdown": "^4.3.2",
     "typedoc-plugin-remark": "^1.2.0",

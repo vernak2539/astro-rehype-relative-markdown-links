@@ -1,5 +1,5 @@
 import { describe, test } from "node:test";
-import { mergeCollectionOptions, validateOptions } from "./options.mjs";
+import { mergeCollectionOptions, validateOptions } from "./options.ts";
 import assert from "node:assert";
 
 /** @type {import('./options.d.ts').CollectionConfig} */

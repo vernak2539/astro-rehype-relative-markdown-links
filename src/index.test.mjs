@@ -5,18 +5,18 @@ import path, { dirname } from "path";
 import { rehype } from "rehype";
 import { visit } from "unist-util-visit";
 import esmock from "esmock";
-import { validateOptions as validateOptionsOriginal } from "./options.mjs";
+import { validateOptions as validateOptionsOriginal } from "./options.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import astroRehypeRelativeMarkdownLinks from "./index.mjs";
+import astroRehypeRelativeMarkdownLinks from "./index.ts";
 
 /*
   NOTE ON ESMOCK USAGE
 
   node:test does not provide a stock way of mocking sub-modules.  There is work being done on this (see
-  links below) but for now some type of module loader is required.  Esmock (https://github.com/iambumblehead/esmock) 
+  links below) but for now some type of module loader is required.  Esmock (https://github.com/iambumblehead/esmock)
   seems to address what is needed for our use cases for now although there doesn't seem to be a simple way for a simple spy
   as you need to swap in the original manually.  If/When node:test supports this natively, esmock can be removed.
 
