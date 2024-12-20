@@ -7,27 +7,9 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": true,
-    "allowImportingTsExtensions": true,
     "lib": ["esnext"],
-    "types": ["node"],
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.test.*"]
 }
-
-//{
-//  "compilerOptions": {
-//    "allowJs": true,
-//    "checkJs": true,
-//    "customConditions": ["development"],
-//    "declaration": true,
-//    "emitDeclarationOnly": true,
-//    "exactOptionalPropertyTypes": true,
-//    "lib": ["es2022"],
-//    "module": "NodeNext",
-//    "strict": true,
-//    "target": "es2022"
-//  },
-//  "include": ["src/**/*"],
-//  "exclude": ["**/*.test.*"]
-//}
