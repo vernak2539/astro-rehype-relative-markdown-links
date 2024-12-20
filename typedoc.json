@@ -1,8 +1,12 @@
 {
   "$schema": "https://typedoc-plugin-markdown.org/schema.json",
-  "entryPoints": ["./src/index.d.ts"],
+  "entryPoints": ["./src/index.ts"],
   "gitRevision": "main",
-  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-remark"],
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-remark",
+    "typedoc-plugin-zod"
+  ],
   "readme": "none",
   "parametersFormat": "table",
   "indexFormat": "table",
