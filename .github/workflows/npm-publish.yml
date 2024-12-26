@@ -39,6 +39,7 @@ jobs:
     environment:
       name: npm-publish
     steps:
+      - uses: actions/checkout@v4
       - name: Generate CHANGELOG
         uses: ./.github/workflows/update-changelog.yml
         env:
@@ -49,5 +50,6 @@ jobs:
     environment:
       name: npm-publish
     steps:
+      - uses: actions/checkout@v4
       - name: Generate Docs
         uses: ./.github/workflows/update-generated-docs.yml
