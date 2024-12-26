@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.18.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.18.0) (2024-12-26)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.17.3...v0.18.0)
+
+**Closed issues:**
+
+- bug: hover & intellisense do not work for `Options` [\#72](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/72)
+
+**Merged pull requests:**
+
+- Move to TypeScript [\#78](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/78) ([vernak2539](https://github.com/vernak2539))
+- chore\(husky\): add husky and run prettier pre-commit [\#77](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/77) ([vernak2539](https://github.com/vernak2539))
+
 ## [v0.17.3](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.17.3) (2024-12-12)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.17.0...v0.17.3)
