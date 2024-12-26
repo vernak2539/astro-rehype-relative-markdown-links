@@ -31,8 +31,7 @@ import astroRehypeRelativeMarkdownLinks from "./plugin";
   - https://github.com/nodejs/node/issues/51164#issuecomment-2034518078
 */
 
-/** @param {Record<string, { currentFilePath?: string }} options */
-function testSetupRehype(options = {}) {
+function testSetupRehype(options: { currentFilePath?: string } = {}) {
   return (tree, file) => {
     visit(tree, "element", () => {
       const fileInHistory = options.currentFilePath

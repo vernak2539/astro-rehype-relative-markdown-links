@@ -1,4 +1,4 @@
-import astroRehypeRelativeMarkdownLinks from "./plugin";
+// NOTE - The order of exports is very important see https://github.com/Gerrit0/typedoc-plugin-zod/issues/8
+export type { CollectionConfig, Options } from "./options";
 
-export type { Options, CollectionConfig } from "./options";
-export default astroRehypeRelativeMarkdownLinks;
+export { default } from "./plugin";
