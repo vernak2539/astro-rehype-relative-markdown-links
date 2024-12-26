@@ -31,6 +31,7 @@ const debug = debugFn("astro-rehype-relative-markdown-links");
 
 /**
  * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
+ * @see {@link Options}
  */
 const astroRehypeRelativeMarkdownLinks: Plugin<
   [(Options | null | undefined)?],
