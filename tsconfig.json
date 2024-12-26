@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "target": "ESNext",
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "noEmit": true,
     "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
     "lib": ["esnext"],
+    "module": "es2022",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
     "types": ["node"]
   },
   "include": ["src/**/*"],
