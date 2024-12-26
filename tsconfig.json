@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "customConditions": ["development"],
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "exactOptionalPropertyTypes": true,
-    "lib": ["es2022"],
-    "module": "node16",
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "lib": ["esnext"],
+    "module": "es2022",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
     "strict": true,
-    "target": "es2022"
+    "target": "es2022",
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.test.*"]

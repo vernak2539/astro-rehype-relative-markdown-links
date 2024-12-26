@@ -27,6 +27,8 @@ jobs:
         run: rm -rf docs CHANGELOG.md
       - name: Install Dependencies
         run: yarn --immutable
+      - name: Build
+        run: yarn build
       - name: Publish
         run: yarn npm publish
         env:

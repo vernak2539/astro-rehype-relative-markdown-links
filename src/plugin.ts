@@ -1,6 +1,8 @@
 import { visit } from "unist-util-visit";
 import * as path from "path";
 import { default as debugFn } from "debug";
+import type { Plugin } from "unified";
+import type { Root } from "hast";
 import {
   replaceExt,
   isValidRelativeLink,
@@ -16,17 +18,25 @@ import {
   shouldProcessFile,
   getMatter,
   resolveCollectionBase,
-} from "./utils.mjs";
-import { validateOptions, mergeCollectionOptions } from "./options.mjs";
+} from "./utils";
+import {
+  type Options,
+  validateOptions,
+  mergeCollectionOptions,
+} from "./options";
 
 // This package makes a lot of assumptions based on it being used with Astro
 
 const debug = debugFn("astro-rehype-relative-markdown-links");
 
 /**
- * @type {import('unified').Plugin<[(import('./options.d.ts').Options | null | undefined)?], import('hast').Root>}
+ * Rehype plugin for Astro to add support for transforming relative links in MD and MDX files into their final page paths.
+ * @see {@link Options}
  */
-function astroRehypeRelativeMarkdownLinks(opts) {
+const astroRehypeRelativeMarkdownLinks: Plugin<
+  [(Options | null | undefined)?],
+  Root
+> = (opts) => {
   const options = validateOptions(opts);
 
   return (tree, file) => {
@@ -49,6 +59,12 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       }
 
       const currentFile = file.history[0];
+
+      // TODO: decide what the right response here is...
+      if (!currentFile) {
+        return;
+      }
+
       const currentFileParsed = path.parse(currentFile);
       const currentFileDirectory = currentFileParsed.dir;
 
@@ -71,9 +87,9 @@ function astroRehypeRelativeMarkdownLinks(opts) {
         content collections.
 
         Given this, the default behavior we follow is to to derive the the collection name from physical name of the collection
-        directory on disk and include it in the generated path.  Since we don't have internal info, we have to make an assumption 
-        that the site page path is mapped directly to a path that starts with the collection name followed by the slug of the content 
-        collection page.  We do this by following Astro's own assumptions on the directory structure of content collections - they 
+        directory on disk and include it in the generated path.  Since we don't have internal info, we have to make an assumption
+        that the site page path is mapped directly to a path that starts with the collection name followed by the slug of the content
+        collection page.  We do this by following Astro's own assumptions on the directory structure of content collections - they
         are subdirectories of content path.
 
         We make a couple of exceptions to the above based on options specified:
@@ -81,13 +97,13 @@ function astroRehypeRelativeMarkdownLinks(opts) {
         1. By default, we derive the name of the collection from the physical name of the content collection directory, however when
            options.<collectionname>.name is specified, we use that value instead for the name of the collection.
         2. When the effective `collectionBase` (options.collectionBase or options.collections.<collectionname>.base
-           is `false`), we treat the content collection as the site root so we do not include the effective content collection 
-           name in the transformed url.  For example, with a content collection page of of src/content/docs/page-1.md, if the 
+           is `false`), we treat the content collection as the site root so we do not include the effective content collection
+           name in the transformed url.  For example, with a content collection page of of src/content/docs/page-1.md, if the
            effective collectionBase is `false`, the url would be `/page-1` whereas with effective collectionBase of `name`, it would be `/docs/page-1`.
 
         KNOWN LIMITATIONS/ISSUES
         - Astro allows mapping a content collection to multiple site paths (as mentioned above).  The current approach of this library
-        assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name (or custom slug).  
+        assumes that page paths always align 1:1 to their corresponding content collection paths based on physical directory name (or custom slug).
         For example, if you have a content collection at src/content/blogs but your site page path is at /pages/my-blog/[...slug].astro and you have not
         overridden the collection name to `my-blog` via options.<collectionname>.name, the default functionality of this library will not work currently.
         Note, that even when overridden via options, if you map multiple page paths to the same collection (e.g., /pages/my-blog/[...slug].astro &
@@ -104,6 +120,12 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       const collectionName = path
         .dirname(relativeToContentPath)
         .split(FILE_PATH_SEPARATOR)[0];
+
+      // TODO: decide what the right response here is...
+      if (!collectionName) {
+        return;
+      }
+
       // flatten options merging any collection overrides
       const collectionOptions = mergeCollectionOptions(collectionName, options);
       if (
@@ -117,7 +139,7 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       const collectionDir = path.join(contentDir, collectionName);
       const relativeToCollectionPath = path.relative(
         collectionDir,
-        urlFilePath,
+        urlFilePath
       );
       // md/mdx extentions should not be in the final url
       const withoutFileExt = replaceExt(relativeToCollectionPath, "");
@@ -136,7 +158,7 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       //        directory name of the content collection maps 1:1 to the site page path serving the content collection
       //        page or an override name value has been specified via options (see details above).
       const resolvedUrl = [resolvedCollectionBase, resolvedSlug].join(
-        URL_PATH_SEPARATOR,
+        URL_PATH_SEPARATOR
       );
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
@@ -146,7 +168,7 @@ function astroRehypeRelativeMarkdownLinks(opts) {
           ? URL_PATH_SEPARATOR
           : frontmatterSlug) || urlPathPart,
         resolvedUrl,
-        trailingSlashMode,
+        trailingSlashMode
       );
 
       if (urlQueryStringAndFragmentPart) {
@@ -164,15 +186,15 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       debug("Collection Name from Disk            : %s", collectionName);
       debug(
         "Resolved Collection Name Option      : %s",
-        collectionOptions.collectionName,
+        collectionOptions.collectionName
       );
       debug(
         "Resolved Collection Base Option      : %s",
-        collectionOptions.collectionBase,
+        collectionOptions.collectionBase
       );
       debug(
         "Resolved Collection Base             : %s",
-        resolvedCollectionBase,
+        resolvedCollectionBase
       );
       debug("TrailingSlashMode                    : %s", trailingSlashMode);
       debug("md/mdx AST Current File              : %s", currentFile);
@@ -181,13 +203,13 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       debug("md/mdx AST href path                 : %s", urlPathPart);
       debug(
         "md/mdx AST href qs and/or hash       : %s",
-        urlQueryStringAndFragmentPart,
+        urlQueryStringAndFragmentPart
       );
       debug("URL file                             : %s", urlFilePath);
       debug("URL file relative to content path    : %s", relativeToContentPath);
       debug(
         "URL file relative to collection path : %s",
-        relativeToCollectionPath,
+        relativeToCollectionPath
       );
       debug("URL file custom slug                 : %s", frontmatterSlug);
       debug("URL file generated slug              : %s", generatedSlug);
@@ -197,6 +219,6 @@ function astroRehypeRelativeMarkdownLinks(opts) {
       node.properties.href = webPathFinal;
     });
   };
-}
+};
 
 export default astroRehypeRelativeMarkdownLinks;

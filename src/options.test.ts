@@ -1,12 +1,15 @@
 import { describe, test } from "node:test";
-import { mergeCollectionOptions, validateOptions } from "./options.mjs";
+import {
+  mergeCollectionOptions,
+  type Options,
+  type CollectionConfig,
+  validateOptions,
+} from "./options";
 import assert from "node:assert";
 
-/** @type {import('./options.d.ts').CollectionConfig} */
-const defaultCollectionConfig = {};
+const defaultCollectionConfig: CollectionConfig = {};
 
-/** @type {import('./options.d.ts').Options} */
-const defaultOptions = {
+const defaultOptions: Options = {
   srcDir: "./src",
   trailingSlash: "ignore",
   collectionBase: "name",

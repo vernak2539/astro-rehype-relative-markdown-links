@@ -112,8 +112,21 @@ export const OptionsSchema = z.object({
     .default("ignore"),
 });
 
-/** @type {import('./options.d.ts').ValidateOptions} */
-export const validateOptions = (options) => {
+/** Collection specific options */
+export interface CollectionConfig extends z.input<CollectionConfigSchemaType> {}
+type CollectionConfigSchemaType = typeof CollectionConfigSchema;
+
+/** General options */
+export type Options = z.infer<typeof OptionsSchema>;
+interface EffectiveOptions extends Options {}
+export interface EffectiveCollectionOptions
+  extends Omit<EffectiveOptions, "collections"> {
+  collectionName: string;
+}
+
+export const validateOptions = (
+  options: Options | null | undefined
+): EffectiveOptions => {
   const result = OptionsSchema.safeParse(options || {});
   if (!result.success) {
     throw result.error;
@@ -122,8 +135,10 @@ export const validateOptions = (options) => {
   return result.data;
 };
 
-/** @type {import('./options.d.ts').MergeCollectionOptions} */
-export const mergeCollectionOptions = (collectionName, options) => {
+export const mergeCollectionOptions = (
+  collectionName: string,
+  options: EffectiveOptions
+): EffectiveCollectionOptions => {
   const config = options.collections[collectionName] || {};
   const { base = options.collectionBase, name = collectionName } = config;
   return {
