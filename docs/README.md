@@ -3,6 +3,7 @@
 ## Contents
 
 * [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 * [Functions](#functions)
 
 ## Interfaces
@@ -10,7 +11,12 @@
 | Interface                                          | Description                 |
 | -------------------------------------------------- | --------------------------- |
 | [CollectionConfig](interfaces/CollectionConfig.md) | Collection specific options |
-| [Options](interfaces/Options.md)                   | General options             |
+
+## Type Aliases
+
+| Type alias                         | Description     |
+| ---------------------------------- | --------------- |
+| [Options](type-aliases/Options.md) | General options |
 
 ## Functions
 

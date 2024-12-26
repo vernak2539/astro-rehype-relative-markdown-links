@@ -1,24 +1,12 @@
 [astro-rehype-relative-markdown-links](../README.md) / Options
 
-# Interface: Options
+# Type Alias: Options
+
+> **Options**: `object`
 
 General options
 
-## Contents
-
-* [Extends](#extends)
-* [Properties](#properties)
-  * [base?](#base)
-  * [collectionBase?](#collectionbase)
-  * [collections?](#collections)
-  * [srcDir?](#srcdir)
-  * [trailingSlash?](#trailingslash)
-
-## Extends
-
-* `input`\<`OptionsSchemaType`>
-
-## Properties
+## Type declaration
 
 ### base?
 
@@ -40,19 +28,9 @@ In the example below, `astro dev` will start your server at `/docs`.
 }
 ```
 
-#### Inherited from
+### collectionBase
 
-`z.input.base`
-
-#### Defined in
-
-[src/options.mjs:86](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L86)
-
-***
-
-### collectionBase?
-
-> `optional` **collectionBase**: `false` | `"name"`
+> **collectionBase**: `false` | `"name"`
 
 Set how the base segment of the URL path to the referenced markdown file should be derived:
 
@@ -63,7 +41,7 @@ Use `false` when you are treating your content collection as if it were located 
 set this value and the default of `"name"` will be used.
 
 Note that this is a top-level option and will apply to all content collections.  If you have multiple content collections and want the behavior to be different on a per content collection basis, add the collection(s) to
-the [collections](Options.md#collections) option and provide a value for the [base](CollectionConfig.md#base) property.
+the [collections](Options.md#collections) option and provide a value for the [base](../interfaces/CollectionConfig.md#base) property.
 
 #### Default
 
@@ -82,19 +60,9 @@ the [collections](Options.md#collections) option and provide a value for the [ba
 }
 ```
 
-#### Inherited from
+### collections
 
-`z.input.collectionBase`
-
-#### Defined in
-
-[src/options.mjs:55](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L55)
-
-***
-
-### collections?
-
-> `optional` **collections**: `Record`\<`string`, \{ `base`: `false` | `"name"`; `name`: `string`; }>
+> **collections**: `Record`\<`string`, \{ `base`: `false` | `"name"`; `name`: `string`; }>
 
 Specify a mapping of collections where the key is the name of a collection on disk and the value is an object of collection specific configuration which will override any top-level
 configuration where applicable.
@@ -105,7 +73,7 @@ configuration where applicable.
 
 #### See
 
-[CollectionConfig](CollectionConfig.md)
+[CollectionConfig](../interfaces/CollectionConfig.md)
 
 #### Example
 
@@ -120,19 +88,9 @@ configuration where applicable.
 }
 ```
 
-#### Inherited from
+### srcDir
 
-`z.input.collections`
-
-#### Defined in
-
-[src/options.mjs:73](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L73)
-
-***
-
-### srcDir?
-
-> `optional` **srcDir**: `string`
+> **srcDir**: `string`
 
 Set the directory that Astro will read your site from.
 
@@ -154,19 +112,9 @@ The value can be either an absolute file system path or a path relative to the p
 }
 ```
 
-#### Inherited from
+### trailingSlash
 
-`z.input.srcDir`
-
-#### Defined in
-
-[src/options.mjs:34](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L34)
-
-***
-
-### trailingSlash?
-
-> `optional` **trailingSlash**: `"always"` | `"never"` | `"ignore"`
+> **trailingSlash**: `"never"` | `"ignore"` | `"always"`
 
 Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
 
@@ -200,10 +148,6 @@ When set to `"ignore"` (the default), the following will occur:
 }
 ```
 
-#### Inherited from
+## Defined in
 
-`z.input.trailingSlash`
-
-#### Defined in
-
-[src/options.mjs:110](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.mjs#L110)
+[src/options.ts:120](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/options.ts#L120)

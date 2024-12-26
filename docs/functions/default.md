@@ -8,10 +8,10 @@ Rehype plugin for Astro to add support for transforming relative links in MD and
 
 ## Parameters
 
-| Parameter       | Type                                                                          |
-| --------------- | ----------------------------------------------------------------------------- |
-| `this`          | `Processor`\<`undefined`, `undefined`, `undefined`, `undefined`, `undefined`> |
-| ...`parameters` | \[(`null` \| [`Options`](../interfaces/Options.md))?]                         |
+| Parameter       | Type                                                                                                                                                                                                                                               |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `this`          | `Processor`\<`undefined`, `undefined`, `undefined`, `undefined`, `undefined`>                                                                                                                                                                      |
+| ...`parameters` | \[(`null` \| \{ `base`: `string`; `collectionBase`: `false` \| `"name"`; `collections`: `Record`\<`string`, \{ `base`: `false` \| `"name"`; `name`: `string`; }>; `srcDir`: `string`; `trailingSlash`: `"never"` \| `"ignore"` \| `"always"`; })?] |
 
 ## Returns
 
@@ -19,8 +19,8 @@ Rehype plugin for Astro to add support for transforming relative links in MD and
 
 ## See
 
-[Options](../interfaces/Options.md)
+[Options](../type-aliases/Options.md)
 
 ## Defined in
 
-[src/index.d.ts:11](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/index.d.ts#L11)
+[src/plugin.ts:36](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/src/plugin.ts#L36)
