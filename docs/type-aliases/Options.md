@@ -28,9 +28,9 @@ In the example below, `astro dev` will start your server at `/docs`.
 }
 ```
 
-### collectionBase
+### collectionBase?
 
-> **collectionBase**: `false` | `"name"`
+> `optional` **collectionBase**: `false` | `"name"`
 
 Set how the base segment of the URL path to the referenced markdown file should be derived:
 
@@ -41,7 +41,7 @@ Use `false` when you are treating your content collection as if it were located 
 set this value and the default of `"name"` will be used.
 
 Note that this is a top-level option and will apply to all content collections.  If you have multiple content collections and want the behavior to be different on a per content collection basis, add the collection(s) to
-the [collections](Options.md#collections) option and provide a value for the [base](../interfaces/CollectionConfig.md#base) property.
+the [collections](Options.md#collections) option and provide a value for the [base](CollectionConfig.md#base) property.
 
 #### Default
 
@@ -60,9 +60,9 @@ the [collections](Options.md#collections) option and provide a value for the [ba
 }
 ```
 
-### collections
+### collections?
 
-> **collections**: `Record`\<`string`, \{ `base`: `false` | `"name"`; `name`: `string`; }>
+> `optional` **collections**: `Record`\<`string`, \{ `base`: `false` | `"name"`; `name`: `string`; }>
 
 Specify a mapping of collections where the key is the name of a collection on disk and the value is an object of collection specific configuration which will override any top-level
 configuration where applicable.
@@ -73,7 +73,7 @@ configuration where applicable.
 
 #### See
 
-[CollectionConfig](../interfaces/CollectionConfig.md)
+[CollectionConfig](CollectionConfig.md)
 
 #### Example
 
@@ -88,9 +88,9 @@ configuration where applicable.
 }
 ```
 
-### srcDir
+### srcDir?
 
-> **srcDir**: `string`
+> `optional` **srcDir**: `string`
 
 Set the directory that Astro will read your site from.
 
@@ -112,9 +112,9 @@ The value can be either an absolute file system path or a path relative to the p
 }
 ```
 
-### trailingSlash
+### trailingSlash?
 
-> **trailingSlash**: `"never"` | `"ignore"` | `"always"`
+> `optional` **trailingSlash**: `"never"` | `"ignore"` | `"always"`
 
 Allows you to control the behavior for how trailing slashes should be handled on transformed urls:
 

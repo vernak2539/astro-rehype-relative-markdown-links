@@ -2,21 +2,15 @@
 
 ## Contents
 
-* [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 * [Functions](#functions)
 
-## Interfaces
-
-| Interface                                          | Description                 |
-| -------------------------------------------------- | --------------------------- |
-| [CollectionConfig](interfaces/CollectionConfig.md) | Collection specific options |
-
 ## Type Aliases
 
-| Type alias                         | Description     |
-| ---------------------------------- | --------------- |
-| [Options](type-aliases/Options.md) | General options |
+| Type alias                                           | Description                 |
+| ---------------------------------------------------- | --------------------------- |
+| [CollectionConfig](type-aliases/CollectionConfig.md) | Collection specific options |
+| [Options](type-aliases/Options.md)                   | General options             |
 
 ## Functions
 
