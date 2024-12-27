@@ -1,0 +1,15 @@
+name: Update Changelog + Generate Docs
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  update_changelog:
+    uses: ./.github/workflows/update-changelog.yml
+  update_docs:
+    needs: update_changelog
+    uses: ./.github/workflows/update-generated-docs.yml
