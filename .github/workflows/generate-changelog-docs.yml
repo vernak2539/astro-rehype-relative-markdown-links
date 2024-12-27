@@ -10,8 +10,7 @@ permissions:
 jobs:
   update_changelog:
     uses: ./.github/workflows/update-changelog.yml
-    with:
-      secrets: inherit
+    secrets: inherit
   update_docs:
     needs: update_changelog
     uses: ./.github/workflows/update-generated-docs.yml
