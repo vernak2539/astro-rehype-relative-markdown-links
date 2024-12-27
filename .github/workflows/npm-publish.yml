@@ -34,22 +34,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   update_changelog:
-    needs: publish
-    runs-on: ubuntu-latest
-    environment:
-      name: npm-publish
-    steps:
-      - uses: actions/checkout@v4
-      - name: Generate CHANGELOG
-        uses: ./.github/workflows/update-changelog.yml
-        env:
-          CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
+    uses: ./.github/workflows/update-changelog.yml
+    secrets: inherit
   update_docs:
     needs: update_changelog
-    runs-on: ubuntu-latest
-    environment:
-      name: npm-publish
-    steps:
-      - uses: actions/checkout@v4
-      - name: Generate Docs
-        uses: ./.github/workflows/update-generated-docs.yml
+    uses: ./.github/workflows/update-generated-docs.yml
