@@ -113,12 +113,14 @@ export const OptionsSchema = z.object({
 });
 
 /** Collection specific options */
-export interface CollectionConfig extends z.input<CollectionConfigSchemaType> {}
+export type CollectionConfig = z.input<CollectionConfigSchemaType>;
 type CollectionConfigSchemaType = typeof CollectionConfigSchema;
 
 /** General options */
-export type Options = z.infer<typeof OptionsSchema>;
-interface EffectiveOptions extends Options {}
+export type Options = z.input<OptionsSchemaType>;
+type OptionsSchemaType = typeof OptionsSchema;
+
+interface EffectiveOptions extends z.infer<OptionsSchemaType> {}
 export interface EffectiveCollectionOptions
   extends Omit<EffectiveOptions, "collections"> {
   collectionName: string;
