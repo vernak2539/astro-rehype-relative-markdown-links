@@ -45,7 +45,7 @@
     "zod": "^3.23.8"
   },
   "peerDependencies": {
-    "astro": ">=2 <6"
+    "astro": ">=2 <7"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
