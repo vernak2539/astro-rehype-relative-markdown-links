@@ -16,7 +16,7 @@ jobs:
     environment:
       name: npm-publish
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
       - name: "Install github_changelog_generator"
         run: gem install github_changelog_generator
