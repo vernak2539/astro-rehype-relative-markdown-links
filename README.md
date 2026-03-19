@@ -9,7 +9,7 @@ transform relative links in MD and MDX files into their final output paths.
 2. You have a content collection(s) residing at `src/content/<content_collection(s)>`
 3. **(Fixed v0.17.0)** You have a page that renders the above content collection at `src/pages/<content_collection>/[...slug].astro`
     - You can now map your content collection to paths that don't match your content collection directory name.
-See [docs](https://github.com/vernak2539/astro-rehype-relative-markdown-links/blob/main/docs/interfaces/CollectionConfig.md#properties) for more information.
+See [docs](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/main/docs) for more information.
 
 ## Example Functionality
 
