@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.19.2](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.19.2) (2026-07-24)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.19.1...v0.19.2)
+
+## [v0.19.1](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.19.1) (2026-07-24)
+
+[Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.19.0...v0.19.1)
+
+**Closed issues:**
+
+- Support Astro v7 \(update peer dependency range\) [\#84](https://github.com/vernak2539/astro-rehype-relative-markdown-links/issues/84)
+
+**Merged pull requests:**
+
+- Feature/astro v7 support [\#85](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/85) ([vernak2539](https://github.com/vernak2539))
+- chore\(ci\): update node version used [\#83](https://github.com/vernak2539/astro-rehype-relative-markdown-links/pull/83) ([vernak2539](https://github.com/vernak2539))
+
 ## [v0.19.0](https://github.com/vernak2539/astro-rehype-relative-markdown-links/tree/v0.19.0) (2026-03-19)
 
 [Full Changelog](https://github.com/vernak2539/astro-rehype-relative-markdown-links/compare/v0.18.1...v0.19.0)
