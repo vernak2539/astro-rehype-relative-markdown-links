@@ -154,6 +154,104 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     assert.equal(actual, expected);
   });
 
+  describe("query string and fragment are not path-normalised", () => {
+    const cases: Array<[string, string, Record<string, unknown>, string]> = [
+      [
+        "should keep a url in the query string",
+        "./fixtures/content/docs/test.md?redirect=https://example.com/a",
+        {},
+        "/docs/test?redirect=https://example.com/a",
+      ],
+      [
+        "should keep double slashes in the fragment",
+        "./fixtures/content/docs/test.md#a//b",
+        {},
+        "/docs/test#a//b",
+      ],
+      [
+        "should keep dot segments in the query string",
+        "./fixtures/content/docs/test.md?next=/a/../b",
+        {},
+        "/docs/test?next=/a/../b",
+      ],
+      [
+        "should keep dot segments in the fragment",
+        "./fixtures/content/docs/test.md#sec/../top",
+        {},
+        "/docs/test#sec/../top",
+      ],
+      [
+        "should keep the query string when base is set",
+        "./fixtures/content/docs/test.md?r=https://e.com//x",
+        { base: "/base" },
+        "/base/docs/test?r=https://e.com//x",
+      ],
+      [
+        "should keep the query string with trailingSlash always",
+        "./fixtures/content/docs/test.md?a=/./b",
+        { trailingSlash: "always" },
+        "/docs/test/?a=/./b",
+      ],
+    ];
+
+    for (const [name, href, opts, expectedHref] of cases) {
+      test(name, async () => {
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            ...opts,
+          })
+          .process(`<a href="${href}">foo</a>`);
+
+        assert.equal(
+          actual,
+          `<html><head></head><body><a href="${expectedHref}">foo</a></body></html>`,
+        );
+      });
+    }
+  });
+
+  describe("root index with empty slug, collectionBase:false, trailingSlash:never", () => {
+    const href = "./fixtures/content/dir-test-custom-slug/index.md";
+    const cases: Array<[string, string, Record<string, unknown>, string]> = [
+      ["should link to site root", "", {}, "/"],
+      ["should link to site root with query", "?q=1", {}, "/?q=1"],
+      ["should link to base", "", { base: "/base" }, "/base/"],
+      [
+        "should link to base with query",
+        "?q=1",
+        { base: "/base" },
+        "/base/?q=1",
+      ],
+      [
+        "should link to base with fragment",
+        "#h",
+        { base: "/base" },
+        "/base/#h",
+      ],
+    ];
+
+    for (const [name, suffix, opts, expectedHref] of cases) {
+      test(name, async () => {
+        const { value: actual } = await rehype()
+          .use(testSetupRehype)
+          .use(astroRehypeRelativeMarkdownLinks, {
+            srcDir: "src/fixtures",
+            collectionBase: false,
+            trailingSlash: "never",
+            ...opts,
+          })
+          .process(`<a href="${href}${suffix}">foo</a>`);
+
+        assert.equal(
+          actual,
+          `<html><head></head><body><a href="${expectedHref}">foo</a></body></html>`,
+        );
+      });
+    }
+  });
+
   test("should not replace path if relative file does not exist", async () => {
     const input = '<a href="./fixtures/content/docs/does-not-exist.md">foo</a>';
     const { value: actual } = await rehype()

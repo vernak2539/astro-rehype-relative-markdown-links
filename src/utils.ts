@@ -101,21 +101,20 @@ export const normaliseAstroOutputPath = (
   initialPath: string,
   collectionOptions: EffectiveCollectionOptions,
 ): string => {
+  // an empty path is the site root; left empty it would link to the current page
+  const sitePath = initialPath || URL_PATH_SEPARATOR;
+
   const buildPath = () => {
     if (!collectionOptions.base) {
-      return initialPath;
+      return sitePath;
     }
 
     if (collectionOptions.base.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(collectionOptions.base, initialPath);
+      return path.join(collectionOptions.base, sitePath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(collectionOptions.base, initialPath);
+    return URL_PATH_SEPARATOR + path.join(collectionOptions.base, sitePath);
   };
-
-  if (!initialPath) {
-    return initialPath;
-  }
 
   return normalizePath(buildPath());
 };

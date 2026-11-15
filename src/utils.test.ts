@@ -237,6 +237,20 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
   });
+
+  describe("empty path", () => {
+    test("should return site root without base", () => {
+      const actual = normaliseAstroOutputPath("", {});
+
+      assert.equal(actual, "/");
+    });
+
+    test("should return base with base set", () => {
+      const actual = normaliseAstroOutputPath("", { base: "/base" });
+
+      assert.equal(actual, "/base/");
+    });
+  });
 });
 
 describe("isValidFile", () => {

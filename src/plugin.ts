@@ -171,11 +171,12 @@ const astroRehypeRelativeMarkdownLinks: Plugin<
         trailingSlashMode
       );
 
+      // normalise only the path so `//`, `.` and `..` in the query string or fragment are kept as-is
+      webPathFinal = normaliseAstroOutputPath(webPathFinal, collectionOptions);
+
       if (urlQueryStringAndFragmentPart) {
         webPathFinal += urlQueryStringAndFragmentPart;
       }
-
-      webPathFinal = normaliseAstroOutputPath(webPathFinal, collectionOptions);
 
       // Debugging
       debug("--------------------------------------");
