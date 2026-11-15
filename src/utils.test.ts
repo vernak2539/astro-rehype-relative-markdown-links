@@ -237,20 +237,6 @@ describe("normaliseAstroOutputPath", () => {
       assert.equal(actual, "/base/foo-testing-test");
     });
   });
-
-  describe("empty path", () => {
-    test("should return site root without base", () => {
-      const actual = normaliseAstroOutputPath("", {});
-
-      assert.equal(actual, "/");
-    });
-
-    test("should return base with base set", () => {
-      const actual = normaliseAstroOutputPath("", { base: "/base" });
-
-      assert.equal(actual, "/base/");
-    });
-  });
 });
 
 describe("isValidFile", () => {
@@ -344,6 +330,14 @@ describe("isValidFile", () => {
 });
 
 describe("applyTrailingSlash", () => {
+  describe("site root", () => {
+    for (const mode of ["always", "never", "ignore"] as const) {
+      test(`keeps '/' in ${mode} mode`, () => {
+        assert.equal(applyTrailingSlash("./index.md", "/", mode), "/");
+      });
+    }
+  });
+
   describe("always", () => {
     test("original does not contain resolved does not contain", () => {
       const actual = applyTrailingSlash("./foo.md", "/foo", "always");

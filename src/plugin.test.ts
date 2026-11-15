@@ -212,22 +212,83 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
     }
   });
 
-  describe("root index with empty slug, collectionBase:false, trailingSlash:never", () => {
+  describe("root index with empty slug, collectionBase:false", () => {
     const href = "./fixtures/content/dir-test-custom-slug/index.md";
     const cases: Array<[string, string, Record<string, unknown>, string]> = [
-      ["should link to site root", "", {}, "/"],
-      ["should link to site root with query", "?q=1", {}, "/?q=1"],
-      ["should link to base", "", { base: "/base" }, "/base/"],
+      // trailingSlash: never
+      ["never: should link to site root", "", { trailingSlash: "never" }, "/"],
       [
-        "should link to base with query",
+        "never: should link to site root with query",
         "?q=1",
-        { base: "/base" },
-        "/base/?q=1",
+        { trailingSlash: "never" },
+        "/?q=1",
       ],
       [
-        "should link to base with fragment",
+        "never: should link to base",
+        "",
+        { trailingSlash: "never", base: "/base" },
+        "/base",
+      ],
+      [
+        "never: should link to base with query",
+        "?q=1",
+        { trailingSlash: "never", base: "/base" },
+        "/base?q=1",
+      ],
+      [
+        "never: should link to base with fragment",
         "#h",
-        { base: "/base" },
+        { trailingSlash: "never", base: "/base" },
+        "/base#h",
+      ],
+      // trailingSlash: ignore (an empty-slug root page counts as "/", so its slash is kept)
+      [
+        "ignore: should link to site root",
+        "",
+        { trailingSlash: "ignore" },
+        "/",
+      ],
+      [
+        "ignore: should link to site root with fragment",
+        "#h",
+        { trailingSlash: "ignore" },
+        "/#h",
+      ],
+      [
+        "ignore: should link to base",
+        "",
+        { trailingSlash: "ignore", base: "/base" },
+        "/base/",
+      ],
+      [
+        "ignore: should link to base with query",
+        "?q=1",
+        { trailingSlash: "ignore", base: "/base" },
+        "/base/?q=1",
+      ],
+      // trailingSlash: always
+      [
+        "always: should link to site root",
+        "",
+        { trailingSlash: "always" },
+        "/",
+      ],
+      [
+        "always: should link to site root with query",
+        "?q=1",
+        { trailingSlash: "always" },
+        "/?q=1",
+      ],
+      [
+        "always: should link to base",
+        "",
+        { trailingSlash: "always", base: "/base" },
+        "/base/",
+      ],
+      [
+        "always: should link to base with fragment",
+        "#h",
+        { trailingSlash: "always", base: "/base" },
         "/base/#h",
       ],
     ];
@@ -239,7 +300,6 @@ describe("astroRehypeRelativeMarkdownLinks", () => {
           .use(astroRehypeRelativeMarkdownLinks, {
             srcDir: "src/fixtures",
             collectionBase: false,
-            trailingSlash: "never",
             ...opts,
           })
           .process(`<a href="${href}${suffix}">foo</a>`);

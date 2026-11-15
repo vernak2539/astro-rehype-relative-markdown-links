@@ -101,20 +101,21 @@ export const normaliseAstroOutputPath = (
   initialPath: string,
   collectionOptions: EffectiveCollectionOptions,
 ): string => {
-  // an empty path is the site root; left empty it would link to the current page
-  const sitePath = initialPath || URL_PATH_SEPARATOR;
-
   const buildPath = () => {
     if (!collectionOptions.base) {
-      return sitePath;
+      return initialPath;
     }
 
     if (collectionOptions.base.startsWith(URL_PATH_SEPARATOR)) {
-      return path.join(collectionOptions.base, sitePath);
+      return path.join(collectionOptions.base, initialPath);
     }
 
-    return URL_PATH_SEPARATOR + path.join(collectionOptions.base, sitePath);
+    return URL_PATH_SEPARATOR + path.join(collectionOptions.base, initialPath);
   };
+
+  if (!initialPath) {
+    return initialPath;
+  }
 
   return normalizePath(buildPath());
 };
@@ -138,6 +139,11 @@ export const applyTrailingSlash = (
   resolvedUrl: string,
   trailingSlash: EffectiveCollectionOptions["trailingSlash"] = "ignore",
 ) => {
+  // the site root is always '/'; stripping its slash would leave an empty href that links to the current page
+  if (resolvedUrl === URL_PATH_SEPARATOR) {
+    return resolvedUrl;
+  }
+
   const hasTrailingSlash = resolvedUrl.endsWith(URL_PATH_SEPARATOR);
 
   if (trailingSlash === "always") {

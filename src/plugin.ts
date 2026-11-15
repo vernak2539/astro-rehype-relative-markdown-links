@@ -139,7 +139,7 @@ const astroRehypeRelativeMarkdownLinks: Plugin<
       const collectionDir = path.join(contentDir, collectionName);
       const relativeToCollectionPath = path.relative(
         collectionDir,
-        urlFilePath
+        urlFilePath,
       );
       // md/mdx extentions should not be in the final url
       const withoutFileExt = replaceExt(relativeToCollectionPath, "");
@@ -158,7 +158,14 @@ const astroRehypeRelativeMarkdownLinks: Plugin<
       //        directory name of the content collection maps 1:1 to the site page path serving the content collection
       //        page or an override name value has been specified via options (see details above).
       const resolvedUrl = [resolvedCollectionBase, resolvedSlug].join(
-        URL_PATH_SEPARATOR
+        URL_PATH_SEPARATOR,
+      );
+
+      // join the base and normalise before applying the trailing slash mode, so the mode decides the final path.
+      // only the path is normalised, so `//`, `.` and `..` in the query string or fragment are kept as-is
+      const normalisedUrl = normaliseAstroOutputPath(
+        resolvedUrl,
+        collectionOptions,
       );
 
       // slug of empty string ('') is a special case in Astro for root page (e.g., index.md) of a collection
@@ -167,12 +174,9 @@ const astroRehypeRelativeMarkdownLinks: Plugin<
         frontmatterSlug === PATH_SEGMENT_EMPTY
           ? URL_PATH_SEPARATOR
           : frontmatterSlug) || urlPathPart,
-        resolvedUrl,
-        trailingSlashMode
+        normalisedUrl,
+        trailingSlashMode,
       );
-
-      // normalise only the path so `//`, `.` and `..` in the query string or fragment are kept as-is
-      webPathFinal = normaliseAstroOutputPath(webPathFinal, collectionOptions);
 
       if (urlQueryStringAndFragmentPart) {
         webPathFinal += urlQueryStringAndFragmentPart;
@@ -187,15 +191,15 @@ const astroRehypeRelativeMarkdownLinks: Plugin<
       debug("Collection Name from Disk            : %s", collectionName);
       debug(
         "Resolved Collection Name Option      : %s",
-        collectionOptions.collectionName
+        collectionOptions.collectionName,
       );
       debug(
         "Resolved Collection Base Option      : %s",
-        collectionOptions.collectionBase
+        collectionOptions.collectionBase,
       );
       debug(
         "Resolved Collection Base             : %s",
-        resolvedCollectionBase
+        resolvedCollectionBase,
       );
       debug("TrailingSlashMode                    : %s", trailingSlashMode);
       debug("md/mdx AST Current File              : %s", currentFile);
@@ -204,13 +208,13 @@ const astroRehypeRelativeMarkdownLinks: Plugin<
       debug("md/mdx AST href path                 : %s", urlPathPart);
       debug(
         "md/mdx AST href qs and/or hash       : %s",
-        urlQueryStringAndFragmentPart
+        urlQueryStringAndFragmentPart,
       );
       debug("URL file                             : %s", urlFilePath);
       debug("URL file relative to content path    : %s", relativeToContentPath);
       debug(
         "URL file relative to collection path : %s",
-        relativeToCollectionPath
+        relativeToCollectionPath,
       );
       debug("URL file custom slug                 : %s", frontmatterSlug);
       debug("URL file generated slug              : %s", generatedSlug);
