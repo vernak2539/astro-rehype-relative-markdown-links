@@ -330,6 +330,14 @@ describe("isValidFile", () => {
 });
 
 describe("applyTrailingSlash", () => {
+  describe("site root", () => {
+    for (const mode of ["always", "never", "ignore"] as const) {
+      test(`keeps '/' in ${mode} mode`, () => {
+        assert.equal(applyTrailingSlash("./index.md", "/", mode), "/");
+      });
+    }
+  });
+
   describe("always", () => {
     test("original does not contain resolved does not contain", () => {
       const actual = applyTrailingSlash("./foo.md", "/foo", "always");

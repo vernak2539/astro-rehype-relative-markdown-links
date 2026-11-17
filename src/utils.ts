@@ -139,6 +139,11 @@ export const applyTrailingSlash = (
   resolvedUrl: string,
   trailingSlash: EffectiveCollectionOptions["trailingSlash"] = "ignore",
 ) => {
+  // the site root is always '/'; stripping its slash would leave an empty href that links to the current page
+  if (resolvedUrl === URL_PATH_SEPARATOR) {
+    return resolvedUrl;
+  }
+
   const hasTrailingSlash = resolvedUrl.endsWith(URL_PATH_SEPARATOR);
 
   if (trailingSlash === "always") {

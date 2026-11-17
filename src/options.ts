@@ -127,7 +127,7 @@ export interface EffectiveCollectionOptions
 }
 
 export const validateOptions = (
-  options: Options | null | undefined
+  options: Options | null | undefined,
 ): EffectiveOptions => {
   const result = OptionsSchema.safeParse(options || {});
   if (!result.success) {
@@ -139,7 +139,7 @@ export const validateOptions = (
 
 export const mergeCollectionOptions = (
   collectionName: string,
-  options: EffectiveOptions
+  options: EffectiveOptions,
 ): EffectiveCollectionOptions => {
   const config = options.collections[collectionName] || {};
   const { base = options.collectionBase, name = collectionName } = config;
